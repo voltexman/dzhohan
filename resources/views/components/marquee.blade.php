@@ -5,7 +5,7 @@
         // Клонуємо контент два рази для 100% заповнення простору
         this.$refs.marqueeTrack.innerHTML += this.$refs.marqueeTrack.innerHTML;
     }
-}" class="relative w-full overflow-hidden py-5 max-w-sm">
+}" class="relative w-full overflow-hidden my-10 max-w-md">
 
     <div x-ref="marqueeTrack" class="flex w-max animate-infinite-scroll hover:[animation-play-state:paused]">
 
@@ -18,7 +18,6 @@
                 <div class="size-1.5 rounded-full bg-white flex-none"></div>
             @endforeach
         </div>
-
     </div>
 </div>
 

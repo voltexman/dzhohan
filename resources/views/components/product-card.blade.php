@@ -21,10 +21,14 @@
             class="size-full object-cover group-hover:scale-105 transition duration-500">
 
         <!-- Кнопка Серце -->
-        <button type="button"
-            class="absolute top-3 right-3 z-10 size-9 bg-white/20 backdrop-blur-md flex justify-center items-center hover:bg-white transition">
-            <x-lucide-heart class="size-5 stroke-white" />
-        </button>
+        <x-button type="button" variant="soft" color="light" size="md" icon
+            class="absolute top-2.5 right-2.5 z-30 size-8! rounded-sm bg-white/10 backdrop-blur-xs hover:bg-white border-white/10">
+            <x-lucide-heart @class([
+                'size-5',
+                'fill-red-500 stroke-red-500' => $product->isLiked(),
+                'stroke-white' => !$product->isLiked(),
+            ]) />
+        </x-button>
 
         {{-- Показуємо плашку лише якщо товару НЕМАЄ в наявності --}}
         @if (!$product->hasStock())
@@ -43,14 +47,14 @@
 
     <!-- Контент -->
     <div @class([
-        'flex-1',
+        'flex-1 flex flex-col',
         'p-4' => $view === 'grid',
         'py-2' => $view === 'list',
         'absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent' =>
             $view === 'cards',
     ])>
         <h3 @class([
-            'font-semibold font-[SN_Pro] transition line-clamp-1',
+            'font-semibold font-[SN_Pro] transition line-clamp-1 drop-shadow-xl',
             'text-xl text-gray-800 group-hover:text-orange-600' => $view !== 'grid',
             'text-xl text-gray-800 group-hover:text-orange-600' => $view !== 'list',
             'text-white text-xl md:text-2xl' => $view === 'cards',
@@ -60,7 +64,7 @@
 
         @if (!$category)
             <div @class([
-                'font-[Oswald] tracking-wide',
+                'font-[Oswald] tracking-wide w-full',
                 'text-gray-600' => $view !== 'cards',
                 'text-gray-400' => $view === 'cards',
             ])>
@@ -68,71 +72,73 @@
             </div>
         @endif
 
+        {{-- Теги --}}
         <div @class([
-            'flex items-center justify-between gap-1.5 mt-0.5',
-            'flex-wrap' => $view === 'grid',
+            'w-full text-xs font-medium text-nowrap line-clamp-1 flex items-center justifycenter gap-1.5 mt-0.5',
+            'text-zinc-500' => in_array($view, ['grid', 'list']),
+            'text-zinc-300' => $view === 'cards',
         ])>
-            {{-- Ціна --}}
-            <div @class([
-                'font-[Oswald] text-orange-500 font-semibold text-nowrap',
-                'text-lg' => $view === 'grid',
-                'text-base' => $view === 'list',
-                'text-xl' => $view === 'cards',
-            ])>
-                {{ number_format($product->price, 0, '.', ' ') }} <span class="text-xs uppercase ml-0.5">грн</span>
-            </div>
+            @foreach ($product->tags->take(2) as $tag)
+                <span class="flex items-center gap-1 whitespace-nowrap">
+                    <x-lucide-tag class="size-3.5 shrink-0 fill-zinc-100 stroke-zinc-500" />
+                    {{ $tag->name }}
+                </span>
+            @endforeach
+        </div>
 
-            <div @class([
-                'ms-auto text-xs font-medium text-nowrap line-clamp-1 flex items-center justify-center gap-2',
-                'text-zinc-500' => in_array($view, ['grid', 'list', 'cards']),
-            ])>
-                @foreach ($product->tags->take(2) as $tag)
-                    <span class="flex items-center gap-1 whitespace-nowrap">
-                        <x-lucide-tag class="size-3.5 shrink-0 fill-zinc-100 stroke-zinc-500" />
-                        {{ $tag->name }}
-                    </span>
-                @endforeach
-            </div>
-
-            {{-- Метрики (Лайки / Коментарі) --}}
-            @if ($product->likes_count || $product->comments_count)
+        <div class="flex items-center justify-between mt-0.5 w-full">
+            <div class="flex justify-between w-full">
+                {{-- Ціна --}}
                 <div @class([
-                    'flex items-center gap-1.5',
-                    // 'text-zinc-300' => $view === 'grid',
-                    // 'text-zinc-300' => $view === 'list',
-                    // 'text-zinc-300' => $view === 'cards',
+                    'w-full font-[Oswald] text-orange-500 font-semibold text-nowrap',
+                    'text-lg' => $view === 'grid',
+                    'text-base' => $view === 'list',
+                    'text-xl' => $view === 'cards',
                 ])>
-                    @if ($product->comments_count)
-                        <div @class([
-                            'flex items-center gap-0.5 text-xs font-medium transition-colors duration-200',
-                            'text-zinc-500' => in_array($view, ['grid', 'list', 'cards']),
-                        ])>
-                            <x-lucide-message-circle class="size-3.5 mb-0.5 shrink-0 fill-zinc-100 stroke-zinc-500" />
-
-                            <span>{{ $product->comments_count }}</span>
-                        </div>
-                    @endif
-
-                    @if ($product->likes_count)
-                        <div @class([
-                            'flex items-center gap-0.5 text-xs font-medium transition-colors duration-200',
-                            // Основний колір для всіх режимів перегляду (якщо НЕ лайкнуто)
-                            'text-zinc-500' =>
-                                !$product->isLiked() && in_array($view, ['grid', 'list', 'cards']),
-                            // Червоний колір, якщо лайкнуто
-                            'text-red-500' => $product->isLiked(),
-                        ])>
-                            <x-lucide-heart @class([
-                                'size-3.5 mb-0.5 transition-all',
-                                'fill-red-500 stroke-red-500 scale-110' => $product->isLiked(),
-                                'fill-zinc-100 stroke-zinc-500' => !$product->isLiked(),
-                            ]) />
-
-                            <span>{{ $product->likes_count }}</span>
-                        </div>
-                    @endif
+                    {{ number_format($product->price, 0, '.', ' ') }} <span class="text-xs uppercase ml-0.5">грн</span>
                 </div>
-            @endif
+
+                {{-- Метрики (Лайки / Коментарі) --}}
+                @if ($product->likes_count || $product->comments_count)
+                    <div @class([
+                        'flex items-center gap-1.5',
+                        // 'text-zinc-300' => $view === 'grid',
+                        // 'text-zinc-300' => $view === 'list',
+                        // 'text-zinc-300' => $view === 'cards',
+                    ])>
+                        @if ($product->comments_count)
+                            <div @class([
+                                'flex items-center gap-0.5 text-xs font-medium transition-colors duration-200',
+                                'text-zinc-500' => in_array($view, ['grid', 'list', 'cards']),
+                            ])>
+                                <x-lucide-message-circle
+                                    class="size-3.5 mb-0.5 shrink-0 fill-zinc-100 stroke-zinc-500" />
+
+                                <span>{{ $product->comments_count }}</span>
+                            </div>
+                        @endif
+
+                        @if ($product->likes_count)
+                            <div @class([
+                                'flex items-center gap-0.5 text-xs font-medium transition-colors duration-200',
+                                // Основний колір для всіх режимів перегляду (якщо НЕ лайкнуто)
+                                'text-zinc-500' =>
+                                    !$product->isLiked() && in_array($view, ['grid', 'list', 'cards']),
+                                // Червоний колір, якщо лайкнуто
+                                'text-red-500' => $product->isLiked(),
+                            ])>
+                                <x-lucide-heart @class([
+                                    'size-3.5 mb-0.5 transition-all',
+                                    'fill-red-500 stroke-red-500 scale-110' => $product->isLiked(),
+                                    'fill-zinc-100 stroke-zinc-500' => !$product->isLiked(),
+                                ]) />
+
+                                <span>{{ $product->likes_count }}</span>
+                            </div>
+                        @endif
+                    </div>
+                @endif
+            </div>
         </div>
 
         {{-- Відображаємо опис для Списку та Карток --}}

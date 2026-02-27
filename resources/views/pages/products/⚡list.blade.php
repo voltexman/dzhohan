@@ -187,8 +187,7 @@ new class extends Component {
                 </div>
             @endif
 
-            <div
-                class="hidden lg:grid grid-cols-2 md:flex md:items-center gap-2.5 py-2.5 lg:sticky lg:top-16 z-20 bg-zinc-50">
+            <div class="flex justify-between 2.5 py-2.5 sticky top-16 z-40 bg-zinc-50">
                 <!-- 🔍 Пошук + 🔽 Фільтр (Перший ряд на моб) -->
                 <!-- Пошук -->
                 <div class="relative flex-1 md:max-w-md">

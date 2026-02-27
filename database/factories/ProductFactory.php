@@ -68,7 +68,7 @@ class ProductFactory extends Factory
     {
         return $this->afterCreating(function (Product $product) {
             collect(range(1, rand(2, 6)))->each(function () use ($product) {
-                $path = database_path("seeders/images/product-test-" . rand(1, 12) . ".jpg");
+                $path = database_path('seeders/images/product-test-'.rand(1, 12).'.jpg');
 
                 if (file_exists($path)) {
                     $product->addMedia($path)

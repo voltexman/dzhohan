@@ -37,6 +37,7 @@ const RAW_RUNTIME_STATE =
           ["embla-carousel", "npm:8.6.0"],\
           ["laravel-vite-plugin", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:2.1.0"],\
           ["lodash", "npm:4.17.23"],\
+          ["photoswipe", "npm:5.4.4"],\
           ["preline", "npm:4.0.1"],\
           ["root-workspace-0b6124", "workspace:."],\
           ["swiper", "npm:12.1.1"],\
@@ -2169,6 +2170,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["photoswipe", [\
+      ["npm:5.4.4", {\
+        "packageLocation": "../../../C:/Users/volte/AppData/Local/Yarn/Berry/cache/photoswipe-npm-5.4.4-f7a755162f-10c0.zip/node_modules/photoswipe/",\
+        "packageDependencies": [\
+          ["photoswipe", "npm:5.4.4"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["picocolors", [\
       ["npm:1.1.1", {\
         "packageLocation": "../../../C:/Users/volte/AppData/Local/Yarn/Berry/cache/picocolors-npm-1.1.1-4fede47cf1-10c0.zip/node_modules/picocolors/",\
@@ -2319,6 +2329,7 @@ const RAW_RUNTIME_STATE =
           ["embla-carousel", "npm:8.6.0"],\
           ["laravel-vite-plugin", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:2.1.0"],\
           ["lodash", "npm:4.17.23"],\
+          ["photoswipe", "npm:5.4.4"],\
           ["preline", "npm:4.0.1"],\
           ["root-workspace-0b6124", "workspace:."],\
           ["swiper", "npm:12.1.1"],\

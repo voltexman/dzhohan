@@ -104,7 +104,7 @@ new class extends Component {
             </div>
         @endif
 
-        <x-button type="submit">
+        <x-button type="submit" size="md">
             <span wire:loading.remove wire:target="send">Надіслати</span>
             <span wire:loading wire:target="send">Відправка</span>
             <x-lucide-send wire:loading.remove wire:target="send" class="size-4 ms-1.5" />

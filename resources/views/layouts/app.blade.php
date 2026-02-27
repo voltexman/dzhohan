@@ -19,7 +19,31 @@
 </head>
 
 <body>
-    <livewire:navigation mode="top" />
+    <div x-data="{ scrolled: false }" @scroll.window="scrolled = window.scrollY > 50" x-init="scrolled = window.scrollY > 50"
+        class="fixed z-50 top-0 h-16 text-white w-full flex items-center justify-between px-4 transition-colors duration-500"
+        :class="scrolled ? 'bg-black/90 backdrop-blur-xs shadow-lg text-white' : 'bg-transparent text-white'">
+        <div class="flex-none me-auto">
+            @unless (Route::is('home'))
+                <a href="{{ route('home') }}" wire:navigate>
+                    <img src="{{ Vite::asset('resources/images/logo_light.svg') }}" class="size-20" alt="logo">
+                </a>
+            @endunless
+        </div>
+
+        <x-nav class="hidden lg:flex lg:mx-auto" x-cloak>
+            <x-nav.item label="Головна" url="home" icon="home" />
+            <x-nav.item label="Про мене" url="about" icon="user-round" />
+            <x-nav.item label="Товари" url="products" icon="package" />
+            <x-nav.item label="Галерея" url="gallery" icon="images" />
+            <x-nav.item label="Блог" url="blog" icon="newspaper" />
+            <x-nav.item label="Контакти" url="contacts" icon="notebook-text" />
+        </x-nav>
+
+        <div class="flex gap-1 ms-auto">
+            <livewire:search position="end" />
+            <livewire:cart position="end" />
+        </div>
+    </div>
 
     @yield('header')
 

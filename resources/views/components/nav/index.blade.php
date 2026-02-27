@@ -1,4 +1,12 @@
-<nav
-    {{ $attributes->class('w-full max-w-xl flex flex-col lg:flex-row gap-y-5 gap-x-7.5 justify-center items-center') }}>
+@props(['variant' => 'inline'])
+
+<nav data-variant="{{ $variant }}"
+    {{ $attributes->merge([
+        'class' => \Illuminate\Support\Arr::toCssClasses([
+            'group/nav w-full max-w-xl flex justify-center items-center',
+            'lg:flex-row gap-x-7.5' => $variant === 'inline',
+            'flex-col gap-y-5' => $variant === 'offcanvas',
+        ]),
+    ]) }}>
     {{ $slot }}
 </nav>
