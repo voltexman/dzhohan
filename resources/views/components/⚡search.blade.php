@@ -66,10 +66,12 @@ new class extends Component {
         class="relative rounded-md p-1.5 cursor-pointer transition-colors duration-500">
         <x-lucide-search class="size-6" />
 
-        <span class="absolute top-0 right-0 flex size-2">
-            <span class="absolute inline-flex size-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-            <span class="relative inline-flex size-2 rounded-full bg-red-500"></span>
-        </span>
+        @if ($search)
+            <span class="absolute top-0 right-0 flex size-2">
+                <span class="absolute inline-flex size-full animate-ping rounded-full bg-orange-400 opacity-75"></span>
+                <span class="relative inline-flex size-2 rounded-full bg-orange-500"></span>
+            </span>
+        @endif
     </button>
     {{-- End Trigger --}}
 
@@ -145,14 +147,16 @@ new class extends Component {
                             @else
                                 <!-- Список результатів -->
                                 <div class="flex flex-col gap-2.5">
-                                    <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Результати
-                                        пошуку</span>
+                                    <span class="text-xs font-bold uppercase tracking-wider text-gray-500">
+                                        Результати пошуку
+                                    </span>
                                     @foreach ($this->results as $product)
                                         <a href="{{ route('product.show', $product) }}" wire:navigate
-                                            class="flex items-center gap-5 p-1.5 hover:bg-zinc-50 transition-colors">
+                                            class="flex items-center gap-5 p-1.5 rounded-md hover:bg-zinc-50 transition-colors">
                                             <div class="size-14 bg-zinc-100 shrink-0 overflow-hidden">
                                                 <img src="{{ Vite::asset('resources/images/header.png') }}"
-                                                    class="size-full object-cover" alt="{{ $product->name }}">
+                                                    class="size-full object-cover rounded-md"
+                                                    alt="{{ $product->name }}">
                                             </div>
                                             <div class="flex flex-col">
                                                 <span class="font-medium text-gray-900 leading-tight">
@@ -176,7 +180,7 @@ new class extends Component {
 
                             @if ($search)
                                 <button wire:click="$set('search', '')"
-                                    class="absolute right-4 top-1/2 -translate-y-1/2">
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer">
                                     <x-lucide-loader-circle wire:loading class="size-5 stroke-gray-700 animate-spin" />
                                     <x-lucide-circle-x wire:loading.remove class="size-5 stroke-gray-700" />
                                 </button>

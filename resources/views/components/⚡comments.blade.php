@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
+use Livewire\Attributes\Computed;
 use Livewire\WithPagination;
 use App\Models\Comment;
 
@@ -54,7 +55,8 @@ new class extends Component {
         }
     }
 
-    public function getCommentsProperty()
+    #[Computed]
+    public function comments()
     {
         return $this->model
             ->comments()
@@ -142,7 +144,7 @@ new class extends Component {
                         {{-- Ім'я автора --}}
                         <div class="flex items-center gap-1.5 font-semibold text-sm text-zinc-700 min-w-0">
                             <x-lucide-user-round class="size-4 shrink-0 text-zinc-500" />
-                            <span class="truncate">{{ $comment->author_name }}</span>
+                            <span class="truncate">{{ $comment->author_name ?: 'Гість' }}</span>
                         </div>
 
                         {{-- Мета-дані (Лайки та Час) --}}
@@ -226,11 +228,12 @@ new class extends Component {
                 <nav class="flex items-center gap-2 mt-8">
                     {{-- Кнопка Назад --}}
                     @if ($this->comments->onFirstPage())
-                        <x-button variant="circle" color="light" size="md">
+                        <x-button variant="circle" color="light" size="sm" icon>
                             <x-lucide-chevron-left class="size-4 stroke-gray-800" />
                         </x-button>
                     @else
-                        <x-button variant="circle" color="light" size="md" wire:click="previousPage('commentsPage')">
+                        <x-button variant="circle" color="light" size="sm" icon disabled
+                            wire:click="previousPage('commentsPage')">
                             <x-lucide-chevron-left class="size-4 stroke-gray-800" />
                         </x-button>
                     @endif
@@ -241,7 +244,7 @@ new class extends Component {
                         @foreach ($this->comments->onEachSide(1)->getUrlRange(1, $this->comments->lastPage()) as $page => $url)
                             {{-- Логіка для відображення тільки першої, останньої та сусідніх сторінок (спрощено) --}}
                             @if ($page == 1 || $page == $this->comments->lastPage() || abs($page - $this->comments->currentPage()) <= 1)
-                                <x-button variant="circle" color="light" size="md"
+                                <x-button variant="circle" color="light" size="sm" icon
                                     wire:click="gotoPage({{ $page }}, 'commentsPage')"
                                     class="flex items-center justify-center transition
                         {{ $page == $this->comments->currentPage() ? 'bg-zinc-900 text-white' : 'text-zinc-600 hover:bg-zinc-50' }}">
@@ -255,12 +258,12 @@ new class extends Component {
 
                     {{-- Кнопка Вперед --}}
                     @if ($this->comments->hasMorePages())
-                        <x-button variant="circle" color="light" size="md" wire:click="nextPage('commentsPage')">
-                            <x-lucide-chevron-right class="size-4 stroke-white" />
+                        <x-button variant="circle" color="light" size="sm" icon wire:click="nextPage('commentsPage')">
+                            <x-lucide-chevron-right class="size-4 stroke-gray-800" />
                         </x-button>
                     @else
-                        <x-button variant="circle" color="light" size="md" class="cursor-not-allowed">
-                            <x-lucide-chevron-right class="size-4 stroke-white" />
+                        <x-button variant="circle" color="light" size="sm" icon disabled>
+                            <x-lucide-chevron-right class="size-4 stroke-gray-800" />
                         </x-button>
                     @endif
                 </nav>

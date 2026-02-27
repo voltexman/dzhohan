@@ -100,19 +100,18 @@
 
                 {{-- Метрики (Лайки / Коментарі) --}}
                 @if ($product->likes_count || $product->comments_count)
-                    <div @class([
-                        'flex items-center gap-1.5',
-                        // 'text-zinc-300' => $view === 'grid',
-                        // 'text-zinc-300' => $view === 'list',
-                        // 'text-zinc-300' => $view === 'cards',
-                    ])>
+                    <div class="flex items-center gap-1.5">
                         @if ($product->comments_count)
                             <div @class([
                                 'flex items-center gap-0.5 text-xs font-medium transition-colors duration-200',
-                                'text-zinc-500' => in_array($view, ['grid', 'list', 'cards']),
+                                'text-zinc-500' => in_array($view, ['grid', 'list']),
+                                'text-zinc-300' => $view === 'cards',
                             ])>
-                                <x-lucide-message-circle
-                                    class="size-3.5 mb-0.5 shrink-0 fill-zinc-100 stroke-zinc-500" />
+                                <x-lucide-message-circle @class([
+                                    'size-3.5 mb-0.5 shrink-0',
+                                    'fill-zinc-100 stroke-zinc-500' => in_array($view, ['grid', 'list']),
+                                    'fill-zinc-100/25 stroke-zinc-300' => $view === 'cards',
+                                ]) />
 
                                 <span>{{ $product->comments_count }}</span>
                             </div>
@@ -120,17 +119,28 @@
 
                         @if ($product->likes_count)
                             <div @class([
-                                'flex items-center gap-0.5 text-xs font-medium transition-colors duration-200',
-                                // Основний колір для всіх режимів перегляду (якщо НЕ лайкнуто)
-                                'text-zinc-500' =>
-                                    !$product->isLiked() && in_array($view, ['grid', 'list', 'cards']),
-                                // Червоний колір, якщо лайкнуто
+                                'flex items-center gap-0.5 text-xs font-medium transition-colors duration-300',
+                            
+                                // Стан: ЛАЙКНУТО (має найвищий пріоритет)
                                 'text-red-500' => $product->isLiked(),
+                            
+                                // Стан: НЕ ЛАЙКНУТО (залежить від режиму відображення)
+                                'text-zinc-500' =>
+                                    !$product->isLiked() && in_array($view, ['grid', 'list']),
+                                'text-zinc-300' => !$product->isLiked() && $view === 'cards',
                             ])>
+
                                 <x-lucide-heart @class([
-                                    'size-3.5 mb-0.5 transition-all',
+                                    'size-3.5 mb-0.5 transition-all duration-300',
+                                
+                                    // Стан: ЛАЙКНУТО (має найвищий пріоритет)
                                     'fill-red-500 stroke-red-500 scale-110' => $product->isLiked(),
-                                    'fill-zinc-100 stroke-zinc-500' => !$product->isLiked(),
+                                
+                                    // Стан: НЕ ЛАЙКНУТО (залежить від режиму відображення)
+                                    'fill-zinc-100 stroke-zinc-500' =>
+                                        !$product->isLiked() && in_array($view, ['grid', 'list']),
+                                    'fill-zinc-100/25 stroke-zinc-300' =>
+                                        !$product->isLiked() && $view === 'cards',
                                 ]) />
 
                                 <span>{{ $product->likes_count }}</span>

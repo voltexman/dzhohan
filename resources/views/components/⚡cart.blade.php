@@ -93,7 +93,7 @@ new class extends Component {
 
         @if ($this->cartItems->isNotEmpty())
             <span
-                class="absolute -top-1.5 -right-1.5 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm">
+                class="absolute -top-1.5 -right-1.5 flex size-4 items-center justify-center rounded-full bg-orange-500 text-[10px] font-bold text-white shadow-sm">
                 {{ $this->cartItems->sum('qty') }}
             </span>
         @endif

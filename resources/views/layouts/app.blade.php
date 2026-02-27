@@ -42,6 +42,7 @@
         <div class="flex gap-1 ms-auto">
             <livewire:search position="end" />
             <livewire:cart position="end" />
+            <livewire:menu position="end" />
         </div>
     </div>
 

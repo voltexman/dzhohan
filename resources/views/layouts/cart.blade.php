@@ -20,9 +20,9 @@
 
 <body>
     <div x-data="{ scrolled: false }" @scroll.window="scrolled = window.scrollY > 50" x-init="scrolled = window.scrollY > 50"
-        class="fixed z-50 top-0 text-white w-20 h-screen flex flex-col items-center justify-between py-4 transition-colors duration-500"
+        class="fixed z-50 top-0 text-white w-full lg:w-20 h-16 lg:h-screen flex flex-row lg:flex-col items-center justify-between px-4 lg:py-4 transition-colors duration-500"
         :class="scrolled ? 'bg-black/90 backdrop-blur-xs shadow-lg text-white' : 'bg-transparent text-white'">
-        <div class="flex-none mb-auto">
+        <div class="flex-none lg:mb-auto">
             @unless (Route::is('home'))
                 <a href="{{ route('home') }}" wire:navigate>
                     <img src="{{ Vite::asset('resources/images/logo_light.svg') }}" class="size-20" alt="logo">
@@ -30,7 +30,7 @@
             @endunless
         </div>
 
-        <div class="flex flex-col gap-1 mt-auto">
+        <div class="flex flex-row lg:flex-col gap-1 lg:mt-auto">
             <livewire:search position="start" />
             <livewire:cart position="start" />
             <livewire:menu position="start" />
