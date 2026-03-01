@@ -2,10 +2,12 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\EditProfile;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -27,6 +29,14 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->spa()
             ->breadcrumbs(false)
+            ->profile(EditProfile::class)
+            ->userMenuItems([
+                // Додаємо пряме посилання "До адмінки" в меню юзера, якщо ви на сторінці профілю
+                'home' => MenuItem::make()
+                    ->label('На головну')
+                    ->icon('heroicon-m-home')
+                    ->url('/admin'),
+            ])
             ->id('admin')
             ->path('admin')
             ->login()

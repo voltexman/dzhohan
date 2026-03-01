@@ -80,7 +80,7 @@ new class extends Component {
             x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
             x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0" x-bind:aria-hidden="!open" tabindex="-1" role="dialog"
-            aria-labelledby="pm-offcanvas-title"
+            aria-labelledby="offcanvas-title"
             class="z-90 fixed inset-0 overflow-hidden bg-stone-900/60 backdrop-blur-sm"
             x-effect="document.body.style.overflow = open ? 'hidden' : 'auto'">
             <!-- Offcanvas Sidebar -->

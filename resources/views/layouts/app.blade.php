@@ -52,9 +52,10 @@
         {{ $slot }}
     </main>
 
-    <footer class="flex flex-col bg-linear-to-t from-zinc-50 to-zinc-200/60 border-t border-zinc-200">
+    <footer class="flex flex-col border-t border-zinc-200"
+        style="background-image: linear-gradient(to top, rgb(250 250 250), rgb(228 228 231 / 0.6)), url('{{ Vite::asset('resources/images/bg-footer.svg') }}'); background-size: cover, cover; background-repeat: no-repeat, repeat;">
         <div class="px-8 py-10 flex flex-col items-center">
-            Subscribe Form
+            <livewire:subscriber />
         </div>
 
         {{-- content --}}

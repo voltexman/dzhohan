@@ -9,10 +9,10 @@ class CommentFactory extends Factory
     public function definition(): array
     {
         return [
-            'author_name' => fake()->name(),
+            'author_name' => fake()->optional()->name(),
             'body' => fake()->sentence(),
             'ip_address' => fake()->ipv4(),
-            'is_approved' => true,
+            'parent_id' => null,
         ];
     }
 }

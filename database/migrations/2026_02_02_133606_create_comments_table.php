@@ -10,11 +10,14 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+
             // morph
             $table->morphs('commentable');
+            $table->index('commentable_id');
 
             // гість
-            $table->string('author_name');
+            $table->string('author_name')->nullable();
             $table->string('ip_address', 45)->nullable();
 
             // вкладені відповіді
@@ -22,11 +25,8 @@ return new class extends Migration
 
             $table->text('body');
 
-            $table->unsignedTinyInteger('rating')->nullable(); // 1-5
+            $table->unsignedTinyInteger('rating')->nullable();
 
-            $table->boolean('is_approved')->default(true);
-
-            $table->index('commentable_id');
             $table->timestamps();
         });
     }

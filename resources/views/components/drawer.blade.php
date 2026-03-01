@@ -48,9 +48,9 @@
     },
 }" x-on:keydown.esc.prevent="open = false" {{ $attributes->merge(['class' => 'relative']) }}>
     <!-- Offcanvas Toggle Button -->
-    <div x-on:click="open = true" type="button" {{ $trigger->attributes->class('') }}>
+    <x-button variant="soft" color="light" x-on:click="open = true" type="button" {{ $trigger->attributes->class('') }}>
         {{ $trigger }}
-    </div>
+    </x-button>
 
     <!-- Offcanvas Backdrop -->
     <template x-teleport="body">

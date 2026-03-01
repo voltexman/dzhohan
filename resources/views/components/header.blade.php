@@ -13,10 +13,13 @@
                 {{ $title->attributes->class('text-zinc-200 text-2xl md:text-5xl max-w-lg font-[Russo_One] drop-shadow-xl mt-5') }}>
                 {{ $title }}
             </h1>
-            <div
-                {{ $description->attributes->class('text-white drop-shadow-xl font-[SN_Pro] max-w-sm lg:max-w-md mt-2.5 text-balance') }}>
-                {{ $description }}
-            </div>
+
+            @isset($description)
+                <div
+                    {{ $description->attributes->class('text-white drop-shadow-xl font-[SN_Pro] max-w-sm lg:max-w-md mt-2.5 text-balance') }}>
+                    {{ $description }}
+                </div>
+            @endisset
         </div>
     </div>
 </header>

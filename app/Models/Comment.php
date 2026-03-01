@@ -14,13 +14,12 @@ class Comment extends Model
 {
     use HasFactory, Likeable;
 
-    protected $fillable = [
-        'author_name',
-        'body',
-        'rating',
-        'parent_id',
-        'is_approved',
-    ];
+    protected $fillable = ['user_id', 'parent_id', 'commentable_id', 'commentable_type', 'author_name', 'body', 'ip_address'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function commentable(): MorphTo
     {
@@ -40,5 +39,17 @@ class Comment extends Model
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Comment::class, 'parent_id');
+    }
+
+    public function getAllReplies()
+    {
+        $replies = collect();
+
+        foreach ($this->replies as $reply) {
+            $replies->push($reply);
+            $replies = $replies->merge($reply->getAllReplies());
+        }
+
+        return $replies->sortBy('created_at');
     }
 }

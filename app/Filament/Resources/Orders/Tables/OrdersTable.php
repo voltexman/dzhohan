@@ -21,23 +21,6 @@ class OrdersTable
                     ->searchable()
                     ->label('Замовник'),
 
-                TextColumn::make('phone')
-                    ->searchable()
-                    ->label('Телефон'),
-
-                TextColumn::make('email')
-                    ->label('Email')
-                    ->searchable(),
-
-                TextColumn::make('delivery_method')
-                    ->searchable(),
-
-                // TextColumn::make('city')
-                //     ->searchable(),
-
-                // TextColumn::make('address')
-                //     ->searchable(),
-
                 TextColumn::make('total_price')
                     ->money()
                     ->sortable(),

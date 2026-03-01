@@ -2,49 +2,44 @@
 
 namespace Database\Seeders;
 
-use App\Models\Comment;
-use App\Models\Like;
-use App\Models\Order;
-use App\Models\Post;
-use App\Models\Product;
-use App\Models\Tag;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\{Comment, Feedback, Like, Post, Product, Tag, User};
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     public function run(): void
     {
-        // User::factory(10)->create();
+        // 1. Адмін та Роль (Spatie)
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
 
-        // Product::factory(25)->create();
-        // Order::factory(50)->create();
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@admin.com'],
+            ['name' => 'Admin', 'password' => bcrypt('password')]
+        );
 
-        $tags = Tag::factory(15)->create();
+        if (!$admin->hasRole('admin')) $admin->assignRole($adminRole);
 
-        Product::factory(100)->create()->each(function ($product) use ($tags) {
-            Comment::factory(rand(0, 10))->for($product, 'commentable')->create();
+        // 2. Теги (створюємо лише якщо база порожня, щоб не було помилок UNIQUE)
+        if (Tag::count() === 0) {
+            Tag::factory(15)->create();
+        }
+        $tags = Tag::all();
+
+        // 3. Продукти
+        Product::factory(10)->create()->each(function ($product) use ($tags) {
+            Comment::factory(rand(0, 15))->for($product, 'commentable')->create();
             Like::factory(rand(0, 25))->for($product, 'likeable')->create();
-
-            $product->tags()->attach(
-                $tags->random(rand(1, 3))->pluck('id')
-            );
+            $product->tags()->attach($tags->random(rand(1, 3)));
         });
 
-        Post::factory(25)->create()->each(function ($post) use ($tags) {
-            Comment::factory(rand(0, 15))->for($post, 'commentable')->create();
-            Like::factory(rand(0, 30))->for($post, 'likeable')->create();
-
-            $post->tags()->attach(
-                $tags->random(rand(1, 3))->pluck('id')
-            );
+        // 4. Пости
+        Post::factory(10)->create()->each(function ($post) use ($tags) {
+            Comment::factory(rand(2, 5))->for($post, 'commentable')->create();
+            Like::factory(rand(5, 15))->for($post, 'likeable')->create();
+            $post->tags()->attach($tags->random(rand(1, 3)));
         });
 
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        Feedback::factory(50)->create();
     }
 }

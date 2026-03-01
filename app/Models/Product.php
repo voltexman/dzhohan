@@ -75,7 +75,7 @@ class Product extends Model implements HasMedia
 
     public function scopeFilter($query, array $filters)
     {
-        return $query->when($filters['categories'] ?? null, fn ($q, $cat) => $q->whereIn('category', $cat))
+        return $query->when($filters['categories'] ?? null, fn($q, $cat) => $q->whereIn('category', $cat))
             //    Фільтр наявності (виправив 'stock' на 'in_stock' згідно з вашим UI)
             ->when(isset($filters['status']) && $filters['status'] !== 'all', function ($q) use ($filters) {
                 return $filters['status'] === 'in_stock'
@@ -83,12 +83,12 @@ class Product extends Model implements HasMedia
                     : $q->where('quantity', '=', 0);
             })
 
-            ->when($filters['price_from'] ?? null, fn ($q, $from) => $q->where('price', '>=', $from))
-            ->when($filters['price_to'] ?? null, fn ($q, $to) => $q->where('price', '<=', $to))
+            ->when($filters['price_from'] ?? null, fn($q, $from) => $q->where('price', '>=', $from))
+            ->when($filters['price_to'] ?? null, fn($q, $to) => $q->where('price', '<=', $to))
 
-            ->when($filters['steels'] ?? null, fn ($q, $v) => $q->whereIn('steel', $v))
-            ->when($filters['blade_shapes'] ?? null, fn ($q, $v) => $q->whereIn('blade_shape', $v))
-            ->when($filters['handle_materials'] ?? null, fn ($q, $v) => $q->whereIn('handle_material', $v));
+            ->when($filters['steels'] ?? null, fn($q, $v) => $q->whereIn('steel', $v))
+            ->when($filters['blade_shapes'] ?? null, fn($q, $v) => $q->whereIn('blade_shape', $v))
+            ->when($filters['handle_materials'] ?? null, fn($q, $v) => $q->whereIn('handle_material', $v));
     }
 
     public function tags(): MorphToMany
@@ -103,9 +103,7 @@ class Product extends Model implements HasMedia
 
     public function comments(): MorphMany
     {
-        return $this->morphMany(Comment::class, 'commentable')
-            ->whereNull('parent_id')
-            ->where('is_approved', true);
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     public function registerMediaConversions(?Media $media = null): void

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
@@ -10,20 +11,36 @@ use App\Models\Comment;
 new class extends Component {
     use WithPagination;
 
-    public $model; // Product | Article | etc
+    public Model $model; // Product | Article | etc
 
-    #[Validate('min:2', message: 'Занадто мало символів')]
-    #[Validate('max:50', message: 'Занадто багато символів')]
+    #[
+        Validate(
+            'min:2|max:50',
+            message: [
+                'min' => 'Занадто мало символів',
+                'max' => 'Занадто багато символів',
+            ],
+        ),
+    ]
     public $author_name = '';
 
-    #[Validate('required', message: 'Напишіть коментар')]
-    #[Validate('min:3', message: 'Занадто короткий коментар')]
-    #[Validate('max:2000', message: 'Занадто довгий коментар')]
+    #[
+        Validate(
+            'required|min:3|max:2000',
+            message: [
+                'required' => 'Напишіть коментар',
+                'min' => 'Занадто короткий коментар',
+                'max' => 'Занадто довгий коментар',
+            ],
+        ),
+    ]
     public $body = '';
 
     public $replyTo = null;
 
-    public function mount($model)
+    protected $paginationTheme = 'tailwind';
+
+    public function mount(Model $model)
     {
         $this->model = $model;
     }
@@ -34,16 +51,17 @@ new class extends Component {
 
         $this->model->comments()->create([
             'author_name' => $this->author_name,
-            'body' => $this->body,
             'parent_id' => $this->replyTo,
+            'body' => $this->body,
+            'ip_address' => request()->ip(),
         ]);
 
-        $this->reset(['author_name', 'body', 'replyTo']);
+        $this->reset(['author_name', 'replyTo', 'body']);
     }
 
     public function setReply($id)
     {
-        $this->replyTo = $id;
+        $this->replyTo = $this->replyTo === $id ? null : $id;
     }
 
     public function like($commentId)
@@ -60,7 +78,8 @@ new class extends Component {
     {
         return $this->model
             ->comments()
-            ->with('replies')
+            ->whereNull('parent_id')
+            ->with(['replies.user', 'replies.parent.user', 'likes', 'replies.likes'])
             ->withCount('likes')
             ->latest()
             ->paginate(10, ['*'], 'commentsPage');
@@ -138,12 +157,13 @@ new class extends Component {
 
         <div class="space-y-5" wire:poll.15s.visible>
             @forelse ($this->comments as $comment)
-                <div class="border-b border-zinc-200/60 pb-5 last:border-b-0" wire:key="comment-{{ $comment->id }}">
+                <div class="border-b border-zinc-50 pb-5 last:border-b-0" wire:key="comment-{{ $comment->id }}"
+                    wire:transition>
 
                     <div class="flex items-start justify-between gap-4">
                         {{-- Ім'я автора --}}
                         <div class="flex items-center gap-1.5 font-semibold text-sm text-zinc-700 min-w-0">
-                            <x-lucide-user-round class="size-4 shrink-0 text-zinc-500" />
+                            <x-lucide-user-round class="size-4 shrink-0" />
                             <span class="truncate">{{ $comment->author_name ?: 'Гість' }}</span>
                         </div>
 
@@ -170,7 +190,7 @@ new class extends Component {
 
                             {{-- Блок Часу --}}
                             <div class="flex items-center gap-1 text-xs text-zinc-400 whitespace-nowrap">
-                                @if ($comment->created_at->gt(now()->subDays(3)))
+                                @if ($comment->created_at->gt(now()->subDays(1)))
                                     {{-- Свіжий коментар: іконка годинника --}}
                                     <x-lucide-clock class="size-3.5 shrink-0 mb-0.5 fill-zinc-100 stroke-zinc-500" />
                                     <span>{{ $comment->created_at->diffForHumans() }}</span>
@@ -186,7 +206,8 @@ new class extends Component {
 
                     <div class="mt-2.5 text-gray-800">{{ $comment->body }}</div>
 
-                    <button wire:click="setReply({{ $comment->id }})" class="text-xs font-medium text-zinc-500 mt-2.5">
+                    <button wire:click="setReply({{ $comment->id }})"
+                        class="text-xs font-medium text-zinc-500 mt-2.5 hover:text-zinc-800 transition-colors duration-250 cursor-pointer">
                         <x-lucide-reply class="size-4 inline-flex mb-1" />
                         Відповісти
                     </button>
@@ -203,18 +224,72 @@ new class extends Component {
                         Подобається
                     </button>
 
-                    @foreach ($comment->replies as $reply)
-                        <div class="ml-5 mt-5 px-4 py-2 border-s-2 border-gray-200 text-sm"
-                            wire:key="reply-{{ $reply->id }}">
-                            <div class="font-medium text-gray-800">
-                                <x-lucide-user-round class="size-4 inline-flex stroke-gray-700 mb-0.5" />
-                                {{ $reply->author_name }}
-                            </div>
-                            <div class="mt-2.5 text-gray-700">{{ $reply->body }}</div>
-                        </div>
-                    @endforeach
-                </div>
+                    {{-- ПЛОСКИЙ СПИСОК ВСІХ ВІДПОВІДЕЙ --}}
+                    <div class="mt-2.5 space-y-2.5">
+                        @foreach ($comment->getAllReplies() as $reply)
+                            <div wire:key="reply-{{ $reply->id }}" @class([
+                                'ml-6 px-4 py-3 border-s-2 text-sm relative transition-all group',
+                                // Перевірка ролі через Spatie прямо в Blade
+                                'bg-orange-50/50 border-orange-500' => $reply->user?->hasRole('admin'),
+                                'bg-zinc-50 border-zinc-200' => !$reply->user?->hasRole('admin'),
+                            ]) x-cloak>
+                                {{-- Контекст: кому саме відповідають --}}
+                                <div class="flex items-center gap-1.5 mb-1.5 text-[11px] font-medium text-zinc-400">
+                                    <x-lucide-corner-down-right class="size-3 stroke-zinc-400" />
+                                    <div class="shrink-0">відповідь для</div>
+                                    <div class="text-zinc-600 font-bold italic line-clamp-1">
+                                        {{-- Беремо ім'я батьківського юзера або ім'я гостя --}}
+                                        {{ $reply->parent?->user?->name ?? ($reply->parent?->author_name ?: 'Гість') }}
+                                    </div>
+                                </div>
 
+                                <div class="flex items-center justify-between gap-2">
+                                    <div @class([
+                                        'font-semibold flex items-center gap-1.5',
+                                        'text-orange-900' => $reply->user?->hasRole('admin'),
+                                        'text-zinc-700' => !$reply->user?->hasRole('admin'),
+                                    ])>
+                                        @if ($reply->user?->hasRole('admin'))
+                                            <x-lucide-shield-check
+                                                class="size-4 shrink-0 stroke-orange-600 fill-orange-100" />
+                                        @else
+                                            <x-lucide-user-round class="size-4 shrink-0 stroke-zinc-500" />
+                                        @endif
+
+                                        {{-- Пріоритет: ім'я зареєстрованого юзера -> ім'я гостя -> "Гість" --}}
+                                        <span>{{ $reply->user?->name ?? ($reply->author_name ?: 'Гість') }}</span>
+
+                                        @if ($reply->user?->hasRole('admin'))
+                                            <span
+                                                class="ms-1 px-1.5 py-0.5 text-[10px] uppercase tracking-wider bg-orange-600/15 text-orange-600 rounded-full font-bold">
+                                                Адмін
+                                            </span>
+                                        @endif
+                                    </div>
+
+                                    <div class="text-[10px] text-zinc-400 font-medium">
+                                        {{ $reply->created_at->diffForHumans() }}
+                                    </div>
+                                </div>
+
+                                <div @class([
+                                    'mt-2 leading-relaxed',
+                                    'text-orange-800/90' => $reply->user?->hasRole('admin'),
+                                    'text-zinc-600' => !$reply->user?->hasRole('admin'),
+                                ])>
+                                    {{ $reply->body }}
+                                </div>
+
+                                {{-- Кнопка відповіді --}}
+                                <button wire:click="setReply({{ $reply->id }})"
+                                    class="text-[10px] font-medium text-zinc-400 mt-2.5 hover:text-zinc-800 transition-colors cursor-pointer flex items-center gap-1">
+                                    <x-lucide-reply class="size-3" />
+                                    Відповісти
+                                </button>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
             @empty
                 <div class="text-center py-10 text-zinc-500">
                     Немає коментарів
@@ -258,7 +333,8 @@ new class extends Component {
 
                     {{-- Кнопка Вперед --}}
                     @if ($this->comments->hasMorePages())
-                        <x-button variant="circle" color="light" size="sm" icon wire:click="nextPage('commentsPage')">
+                        <x-button variant="circle" color="light" size="sm" icon
+                            wire:click="nextPage('commentsPage')">
                             <x-lucide-chevron-right class="size-4 stroke-gray-800" />
                         </x-button>
                     @else

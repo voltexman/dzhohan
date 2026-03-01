@@ -208,7 +208,7 @@ new class extends Component {
                     <x-slot:trigger>
                         @if ($sortBy === 'price' && $sortDirection === 'asc')
                             <x-lucide-trending-up class="size-4" />
-                            <span class="me-1.5">Дешевші</span>
+                            <span>Дешевші</span>
                         @elseif ($sortBy === 'price' && $sortDirection === 'desc')
                             <x-lucide-trending-down class="size-4" />
                             <span>Дорожчі</span>
@@ -263,6 +263,8 @@ new class extends Component {
                             <x-lucide-layout-template class="size-4 me-1.5" />
                             <span>Картки</span>
                         @endif
+                        <x-lucide-chevron-down class="size-3.5 transition-transform duration-300"
+                            x-bind:class="open ? 'rotate-180' : ''" />
                     </x-slot:trigger>
 
                     <x-dropdown.content>

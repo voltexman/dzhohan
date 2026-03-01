@@ -14,8 +14,11 @@ new class extends Component {
     public function addToCart($productId, CartService $cart)
     {
         $cart->add($productId);
-        $this->open = 'cart';
         unset($this->cartItems);
+
+        $this->dispatch('cart-added');
+
+        $this->js('$dispatch("show-cart")');
     }
 
     #[Computed]
@@ -85,7 +88,7 @@ new class extends Component {
             }
         },
     },
-}" x-on:keydown.esc.prevent="open = false">
+}" x-on:keydown.esc.prevent="open = false" x-on:show-cart.window="open = true">
     {{-- Trigger --}}
     <button x-on:click="open = true" type="button"
         class="relative rounded-md p-1.5 cursor-pointer transition-colors duration-500">
@@ -195,22 +198,50 @@ new class extends Component {
                                                     <div class="flex items-center gap-2.5 mt-1.5">
                                                         <x-button color="light" size="xs" icon
                                                             class="rounded-full!"
-                                                            wire:click="decrement({{ $item->id }})">
-                                                            <x-lucide-minus class="size-3" />
+                                                            wire:click="decrement({{ $item->id }})"
+                                                            wire:loading.attr="disabled"
+                                                            wire:target="decrement({{ $item->id }})">
+
+                                                            <x-lucide-plus wire:loading.remove
+                                                                wire:target="decrement({{ $item->id }})"
+                                                                class="size-3" />
+
+                                                            <x-lucide-loader-circle wire:loading
+                                                                wire:target="decrement({{ $item->id }})"
+                                                                class="size-3 animate-spin" />
                                                         </x-button>
+
                                                         <span class="text-sm font-semibold">{{ $item->qty }}</span>
+
                                                         <x-button color="light" size="xs" icon
                                                             class="rounded-full!"
-                                                            wire:click="increment({{ $item->id }})">
-                                                            <x-lucide-plus class="size-3" />
+                                                            wire:click="increment({{ $item->id }})"
+                                                            wire:loading.attr="disabled"
+                                                            wire:target="increment({{ $item->id }})">
+
+                                                            <x-lucide-plus wire:loading.remove
+                                                                wire:target="increment({{ $item->id }})"
+                                                                class="size-3" />
+
+                                                            <x-lucide-loader-circle wire:loading
+                                                                wire:target="increment({{ $item->id }})"
+                                                                class="size-3 animate-spin" />
                                                         </x-button>
                                                     </div>
                                                 </div>
 
                                                 <x-button variant="ghost" color="light" size="sm" icon
-                                                    wire:click="remove({{ $item->id }})">
-                                                    <x-lucide-trash class="size-5 stroke-red-500"
-                                                        stroke-width="1.5" />
+                                                    wire:click="remove({{ $item->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    wire:target="remove({{ $item->id }})">
+
+                                                    <x-lucide-trash wire:loading.remove
+                                                        wire:target="remove({{ $item->id }})"
+                                                        class="size-5 stroke-red-500" stroke-width="1.5" />
+
+                                                    <x-lucide-loader-circle wire:loading
+                                                        wire:target="remove({{ $item->id }})"
+                                                        class="size-5 animate-spin stroke-red-500" />
                                                 </x-button>
                                             </div>
                                         @endforeach
