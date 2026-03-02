@@ -44,7 +44,7 @@ name('home');
 
                     {{-- текст --}}
                     <div class="relative mt-auto z-10 text-white text-2xl lg:text-3xl font-[Oswald] font-semibold">
-                        {{ $category->label() }}
+                        {{ $category->getLabel() }}
                     </div>
 
                     {{-- опис --}}

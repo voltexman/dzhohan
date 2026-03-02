@@ -210,7 +210,7 @@ new class extends Component {
                                     class="hidden">
 
                                 <span class="text-xs font-semibold tracking-tight">
-                                    {{ $category->label() }}
+                                    {{ $category->getLabel() }}
                                 </span>
 
                                 @if ($isActive)

@@ -105,7 +105,7 @@ new class extends Component {
         'resources/images/' . (\App\Enums\ProductCategory::tryFrom($category)?->images() ?? 'header.png'),
     )">
         <x-slot:title>
-            {{ App\Enums\ProductCategory::tryFrom($category)?->label() ?? 'Каталог товарів' }}
+            {{ App\Enums\ProductCategory::tryFrom($category)?->getLabel() ?? 'Каталог товарів' }}
         </x-slot:title>
         <x-slot:description>
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quas, tenetur animi voluptas
@@ -137,7 +137,7 @@ new class extends Component {
 
                             <!-- Зображення -->
                             <img src="{{ Vite::asset('resources/images/' . $category->images()) }}"
-                                alt="{{ $category->label() }}"
+                                alt="{{ $category->getLabel() }}"
                                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
 
                             <!-- Градієнтне затемнення -->
@@ -161,7 +161,7 @@ new class extends Component {
                                     <!-- Заголовок -->
                                     <h3
                                         class="text-white text-xl md:text-2xl font-black uppercase tracking-wide leading-tight font-[Oswald]">
-                                        {{ $category->label() }}
+                                        {{ $category->getLabel() }}
                                     </h3>
 
                                     <!-- Опис (спочатку невидимий) -->
@@ -313,7 +313,7 @@ new class extends Component {
 
                             <x-button color="light" size="lg">
                                 <x-lucide-hammer class="size-4.5 me-1.5" />
-                                Зробити замовлення
+                                Замовити виготовлення
                             </x-button>
                         </x-product.list.offer>
                     @endif

@@ -28,10 +28,10 @@ class CommentsTable
                         // Використовуємо ?. (null-safe), якщо об'єкт раптом видалено
                         return $model?->name ?? $model?->title ?? 'Обʼєкт видалено';
                     })
-                    ->description(fn($record): string => match ($record->commentable_type) {
-                        'App\Models\Product' => 'Товар (ID: ' . $record->commentable_id . ')',
-                        'App\Models\Post' => 'Стаття (ID: ' . $record->commentable_id . ')',
-                        default => 'Тип: ' . $record->commentable_type,
+                    ->description(fn ($record): string => match ($record->commentable_type) {
+                        'App\Models\Product' => 'Товар (ID: '.$record->commentable_id.')',
+                        'App\Models\Post' => 'Стаття (ID: '.$record->commentable_id.')',
+                        default => 'Тип: '.$record->commentable_type,
                     })
                     ->searchable()
                     ->color('primary')
@@ -42,11 +42,11 @@ class CommentsTable
                     ->searchable()
                     ->default('Гість')
                     // Додаємо іконку перед ім'ям, якщо це відповідь
-                    ->icon(fn($record) => $record->parent_id ? 'heroicon-m-arrow-uturn-left' : 'heroicon-m-chat-bubble-left-right')
+                    ->icon(fn ($record) => $record->parent_id ? 'heroicon-m-arrow-uturn-left' : 'heroicon-m-chat-bubble-left-right')
                     // Змінюємо колір іконки для відповідей
-                    ->iconColor(fn($record) => $record->parent_id ? 'warning' : 'success')
+                    ->iconColor(fn ($record) => $record->parent_id ? 'warning' : 'success')
                     // Додаємо текстове пояснення під ім'ям
-                    ->description(fn($record) => $record->parent_id ? "Відповідь на #$record->parent_id" : null),
+                    ->description(fn ($record) => $record->parent_id ? "Відповідь на #$record->parent_id" : null),
 
                 TextColumn::make('created_at')
                     ->date()
@@ -68,7 +68,7 @@ class CommentsTable
 
                     // Налаштування модального вікна
                     ->modalWidth('xl')
-                    ->modalHeading(fn(Comment $record) => "Відповідь для {$record->author_name}")
+                    ->modalHeading(fn (Comment $record) => "Відповідь для {$record->author_name}")
 
                     // ПРАВИЛЬНІ НАЗВИ КНОПОК ЗГІДНО З ДОКУМЕНТАЦІЄЮ
                     ->modalSubmitActionLabel('Надіслати відповідь')
@@ -78,9 +78,9 @@ class CommentsTable
                     ->form([
                         Placeholder::make('original_comment')
                             ->label('Коментар відвідувача:')
-                            ->content(fn(Comment $record) => new HtmlString(
+                            ->content(fn (Comment $record) => new HtmlString(
                                 '<div class="text-sm p-3 rounded-lg bg-gray-50 border-l-4 border-gray-300 italic">'
-                                    . e($record->body) .
+                                    .e($record->body).
                                     '</div>'
                             )),
 
@@ -103,7 +103,7 @@ class CommentsTable
                             'user_id' => auth()->id(),
                         ]);
                     })
-                    ->successNotificationTitle('Відповідь успішно надіслана!')
+                    ->successNotificationTitle('Відповідь успішно надіслана!'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

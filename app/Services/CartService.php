@@ -14,7 +14,7 @@ class CartService
      */
     public function cart(): Collection
     {
-        return collect(session($this->key, []))->map(fn ($item) => (object) $item);
+        return collect(session($this->key, []))->map(fn($item) => (object) $item);
     }
 
     /**
@@ -90,11 +90,16 @@ class CartService
     public function totalPrice(): float
     {
         // Використовуємо вже існуючу колекцію для підрахунку
-        return $this->cart()->sum(fn ($item) => $item->price * $item->qty);
+        return $this->cart()->sum(fn($item) => $item->price * $item->qty);
     }
 
     public function totalQuantity(): int
     {
         return $this->cart()->sum('qty');
+    }
+
+    public function clear(): void
+    {
+        session()->forget($this->key);
     }
 }

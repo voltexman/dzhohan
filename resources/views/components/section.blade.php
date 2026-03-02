@@ -6,7 +6,7 @@
         @if ($sidebar)
             <aside
                 {{ $sidebar->attributes->class([
-                    'hidden w-full lg:block w-full border-zinc-200 from-transparent to-zinc-100',
+                    'w-full border-zinc-200 from-transparent to-zinc-100',
                 
                     // базові стилі
                     'bg-linear-to-r border-r pr-8 py-10' => $sidebarPosition === 'left',

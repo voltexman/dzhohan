@@ -41,7 +41,11 @@
 
         <div class="flex gap-1 ms-auto">
             <livewire:search position="end" />
-            <livewire:cart position="end" />
+
+            @if (!request()->routeIs('order'))
+                <livewire:cart position="end" />
+            @endif
+
             <livewire:menu position="end" />
         </div>
     </div>

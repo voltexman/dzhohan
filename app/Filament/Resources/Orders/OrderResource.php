@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Orders;
 
+use App\Enums\OrderStatus;
 use App\Filament\Resources\Orders\Pages\ListOrders;
 use App\Filament\Resources\Orders\Pages\ViewOrder;
 use App\Filament\Resources\Orders\Schemas\OrderForm;
@@ -20,7 +21,7 @@ class OrderResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    protected static ?string $modelLabel = 'Замовення';
+    protected static ?string $modelLabel = 'Замовлення';
 
     protected static ?string $pluralModelLabel = 'Замовлення';
 
@@ -28,7 +29,7 @@ class OrderResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count();
+        return static::getModel()::where('status', OrderStatus::Pending)->count() ?: null;
     }
 
     public static function getNavigationBadgeColor(): ?string
@@ -54,7 +55,7 @@ class OrderResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\ProductsRelationManager::class,
         ];
     }
 

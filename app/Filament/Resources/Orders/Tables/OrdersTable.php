@@ -15,6 +15,11 @@ class OrdersTable
         return $table
             ->columns([
                 TextColumn::make('number')
+                    ->label('Замовлення')
+                    ->weight('bold')
+                    ->color('warning')
+                    ->copyable()
+                    ->copyMessage('Номер скопійовано')
                     ->searchable(),
 
                 TextColumn::make('name')
@@ -22,23 +27,29 @@ class OrdersTable
                     ->label('Замовник'),
 
                 TextColumn::make('total_price')
+                    ->label('Ціна')
                     ->money()
                     ->sortable(),
 
-                TextColumn::make('status')
+                TextColumn::make('type')
+                    ->label('Тип')
                     ->badge()
+                    ->color('gray')
+                    ->sortable(),
+
+                TextColumn::make('status')
+                    ->label('Статус')
+                    ->badge()
+                    ->sortable()
                     ->searchable(),
 
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->date()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Дата/час')
+                    ->toggleable(isToggledHiddenByDefault: false),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])

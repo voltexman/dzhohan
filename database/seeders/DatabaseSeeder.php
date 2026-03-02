@@ -2,7 +2,14 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Comment, Feedback, Like, Post, Product, Tag, User};
+use App\Models\Comment;
+use App\Models\Feedback;
+use App\Models\Like;
+use App\Models\Order;
+use App\Models\Post;
+use App\Models\Product;
+use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -18,7 +25,9 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Admin', 'password' => bcrypt('password')]
         );
 
-        if (!$admin->hasRole('admin')) $admin->assignRole($adminRole);
+        if (! $admin->hasRole('admin')) {
+            $admin->assignRole($adminRole);
+        }
 
         // 2. Теги (створюємо лише якщо база порожня, щоб не було помилок UNIQUE)
         if (Tag::count() === 0) {
@@ -41,5 +50,7 @@ class DatabaseSeeder extends Seeder
         });
 
         Feedback::factory(50)->create();
+
+        Order::factory(50)->create();
     }
 }

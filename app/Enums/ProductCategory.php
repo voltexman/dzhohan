@@ -2,7 +2,9 @@
 
 namespace App\Enums;
 
-enum ProductCategory: string
+use Filament\Support\Contracts\HasLabel;
+
+enum ProductCategory: string implements HasLabel
 {
     case TACTICAL = 'tactical';
     case KITCHEN = 'kitchen';
@@ -10,7 +12,7 @@ enum ProductCategory: string
     case EDC = 'everyday';
     case OUTDOOR = 'outdoor';
 
-    public function label(): string
+    public function getLabel(): string
     {
         return match ($this) {
             self::TACTICAL => 'Тактичні ножі',
@@ -64,12 +66,12 @@ enum ProductCategory: string
     public static function options(): array
     {
         return collect(self::cases())
-            ->mapWithKeys(fn ($case) => [$case->value => $case->label()])
+            ->mapWithKeys(fn($case) => [$case->value => $case->getLabel()])
             ->toArray();
     }
 
     public static function values(): array
     {
-        return array_map(fn ($case) => $case->value, self::cases());
+        return array_map(fn($case) => $case->value, self::cases());
     }
 }

@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Products\Schemas;
 
 use App\Enums\ProductCategory;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -15,6 +16,12 @@ class ProductForm
     {
         return $schema
             ->components([
+                SpatieMediaLibraryFileUpload::make('images')
+                    ->collection('products')
+                    ->imageEditor()
+                    ->reorderable()
+                    ->multiple(),
+
                 TextInput::make('name')
                     ->required(),
                 TextInput::make('slug')
@@ -35,6 +42,7 @@ class ProductForm
                     ->required(),
                 Select::make('category')
                     ->options(ProductCategory::class)
+                    ->native(false)
                     ->required(),
             ]);
     }

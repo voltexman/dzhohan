@@ -50,6 +50,13 @@ new class extends Component {
     {
         return $this->cartItems->sum(fn($item) => $item->price * $item->qty);
     }
+
+    #[On('cart:clear')]
+    public function clear(CartService $cart)
+    {
+        $cart->clear();
+        unset($this->cartItems);
+    }
 };
 ?>
 

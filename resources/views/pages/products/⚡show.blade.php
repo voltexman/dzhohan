@@ -36,7 +36,7 @@ new #[Layout('layouts::cart')] class extends Component {
         <div class="embla relative h-full w-full">
             <div class="embla__viewport overflow-hidden h-full">
                 <div class="embla__container mx-0! flex h-full w-full">
-                    @foreach ($product->getMedia('images') as $media)
+                    @foreach ($product->getMedia('products') as $media)
                         @php
                             // Отримуємо реальні розміри зображення для PhotoSwipe
                             [$width, $height] = getimagesize($media->getPath());
@@ -59,7 +59,7 @@ new #[Layout('layouts::cart')] class extends Component {
             <div class="embla-thumbs absolute bottom-8 left-1/2 -translate-x-1/2 w-full max-w-xl px-4">
                 <div class="embla-thumbs__viewport overflow-hidden">
                     <div class="embla-thumbs__container flex gap-2.5 justify-center p-5">
-                        @foreach ($product->getMedia('images') as $media)
+                        @foreach ($product->getMedia('products') as $media)
                             <div class="embla-thumbs__slide shrink-0 size-20 lg:size-24 cursor-pointer overflow-hidden rounded-lg border-2 border-zinc-100/15 transition-all duration-300 shadow-lg shadow-zinc-50/5 hover:shadow-zinc-50/10"
                                 wire:key="thumb-{{ $media->id }}">
                                 <img src="{{ $media->getUrl() }}" alt=""
@@ -99,7 +99,7 @@ new #[Layout('layouts::cart')] class extends Component {
     <div class="flex flex-col mt-2.5 px-6 lg:px-10">
         <div class="text-black font-[SN_Pro] text-xl font-semibold">{{ $product->name }}</div>
         <div class="text-gray-600 text-sm font-[Oswald] font-medium tracking-wide leading-none">
-            {{ $product->category->label() }}
+            {{ $product->category->getLabel() }}
         </div>
     </div>
 

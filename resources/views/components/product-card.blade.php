@@ -17,7 +17,7 @@
         'size-32 flex-shrink-0' => $view === 'list',
         'absolute inset-0 size-full' => $view === 'cards',
     ])>
-        <img src="{{ $product->getFirstMediaUrl('images', 'thumb') }}" alt="{{ $product->name }}"
+        <img src="{{ $product->getFirstMediaUrl('products', 'thumb') }}" alt="{{ $product->name }}"
             class="size-full object-cover group-hover:scale-105 transition duration-500">
 
         <!-- Кнопка Серце -->
@@ -68,7 +68,7 @@
                 'text-gray-600' => $view !== 'cards',
                 'text-gray-400' => $view === 'cards',
             ])>
-                {{ $product->category->label() }}
+                {{ $product->category->getLabel() }}
             </div>
         @endif
 

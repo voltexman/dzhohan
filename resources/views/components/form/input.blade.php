@@ -61,7 +61,7 @@
     $baseClass =
         'font-medium border rounded-md w-full transition-all duration-250 focus:outline-none focus:ring-4 focus:ring-offset-0 disabled:opacity-50 disabled:cursor-not-allowed';
 
-    $paddingClass = $icon ? $currentSize['pl'] . ' ' . $currentSize['pr'] : 'px-6';
+    $paddingClass = $icon ? $currentSize['pl'] . ' ' . $currentSize['pr'] : 'px-4';
 @endphp
 
 <div class="relative w-full">

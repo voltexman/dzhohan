@@ -2,7 +2,13 @@
 
 namespace App\Enums;
 
-enum OrderStatus: string
+use BackedEnum;
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
+use Filament\Support\Contracts\HasLabel;
+use Illuminate\Contracts\Support\Htmlable;
+
+enum OrderStatus: string implements HasColor, HasLabel, HasIcon
 {
     case Pending = 'pending';       // Очікує підтвердження
     case Processing = 'processing'; // В обробці
@@ -11,8 +17,7 @@ enum OrderStatus: string
     case Completed = 'completed';   // Виконано
     case Cancelled = 'cancelled';   // Скасовано
 
-    // Метод для отримання назви українською
-    public function label(): string
+    public function getLabel(): string|Htmlable|null
     {
         return match ($this) {
             self::Pending => 'Нове',
@@ -24,15 +29,49 @@ enum OrderStatus: string
         };
     }
 
-    public function color(): string
+    public function getColor(): string|array|null
     {
         return match ($this) {
-            self::Pending => 'bg-amber-100 text-amber-700',
-            self::Processing => 'bg-blue-100 text-blue-700',
-            self::Manufacturing => 'bg-yellow-100 text-blue-700',
-            self::Shipped => 'bg-purple-100 text-purple-700',
-            self::Completed => 'bg-emerald-100 text-emerald-700',
-            self::Cancelled => 'bg-red-100 text-red-700',
+            // Очікує підтвердження — сірий або нейтральний
+            self::Pending => 'danger',
+
+            // В обробці — синій (інформаційний)
+            self::Processing => 'info',
+
+            // Виготовляється — помаранчевий або жовтий (триває робота)
+            self::Manufacturing => 'warning',
+
+            // Відправлено — фіолетовий або блакитний
+            self::Shipped => 'primary',
+
+            // Виконано — зелений (успіх)
+            self::Completed => 'success',
+
+            // Скасовано — червоний (помилка/відмова)
+            self::Cancelled => 'gray',
+        };
+    }
+
+    public function getIcon(): string | BackedEnum | Htmlable | null
+    {
+        return match ($this) {
+            // Очікує — годинник (пауза)
+            self::Pending => 'heroicon-m-clock',
+
+            // В обробці — іконка оновлення або шестерня
+            self::Processing => 'heroicon-m-arrow-path',
+
+            // Виготовляється — молоток або інструменти
+            self::Manufacturing => 'heroicon-m-wrench-screwdriver',
+
+            // Відправлено — вантажівка або літак
+            self::Shipped => 'heroicon-m-truck',
+
+            // Виконано — галочка (успіх)
+            self::Completed => 'heroicon-m-check-badge',
+
+            // Скасовано — хрестик (скасування)
+            self::Cancelled => 'heroicon-m-x-circle',
         };
     }
 

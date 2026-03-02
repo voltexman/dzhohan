@@ -19,26 +19,26 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'            => fake()->words(2, true),
-            'slug'            => fake()->unique()->slug(),
-            'sku'             => fake()->unique()->bothify('??-####'),
-            'description'     => fake()->paragraph(3),
-            'price'           => fake()->randomFloat(2, 1500, 12000),
-            'quantity'        => fake()->numberBetween(0, 20),
-            'is_active'       => fake()->boolean(90),
-            'category'        => fake()->randomElement(ProductCategory::cases()),
+            'name' => fake()->words(2, true),
+            'slug' => fake()->unique()->slug(),
+            'sku' => fake()->unique()->bothify('??-####'),
+            'description' => fake()->paragraph(3),
+            'price' => fake()->randomFloat(2, 1500, 12000),
+            'quantity' => fake()->numberBetween(0, 20),
+            'is_active' => fake()->boolean(90),
+            'category' => fake()->randomElement(ProductCategory::cases()),
 
             // Характеристики (Enums)
-            'steel'           => fake()->randomElement(SteelType::cases()),
-            'blade_shape'     => fake()->randomElement(BladeShape::cases()),
-            'blade_finish'    => fake()->randomElement(BladeFinish::cases()),
-            'blade_grind'     => fake()->randomElement(BladeGrind::cases()),
+            'steel' => fake()->randomElement(SteelType::cases()),
+            'blade_shape' => fake()->randomElement(BladeShape::cases()),
+            'blade_finish' => fake()->randomElement(BladeFinish::cases()),
+            'blade_grind' => fake()->randomElement(BladeGrind::cases()),
             'handle_material' => fake()->randomElement(HandleMaterial::cases()),
-            'sheath'          => fake()->randomElement(SheathType::cases()),
+            'sheath' => fake()->randomElement(SheathType::cases()),
 
             // Розміри
-            'total_length'    => fake()->randomFloat(1, 150, 350),
-            'blade_length'    => fake()->randomFloat(1, 70, 220),
+            'total_length' => fake()->randomFloat(1, 150, 350),
+            'blade_length' => fake()->randomFloat(1, 70, 220),
             'blade_thickness' => fake()->randomFloat(1, 1.5, 6.0),
         ];
     }
@@ -52,7 +52,7 @@ class ProductFactory extends Factory
                 if (file_exists($path)) {
                     $product->addMedia($path)
                         ->preservingOriginal()
-                        ->toMediaCollection('images');
+                        ->toMediaCollection('products');
                 }
             });
         });

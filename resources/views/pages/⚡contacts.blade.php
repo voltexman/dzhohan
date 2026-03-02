@@ -8,7 +8,7 @@ new class extends Component {
 ?>
 
 @section('header')
-    <x-header :image="Vite::asset('resources/images/header.png')">
+    <x-header :image="Vite::asset('resources/images/contact-header-bg.png')">
         <x-slot:title>
             Контакти
         </x-slot:title>
@@ -27,7 +27,7 @@ new class extends Component {
                         Контакт
                     </div>
                     <div class="font-[SN_Pro] font-medium text-orange-600 mt-1.5">
-                        Джоган Констянтин
+                        Джоган Костянтин
                     </div>
                 </div>
             </div>

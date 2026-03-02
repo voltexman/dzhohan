@@ -13,7 +13,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasFactory, Notifiable, HasRoles, HasAvatars;
+    use HasAvatars, HasFactory, HasRoles, Notifiable;
 
     protected $fillable = [
         'name',
