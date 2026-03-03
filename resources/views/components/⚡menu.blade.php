@@ -80,6 +80,10 @@ new class extends Component {
                 }">
                 <!-- Header -->
                 <div class="flex min-h-16 flex-none items-center justify-between px-6 md:px-10">
+                    <div class="flex mx-auto font-[Russo_One] text-xl">
+                        <span class="font-thin text-zinc-600">Dzhohan</span>
+                        <span class="font-black text-zinc-900">Knives</span>
+                    </div>
                     <!-- Close Button -->
                     <button x-on:click="open = false" type="button"
                         class="absolute top-3 right-3 inline-flex items-center justify-center size-8 rounded-full bg-black text-zinc-50 hover:bg-zinc-800 hover:text-zinc-200 transition-colors duration-300 cursor-pointer">

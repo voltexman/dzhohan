@@ -71,12 +71,12 @@ new class extends Component {
     <div class="max-w-5xl mx-auto">
         <h2 class="text-center font-[Oswald] text-3xl font-semibold mt-10 text-gray-700">Зв'яжіться зі мною</h2>
         <div class="text-sm text-gray-600 max-w-md text-center mx-auto mt-5">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi, saepe hic ullam, accusantium architecto
-            tempora exercitationem.
+            Маєте цікаву ідею, пропозицію або будь-яке питання? Не вагайтесь – напишіть мені листа і я обов'язково
+            ознайомлюсь!
         </div>
 
         <div class="grid lg:grid-cols-2 gap-y-10 pt-10">
-            <div class="order-2 lg:order-1 flex flex-col gap-y-5">
+            <div class="order-2 lg:order-1 flex flex-col gap-y-7.5">
                 <div>
                     <x-form.label class="mb-1.5">Передзвонити вам?</x-form.label>
                     <div class="text-sm text-gray-600 mb-2.5 lg:max-w-sm">

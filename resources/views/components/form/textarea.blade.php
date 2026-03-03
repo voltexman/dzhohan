@@ -13,7 +13,7 @@
     $currentColor = $colors[$color] ?? $colors['soft'];
 
     $baseClass =
-        'font-medium text-sm border rounded-md w-full transition-all duration-250 focus:outline-none focus:ring-4 focus:ring-offset-0 px-6 py-4 resize-none placeholder:text-sm disabled:opacity-50 disabled:cursor-not-allowed';
+        'font-medium text-sm border rounded-md w-full transition-all duration-250 focus:outline-none focus:ring-4 focus:ring-offset-0 px-4 py-4 resize-none placeholder:text-sm disabled:opacity-50 disabled:cursor-not-allowed';
 @endphp
 
 <textarea {{ $attributes->merge([

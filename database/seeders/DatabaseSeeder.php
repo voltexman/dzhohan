@@ -8,6 +8,7 @@ use App\Models\Like;
 use App\Models\Order;
 use App\Models\Post;
 use App\Models\Product;
+use App\Models\Subscriber;
 use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -52,5 +53,7 @@ class DatabaseSeeder extends Seeder
         Feedback::factory(50)->create();
 
         Order::factory(50)->create();
+
+        Subscriber::factory(50)->create();
     }
 }

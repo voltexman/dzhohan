@@ -37,7 +37,7 @@ class Order extends Model
 
         static::creating(function ($order) {
             do {
-                $number = now()->format('ymd') . '-' . random_int(10000, 99999);
+                $number = now()->format('ymd').'-'.random_int(10000, 99999);
             } while (static::where('number', $number)->exists());
 
             $order->number = $number;

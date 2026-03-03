@@ -5,12 +5,11 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+@source "preline";
+
 /* Preline UI */
 @import "preline/variants.css";
 @source "preline/dist/*.js";
-
-/* Preline Themes */
-/* @import "preline/themes/theme.css"; */
 
 @theme {
     --font-sans:
@@ -38,6 +37,21 @@
         100% {
             transform: translateX(100%);
         }
+    }
+}
+
+@layer utilities {
+    .no-native-time-icon::-webkit-calendar-picker-indicator {
+        display: none;
+        -webkit-appearance: none;
+    }
+
+    .no-native-time-icon::-webkit-clear-button {
+        display: none;
+    }
+
+    .no-native-time-icon::-webkit-inner-spin-button {
+        display: none;
     }
 }
 

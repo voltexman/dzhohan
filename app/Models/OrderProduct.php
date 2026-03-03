@@ -13,7 +13,7 @@ class OrderProduct extends Model
         'product_name',
         'custom_options',
         'qty',
-        'price'
+        'price',
     ];
 
     protected $casts = [

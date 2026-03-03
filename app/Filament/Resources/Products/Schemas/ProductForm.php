@@ -20,29 +20,66 @@ class ProductForm
                     ->collection('products')
                     ->imageEditor()
                     ->reorderable()
-                    ->multiple(),
+                    ->disk('public')
+                    ->visibility('public')
+                    ->panelLayout('grid')
+                    ->imagePreviewHeight('250')
+                    ->multiple()
+                    ->hiddenLabel()
+                    ->columnSpanFull(),
 
                 TextInput::make('name')
+                    ->label('Назва товару')
                     ->required(),
+
                 TextInput::make('slug')
                     ->required(),
-                TextInput::make('sku')
-                    ->label('SKU'),
+
+                // TextInput::make('sku')
+                //     ->label('SKU'),
+
                 Textarea::make('description')
+                    ->rows(6)
+                    ->extraAttributes(['class' => 'resize-none'])
+                    ->label('Опис та особливості')
                     ->columnSpanFull(),
+
+                Select::make('tags')
+                    ->relationship('tags', 'name') // 'tags' - назва методу в моделі, 'name' - поле з таблиці tags
+                    ->multiple()                   // Дозволяє обирати кілька тегів
+                    ->searchable()                 // Пошук по існуючих
+                    ->preload()                    // Завантажити список одразу (якщо тегів не тисячі)
+                    ->createOptionForm([           // Дозволяє створити новий тег прямо з форми товару
+                        \Filament\Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn ($set, $state) => $set('slug', \Illuminate\Support\Str::slug($state))),
+                        \Filament\Forms\Components\TextInput::make('slug')
+                            ->required()
+                            ->unique('tags', 'slug'),
+                    ]),
+
                 TextInput::make('price')
                     ->required()
                     ->numeric()
+                    ->label('Ціна')
                     ->prefix('$'),
-                TextInput::make('stock')
+
+                TextInput::make('quantity')
                     ->required()
                     ->numeric()
-                    ->default(0),
+                    ->minValue(0)
+                    ->maxValue(100)
+                    ->default(0)
+                    ->label('Кількість'),
+
                 Toggle::make('is_active')
                     ->required(),
+
                 Select::make('category')
                     ->options(ProductCategory::class)
                     ->native(false)
+                    ->label('Категорія')
                     ->required(),
             ]);
     }

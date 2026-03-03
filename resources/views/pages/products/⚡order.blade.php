@@ -195,7 +195,7 @@ new class extends Component {
                 </div>
             </div>
 
-            <div>
+            <div class="max-w-xl">
                 <h2 class="text-lg font-semibold font-[SN_Pro] flex items-center gap-1.5">
                     <x-lucide-message-square class="size-5" /> Коментар
                     <span class="italic text-gray-500 text-sm font-normal">(за бажанням)</span>
@@ -203,7 +203,7 @@ new class extends Component {
                 <x-form.textarea wire:model.trim="comment" rows="5" placeholder="Ваші побажання до замовлення..." />
             </div>
 
-            <x-button type="submit" color="dark" size="lg" wire:loading.attr="disabled">
+            <x-button type="submit" color="dark" size="lg" wire:loading.attr="disabled" wire:trigger="checkout">
                 <span wire:loading.remove wire:target="checkout">Підтвердити замовлення</span>
                 <span wire:loading wire:target="checkout">Обробка...</span>
                 <x-lucide-loader-circle wire:loading wire:target="checkout" class="size-5 animate-spin ms-1.5" />
@@ -236,7 +236,7 @@ new class extends Component {
                 </div>
 
                 <div class="mt-10 text-xs text-orange-700">
-                    <span>Наш менеджер зателефонує вам для підтвердження замовлення протягом 15 хвилин.</span>
+                    <span>Я зателефоную вам для підтвердження замовлення протягом 30 хвилин.</span>
                 </div>
             </div>
         </x-slot:sidebar>

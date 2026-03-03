@@ -8,7 +8,7 @@ use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 use Illuminate\Contracts\Support\Htmlable;
 
-enum OrderStatus: string implements HasColor, HasLabel, HasIcon
+enum OrderStatus: string implements HasColor, HasIcon, HasLabel
 {
     case Pending = 'pending';       // Очікує підтвердження
     case Processing = 'processing'; // В обробці
@@ -52,7 +52,7 @@ enum OrderStatus: string implements HasColor, HasLabel, HasIcon
         };
     }
 
-    public function getIcon(): string | BackedEnum | Htmlable | null
+    public function getIcon(): string|BackedEnum|Htmlable|null
     {
         return match ($this) {
             // Очікує — годинник (пауза)

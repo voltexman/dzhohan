@@ -58,33 +58,71 @@
 
     <footer class="flex flex-col border-t border-zinc-200"
         style="background-image: linear-gradient(to top, rgb(250 250 250), rgb(228 228 231 / 0.6)), url('{{ Vite::asset('resources/images/bg-footer.svg') }}'); background-size: cover, cover; background-repeat: no-repeat, repeat;">
-        <div class="px-8 py-10 flex flex-col items-center">
-            <livewire:subscriber />
-        </div>
+        <div
+            class="max-w-6xl mx-auto px-6 py-20 lg:px-0 flex flex-col lg:flex-row gap-y-7.5 items-center justify-between w-full">
 
-        {{-- content --}}
-        <div class="px-8 py-20 flex flex-col items-center grow">
-            <div class="text-2xl font-[Oswald] text-gray-700 drop-shadow-xl">
-                +380 (63) 951 88 42
+            {{-- СОЦІАЛЬНІ МЕРЕЖІ --}}
+            <div class="flex flex-col items-center lg:items-start order-3 lg:order-1">
+                <img src="{{ Vite::asset('resources/images/logo_dark.svg') }}"
+                    class="w-22 h-auto mb-2.5 drop-shadow-lg hidden lg:block" alt="">
+                <div class="text-2xl font-[Oswald] text-gray-800 drop-shadow-xl">
+                    +380 (63) 951 88 42
+                </div>
+                <div class="text-xl tracking-wide font-[Oswald] text-gray-800 drop-shadow-xl">
+                    dzhogun@gmail.com
+                </div>
+                <div class="mt-5 grid grid-cols-3 gap-2.5">
+                    <a href="https://www.instagram.com/dzhohan_knives" target="_blank">
+                        <x-lucide-instagram class="size-8 stroke-gray-700 drop-shadow-xl" stroke-width="1.5" />
+                    </a>
+                    <a href="https://www.facebook.com/KostyantynDzhohun" target="_blank">
+                        <x-lucide-facebook class="size-8 stroke-gray-700 drop-shadow-xl" stroke-width="1.5" />
+                    </a>
+                </div>
             </div>
-            <div class="text-xl tracking-wide font-[Oswald] text-gray-700 drop-shadow-xl">
-                voltexman@gmail.com
-            </div>
-            <div class="mt-5 grid grid-cols-3 gap-2.5">
-                <a href="https://www.instagram.com/dzhohan_knives" target="_blank">
-                    <x-lucide-instagram class="size-8 stroke-gray-700 drop-shadow-xl" stroke-width="1.5" />
-                </a>
-                <a href="https://www.facebook.com/KostyantynDzhohun" target="_blank">
-                    <x-lucide-facebook class="size-8 stroke-gray-700 drop-shadow-xl" stroke-width="1.5" />
-                </a>
+
+            {{-- МЕНЮ --}}
+            <x-nav.footer class="order-2">
+                <x-nav.footer.item>
+                    <x-lucide-rotate-ccw class="size-4" />
+                    Політика відшкодування
+                </x-nav.footer.item>
+
+                <x-nav.footer.item>
+                    <x-lucide-truck class="size-4" />
+                    Політика доставки
+                </x-nav.footer.item>
+
+                <x-nav.footer.item>
+                    <x-lucide-shield-check class="size-4" />
+                    Політика конфіденційності
+                </x-nav.footer.item>
+
+                <x-nav.footer.item>
+                    <x-lucide-file-text class="size-4 " />
+                    Умови використання
+                </x-nav.footer.item>
+            </x-nav.footer>
+
+            {{-- ПІДПИСКА --}}
+            <div class="flex flex-col items-center lg:items-start order-1 lg:order-3 w-full max-w-md">
+                <h2 class="font-[Oswald] text-3xl font-semibold text-gray-700">
+                    Підписка
+                </h2>
+                <div class="max-w-sm text-sm text-gray-600 mt-2.5 text-center lg:text-left">
+                    Дізнавайтесь про нові товари та їхні огляди, отримуйте вигідні та спецільні пропозиції.
+                </div>
+                <div class="mt-5 w-full">
+                    <livewire:subscriber />
+                </div>
             </div>
         </div>
 
         <div class="flex justify-center items-center py-2.5 border-t bg-zinc-100 border-zinc-200/40 h-10">
-            <span class="text-xs text-gray-700">&copy;</span>
-            <span class="text-xs text-gray-700">{{ now()->format('Y') }}&nbsp;</span>
-            <span class="text-xs text-gray-700">{{ env('APP_NAME') }}.&nbsp;</span>
-            <span class="text-xs text-gray-700">Всі права застережено</span>
+            <span class="text-xs text-gray-400">&copy;</span>
+            <span class="text-xs text-gray-400">{{ now()->format('Y') }}&nbsp;</span>
+            <span class="text-xs text-gray-500">{{ env('APP_NAME') }}.&nbsp;</span>
+            <span class="text-xs text-gray-400">Всі права застережено</span>
         </div>
     </footer>
 

@@ -1,14 +1,14 @@
 @props(['product', 'view', 'category'])
 
-<a href="{{ route('product.show', $product) }}" @class([
-    'relative transition group overflow-hidden',
-    'bg-white border border-zinc-200/50 hover:border-zinc-200' =>
-        $view === 'grid',
-    'flex gap-5 items-center' => $view === 'list',
-    'h-[400px] md:h-[400px]' => $view === 'cards',
-    'opacity-80 grayscale-50' => !$product->hasStock(),
-])
-    wire:loading.class="animate-pulse pointer-events-none" wire:navigate>
+<a href="{{ route('product.show', ['category' => $product->category->value, 'product' => $product->slug]) }}"
+    @class([
+        'relative transition group overflow-hidden',
+        'bg-white border border-zinc-200/50 hover:border-zinc-200' =>
+            $view === 'grid',
+        'flex gap-5 items-center' => $view === 'list',
+        'h-[400px] md:h-[400px]' => $view === 'cards',
+        'opacity-80 grayscale-50' => !$product->hasStock(),
+    ]) wire:loading.class="animate-pulse pointer-events-none" wire:navigate>
 
     <!-- Зображення -->
     <div @class([

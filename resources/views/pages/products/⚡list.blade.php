@@ -68,6 +68,8 @@ new class extends Component {
     public function products()
     {
         return Product::query()
+            // 1. Додаємо фільтрацію за категорією, якщо вона передана в URL
+            ->when($this->category, fn($q) => $q->where('category', $this->category))
             ->filter($this->filters)
             ->withCount(['likes', 'comments'])
             ->orderBy($this->sortBy, $this->sortDirection)
@@ -85,18 +87,6 @@ new class extends Component {
             ->pluck('total', 'category')
             ->toArray();
     }
-
-    // #[Computed]
-    // public function categoryCounts()
-    // {
-    //     return Product::query()
-    //         // Фільтруємо за сталями, ціною тощо, щоб цифри були актуальними
-    //         ->filter(collect($this->filters)->except('categories')->toArray())
-    //         ->select('category')
-    //         ->selectRaw('count(*) as total')
-    //         ->groupBy('category')
-    //         ->pluck('total', 'category');
-    // }
 };
 ?>
 

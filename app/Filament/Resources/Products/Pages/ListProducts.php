@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Products\Pages;
 
-use App\Enums\ProductCategory;
 use App\Filament\Resources\Products\ProductResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
@@ -31,27 +30,20 @@ class ListProducts extends ListRecords
 
         return [
             'all' => Tab::make('Всі')
-                ->label('Всі товари'),
+                ->label('Всі товари')
+                ->icon('heroicon-m-list-bullet'),
 
-            'tactical' => Tab::make('Тактичні')
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('category', ProductCategory::TACTICAL))
-                ->badge($model::where('category', ProductCategory::TACTICAL)->count()),
+            'in_stock' => Tab::make('В наявності')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('quantity', '>', 0))
+                ->icon('heroicon-m-check-circle')
+                ->badge($model::where('quantity', '>', 0)->count())
+                ->badgeColor('success'),
 
-            'kitchen' => Tab::make('Кухонні')
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('category', ProductCategory::KITCHEN))
-                ->badge($model::where('category', ProductCategory::KITCHEN)->count()),
-
-            'hunting' => Tab::make('Мисливські')
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('category', ProductCategory::HUNTING))
-                ->badge($model::where('category', ProductCategory::HUNTING)->count()),
-
-            'edc' => Tab::make('На кожен день')
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('category', ProductCategory::EDC))
-                ->badge($model::where('category', ProductCategory::EDC)->count()),
-
-            'outdoor' => Tab::make('Для походів')
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('category', ProductCategory::OUTDOOR))
-                ->badge($model::where('category', ProductCategory::OUTDOOR)->count()),
+            'out_of_stock' => Tab::make('Продані')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('quantity', '<=', 0))
+                ->icon('heroicon-m-x-circle')
+                ->badge($model::where('quantity', '<=', 0)->count())
+                ->badgeColor('gray'),
         ];
     }
 }

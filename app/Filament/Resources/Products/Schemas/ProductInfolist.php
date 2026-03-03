@@ -49,7 +49,7 @@ class ProductInfolist
 
                 TextEntry::make('deleted_at')
                     ->dateTime()
-                    ->visible(fn(Product $record): bool => $record->trashed())
+                    ->visible(fn (Product $record): bool => $record->trashed())
                     ->label('Видалено'),
 
                 TextEntry::make('created_at')

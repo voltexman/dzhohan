@@ -7,6 +7,8 @@ use App\Models\Product;
 new #[Layout('layouts::cart')] class extends Component {
     public Product $product;
 
+    public string $tab = 'instructions';
+
     public $backUrl;
 
     public function mount(Product $product): void
@@ -42,9 +44,9 @@ new #[Layout('layouts::cart')] class extends Component {
                             [$width, $height] = getimagesize($media->getPath());
                         @endphp
                         <a class="block embla__slide min-w-0 relative flex-[0_0_100%]! h-full pointer-eventsnone"
-                            wire:key="main-{{ $media->id }}" data-pswp-src="{{ $media->getUrl() }}"
+                            wire:key="main-{{ $media->id }}" data-pswp-src="{{ $media->getFullUrl() }}"
                             data-pswp-width="{{ $width }}" data-pswp-height="{{ $height }}">
-                            <img src="{{ $media->getUrl() }}" alt="{{ $product->name }}"
+                            <img src="{{ $media->getFullUrl() }}" alt="{{ $product->name }}"
                                 class="absolute inset-0 w-full h-full object-cover">
                         </a>
                     @endforeach
@@ -62,7 +64,7 @@ new #[Layout('layouts::cart')] class extends Component {
                         @foreach ($product->getMedia('products') as $media)
                             <div class="embla-thumbs__slide shrink-0 size-20 lg:size-24 cursor-pointer overflow-hidden rounded-lg border-2 border-zinc-100/15 transition-all duration-300 shadow-lg shadow-zinc-50/5 hover:shadow-zinc-50/10"
                                 wire:key="thumb-{{ $media->id }}">
-                                <img src="{{ $media->getUrl() }}" alt=""
+                                <img src="{{ $media->getFullUrl() }}" alt=""
                                     class="size-full object-cover opacity-70 hover:opacity-100 transition-opacity">
                             </div>
                         @endforeach
@@ -176,6 +178,20 @@ new #[Layout('layouts::cart')] class extends Component {
     <div class="max-w-2xl mt-10 space-y-2 px-6 lg:px-10">
         <h3 class="text-lg font-semibold font-[SN_Pro]">Огляд та особливості</h3>
         <p class="text-gray-700 font-[Inter]">{{ $product->description }}</p>
+    </div>
+
+    <div class="px-6 lg:px-10 mt-6 flex flex-wrap gap-2.5">
+        @foreach ($product->tags as $tag)
+            <a href="{{ route('products', ['filters[tags][]' => $tag->id]) }}"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 transition-colors group">
+
+                <x-lucide-tag class="size-3.5 text-zinc-500 group-hover:text-zinc-900 transition-colors" />
+
+                <span class="text-xs font-medium text-zinc-700 group-hover:text-zinc-900">
+                    {{ $tag->name }}
+                </span>
+            </a>
+        @endforeach
     </div>
 
     <div class="max-w-lg mt-10 scroll-mt-6 lg:scroll-mt-10 px-6 lg:px-10" id="comments-section">

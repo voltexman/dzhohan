@@ -17,11 +17,14 @@ import.meta.glob(["../images/**", "../fonts/**"]);
 // EmblaCarousel(viewportNode, OPTIONS);
 
 import "preline";
-import { Calendar } from "vanilla-calendar-pro";
-import "vanilla-calendar-pro/styles/index.css";
 
-// Робимо доступним глобально для Alpine x-init
-// window.Calendar = Calendar;
+import { Calendar } from "vanilla-calendar-pro";
+
+// Імпортуємо стилі згідно з твоєю документацією
+import "vanilla-calendar-pro/styles/index.css";
+import "vanilla-calendar-pro/styles/themes/light.css";
+
+window.Calendar = Calendar;
 
 // Initialize Preline UI components
 function initPrelineComponents() {

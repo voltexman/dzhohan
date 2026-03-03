@@ -14,13 +14,13 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'number' => now()->format('dy') . '-' . fake()->unique()->numberBetween(1000, 9999),
+            'number' => now()->format('dy').'-'.fake()->unique()->numberBetween(1000, 9999),
             'name' => fake()->name(),
             'phone' => fake()->phoneNumber(),
             'email' => fake()->optional()->safeEmail(),
             'delivery_method' => fake()->randomElement(DeliveryMethod::cases()),
             'city' => fake()->city(),
-            'address' => 'Відділення №' . fake()->numberBetween(1, 50),
+            'address' => 'Відділення №'.fake()->numberBetween(1, 50),
             'comment' => fake()->optional()->sentence(15),
             'total_price' => 0, // Буде перераховано після додавання товарів
             'type' => fake()->randomElement(OrderType::cases()),
@@ -35,7 +35,9 @@ class OrderFactory extends Factory
             $products = Product::all();
 
             // Якщо товарів немає, нічого не додаємо
-            if ($products->isEmpty()) return;
+            if ($products->isEmpty()) {
+                return;
+            }
 
             $totalPrice = 0;
             $itemsCount = rand(1, 5);

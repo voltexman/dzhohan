@@ -29,6 +29,12 @@
             'pl' => 'pl-12',
             'pr' => 'pr-6',
         ],
+        'xl' => [
+            'input' => 'py-4.5 text-sm',
+            'icon_pos' => 'left-4',
+            'pl' => 'pl-12',
+            'pr' => 'pr-6',
+        ],
     ];
 
     $currentSize = $sizes[$size] ?? $sizes['lg'];

@@ -7,7 +7,7 @@ use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 use Illuminate\Contracts\Support\Htmlable;
 
-enum OrderType: string implements HasLabel, HasIcon
+enum OrderType: string implements HasIcon, HasLabel
 {
     case Purchase = 'purchase';     // Купівля
     case Manufacturing = 'manufacturing'; // Виготовлення
@@ -20,7 +20,7 @@ enum OrderType: string implements HasLabel, HasIcon
         };
     }
 
-    public function getIcon(): string | BackedEnum | Htmlable | null
+    public function getIcon(): string|BackedEnum|Htmlable|null
     {
         return match ($this) {
             self::Purchase => 'heroicon-m-shopping-bag',
