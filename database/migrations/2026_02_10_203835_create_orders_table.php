@@ -1,8 +1,8 @@
 <?php
 
-use App\Enums\DeliveryMethod;
-use App\Enums\OrderStatus;
-use App\Enums\OrderType;
+use App\Enums\Order\DeliveryMethod;
+use App\Enums\Order\OrderStatus;
+use App\Enums\Order\OrderType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('number')->unique();
-            $table->string('name');
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('phone');
-            $table->string('email')->nullable();
+            $table->string('email');
             $table->enum('delivery_method', DeliveryMethod::values());
             $table->string('city');
             $table->string('address');
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->decimal('total_price', 12, 2);
             $table->enum('type', OrderType::values())->default(OrderType::Purchase->value);
             $table->enum('status', OrderStatus::values())->default(OrderStatus::Pending);
+            $table->json('custom_options')->nullable()->comment('Якщо замовлення на виготовлення');
             $table->timestamps();
         });
 

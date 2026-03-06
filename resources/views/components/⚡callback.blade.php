@@ -91,18 +91,16 @@ new class extends Component {
 @else
     <div>
         <div class="max-w-sm">
-            <div class="relative">
-                <x-form.input icon="phone" wire:model="phone" x-mask="+999 (99) 999-99-99"
-                    placeholder="+380 (63) 123-45-67" class="" />
-                <button type="button"" wire:click="callback" wire:loading.attr="disabled" wire:target="callback"
-                    class="absolute z-40 size-8 top-1/2 right-2.5 -translate-y-1/2 cursor-pointer text-zinc-600 hover:text-zinc-700 transition-colors duration-300">
-                    <x-lucide-bell wire:loading.remove wire:target="callback" class="size-5 shrink-0" />
-                    <x-lucide-loader-circle wire:loading wire:target="callback" class="size-5 shrink-0 animate-spin" />
-                </button>
-            </div>
-            @error('phone')
-                <div class="text-xs text-red-600 mt-1">{{ $message }}</div>
-            @enderror
+            <x-form.input icon="phone-incoming" wire:model="phone" x-mask="+999 (99) 999-99-99"
+                placeholder="+380 (63) 123-45-67" class="">
+                <x-slot:button>
+                    <button type="button"" wire:click="callback" wire:loading.attr="disabled" wire:target="callback"
+                        class="absolute z-40 size-8 top-1/2 right-2.5 -translate-y-1/2 cursor-pointer text-zinc-600 hover:text-zinc-700 transition-colors duration-300">
+                        <x-lucide-bell-ring wire:loading.remove wire:target="callback" class="size-5 shrink-0" />
+                        <x-lucide-loader-circle wire:loading wire:target="callback" class="size-5 shrink-0 animate-spin" />
+                    </button>
+                </x-slot:button>
+            </x-form.input>
         </div>
 
         <div class="inline-flex rounded-md -space-x-px mt-5" role="group">

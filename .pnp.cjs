@@ -42,6 +42,7 @@ const RAW_RUNTIME_STATE =
           ["root-workspace-0b6124", "workspace:."],\
           ["swiper", "npm:12.1.1"],\
           ["tailwindcss", "npm:4.1.18"],\
+          ["tom-select", "npm:2.5.2"],\
           ["vanilla-calendar-pro", "npm:3.1.0"],\
           ["vite", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:7.3.1"]\
         ],\
@@ -464,6 +465,25 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@npmcli/fs", "npm:5.0.0"],\
           ["semver", "npm:7.7.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@orchidjs/sifter", [\
+      ["npm:1.1.0", {\
+        "packageLocation": "../../../C:/Users/volte/AppData/Local/Yarn/Berry/cache/@orchidjs-sifter-npm-1.1.0-8bf427f63a-10c0.zip/node_modules/@orchidjs/sifter/",\
+        "packageDependencies": [\
+          ["@orchidjs/sifter", "npm:1.1.0"],\
+          ["@orchidjs/unicode-variants", "npm:1.1.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@orchidjs/unicode-variants", [\
+      ["npm:1.1.2", {\
+        "packageLocation": "../../../C:/Users/volte/AppData/Local/Yarn/Berry/cache/@orchidjs-unicode-variants-npm-1.1.2-0361cdaa63-10c0.zip/node_modules/@orchidjs/unicode-variants/",\
+        "packageDependencies": [\
+          ["@orchidjs/unicode-variants", "npm:1.1.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -2334,6 +2354,7 @@ const RAW_RUNTIME_STATE =
           ["root-workspace-0b6124", "workspace:."],\
           ["swiper", "npm:12.1.1"],\
           ["tailwindcss", "npm:4.1.18"],\
+          ["tom-select", "npm:2.5.2"],\
           ["vanilla-calendar-pro", "npm:3.1.0"],\
           ["vite", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:7.3.1"]\
         ],\
@@ -2516,6 +2537,17 @@ const RAW_RUNTIME_STATE =
           ["fdir", "virtual:0e783aadbd2b4b8e6f6056033c0b290501892d23bc7c5dad5477e00e48ad8bd3e4434c3962a52dd75a58e06dbb7218094a494bac954ef2f7f6fdb65d9717e5f4#npm:6.5.0"],\
           ["picomatch", "npm:4.0.3"],\
           ["tinyglobby", "npm:0.2.15"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["tom-select", [\
+      ["npm:2.5.2", {\
+        "packageLocation": "../../../C:/Users/volte/AppData/Local/Yarn/Berry/cache/tom-select-npm-2.5.2-b8c7ff33b5-10c0.zip/node_modules/tom-select/",\
+        "packageDependencies": [\
+          ["@orchidjs/sifter", "npm:1.1.0"],\
+          ["@orchidjs/unicode-variants", "npm:1.1.2"],\
+          ["tom-select", "npm:2.5.2"]\
         ],\
         "linkType": "HARD"\
       }]\

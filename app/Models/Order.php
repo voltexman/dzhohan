@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Enums\OrderStatus;
-use App\Enums\OrderType;
+use App\Enums\Order\OrderStatus;
+use App\Enums\Order\OrderType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,7 +14,8 @@ class Order extends Model
 
     protected $fillable = [
         'number',
-        'name',
+        'first_name',
+        'last_name',
         'phone',
         'email',
         'delivery_method',
@@ -22,6 +23,7 @@ class Order extends Model
         'address',
         'comment',
         'total_price',
+        'custom_options',
         'type',
         'status',
     ];
@@ -29,6 +31,7 @@ class Order extends Model
     protected $casts = [
         'type' => OrderType::class,
         'status' => OrderStatus::class,
+        'custom_options' => 'array',
     ];
 
     protected static function boot()

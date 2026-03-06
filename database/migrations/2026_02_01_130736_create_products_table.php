@@ -23,20 +23,20 @@ return new class extends Migration
             $table->longText('description')->nullable();
 
             $table->decimal('price', 10, 2);
-            $table->unsignedInteger('quantity')->default(0);
+            $table->unsignedInteger('quantity')->default(1);
             $table->boolean('is_active')->default(true);
-            $table->enum('category', ProductCategory::values())->index();
+            $table->enum('collection', ProductCategory::values())->index();
 
             $table->decimal('total_length', 8, 2)->nullable()->comment('Загальна довжина, мм');
             $table->decimal('blade_length', 8, 2)->nullable()->comment('Довжина леза, мм');
             $table->decimal('blade_thickness', 5, 2)->nullable()->comment('Товщина леза, мм');
 
-            $table->enum('steel', SteelType::values())->nullable()->index()->comment('Марка сталі клинка');
-            $table->enum('blade_shape', BladeShape::values())->nullable()->index()->comment('Геометрія клинка');
-            $table->enum('blade_finish', BladeFinish::values())->nullable()->comment('Візуальна обробка поверхні');
-            $table->enum('blade_grind', BladeGrind::values())->nullable()->comment('Тип спусків леза');
+            $table->enum('steel', SteelType::values())->nullable()->index()->comment('Марка сталі');
+            $table->enum('blade_shape', BladeShape::values())->nullable()->index()->comment('Профіль клинка');
+            $table->enum('blade_grind', BladeGrind::values())->nullable()->comment('Тип спусків');
+            $table->enum('blade_finish', BladeFinish::values())->nullable()->comment('Покриття клинка');
             $table->enum('handle_material', HandleMaterial::values())->nullable()->comment('Матеріал руків’я');
-            $table->enum('sheath', SheathType::values())->nullable()->comment('Матеріал та тип піхов/чохла');
+            $table->enum('sheath', SheathType::values())->nullable()->comment('Піхви / Чохол');
 
             $table->softDeletes();
             $table->timestamps();

@@ -36,6 +36,7 @@
             <x-nav.item label="Товари" url="products" icon="package" />
             <x-nav.item label="Галерея" url="gallery" icon="images" />
             <x-nav.item label="Блог" url="blog" icon="newspaper" />
+            <x-nav.item label="Замовлення" url="order" icon="package-open" />
             <x-nav.item label="Контакти" url="contacts" icon="notebook-text" />
         </x-nav>
 
@@ -59,7 +60,7 @@
     <footer class="flex flex-col border-t border-zinc-200"
         style="background-image: linear-gradient(to top, rgb(250 250 250), rgb(228 228 231 / 0.6)), url('{{ Vite::asset('resources/images/bg-footer.svg') }}'); background-size: cover, cover; background-repeat: no-repeat, repeat;">
         <div
-            class="max-w-6xl mx-auto px-6 py-20 lg:px-0 flex flex-col lg:flex-row gap-y-7.5 items-center justify-between w-full">
+            class="max-w-5xl mx-auto px-6 py-20 lg:px-0 flex flex-col lg:flex-row gap-y-7.5 items-center justify-between w-full">
 
             {{-- СОЦІАЛЬНІ МЕРЕЖІ --}}
             <div class="flex flex-col items-center lg:items-start order-3 lg:order-1">
@@ -82,25 +83,25 @@
             </div>
 
             {{-- МЕНЮ --}}
-            <x-nav.footer class="order-2">
-                <x-nav.footer.item>
+            <x-nav.footer class="order-2 items-center lg:items-start">
+                <x-nav.footer.item route="polityka-vidshkoduvannia">
                     <x-lucide-rotate-ccw class="size-4" />
                     Політика відшкодування
                 </x-nav.footer.item>
 
-                <x-nav.footer.item>
-                    <x-lucide-truck class="size-4" />
-                    Політика доставки
-                </x-nav.footer.item>
-
-                <x-nav.footer.item>
+                <x-nav.footer.item route="polityka-konfidentsiinosti">
                     <x-lucide-shield-check class="size-4" />
                     Політика конфіденційності
                 </x-nav.footer.item>
 
-                <x-nav.footer.item>
+                <x-nav.footer.item route="umovy-vykorystannia">
                     <x-lucide-file-text class="size-4 " />
                     Умови використання
+                </x-nav.footer.item>
+
+                <x-nav.footer.item route="polityka-dostavky">
+                    <x-lucide-truck class="size-4" />
+                    Політика доставки
                 </x-nav.footer.item>
             </x-nav.footer>
 

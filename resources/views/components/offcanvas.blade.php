@@ -1,14 +1,14 @@
-@props(['trigger', 'header', 'position' => 'end', 'size' => 'md'])
+@props(['trigger', 'header', 'footer'])
 
 <div x-data="{
-    open: true,
+    open: false,
     mobileFullWidth: true,
 
     // 'start', 'end', 'top', 'bottom'
-    position: '{{ $position }}',
+    position: 'end',
 
     // 'xs', 'sm', 'md', 'lg', 'xl'
-    size: '{{ $size }}',
+    size: 'md',
 
     // Set transition classes based on position
     transitionClasses: {
@@ -35,31 +35,29 @@
             }
         },
     },
-}" x-on:keydown.esc.prevent="open = false">
-    <!-- Placeholder -->
-    <!-- Offcanvas Toggle Button -->
+}" x-on:keydown.esc.prevent="open = false" {{ $attributes->class('') }}>
+    {{-- Trigger --}}
     <button x-on:click="open = true" type="button"
-        {{ $trigger->attributes->class('inline-flex items-center justify-center') }}>
+        class="lg:hidden relative rounded-md p-1.5 transition-colors duration-500">
         {{ $trigger }}
     </button>
-    <!-- END Offcanvas Toggle Button -->
-    <!-- END Placeholder -->
+    {{-- End Trigger --}}
 
-    <!-- Offcanvas Backdrop -->
     <template x-teleport="body">
         <div x-cloak x-show="open" x-transition:enter="transition ease-out duration-300"
             x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
             x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0" x-bind:aria-hidden="!open" tabindex="-1" role="dialog"
             aria-labelledby="pm-offcanvas-title"
-            class="z-90 fixed inset-0 overflow-hidden bg-zinc-700/75 backdrop-blur-xs dark:bg-zinc-950/50">
+            class="z-90 fixed inset-0 overflow-hidden bg-stone-900/60 backdrop-blur-sm"
+            x-effect="document.body.style.overflow = open ? 'hidden' : 'auto'">
             <!-- Offcanvas Sidebar -->
             <div x-cloak x-show="open" x-on:click.away="open = false" x-bind="transitionClasses"
                 x-transition:enter="transition ease-out duration-300"
                 x-transition:enter-end="translate-x-0 translate-y-0"
                 x-transition:leave="transition ease-in duration-200"
                 x-transition:leave-start="translate-x-0 translate-y-0" role="document"
-                class="absolute flex w-full flex-col bg-white shadow-lg will-change-transform dark:bg-zinc-900 dark:text-zinc-100 dark:shadow-zinc-950"
+                class="absolute flex w-full flex-col bg-white shadow-lg will-change-transform"
                 x-bind:class="{
                     'h-dvh top-0 end-0': position === 'end',
                     'h-dvh top-0 start-0': position === 'start',
@@ -74,36 +72,39 @@
                     'max-w-72': !mobileFullWidth && !(position === 'top' || position === 'bottom'),
                 }">
                 <!-- Header -->
-                <div class="flex min-h-16 flex-none items-center justify-between border-b border-zinc-100 px-5 md:px-7">
-                    <h3 {{ $header->attributes->class('py-5 font-semibold') }} id="pm-offcanvas-title">
+                @isset($header)
+                    <div
+                        {{ $header->attributes->class('flex min-h-16 flex-none items-center justify-between px-6 md:px-10') }}>
                         {{ $header }}
-                    </h3>
-
-                    <!-- Close Button -->
-                    <button x-on:click="open = false" type="button"
-                        class="inline-flex items-center justify-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs font-semibold leading-5 text-zinc-800 hover:border-zinc-300 hover:text-zinc-900 hover:shadow-xs focus:ring-zinc-300/25 active:border-zinc-200 active:shadow-none">
-                        <svg class="hi-solid hi-x -mx-1 inline-block size-4" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
-                    <!-- END Close Button -->
-                </div>
+                    </div>
+                @endisset
+                <!-- Close Button -->
+                <button x-on:click="open = false" type="button"
+                    class="absolute top-3 right-3 inline-flex items-center justify-center size-8 rounded-full bg-black text-zinc-50 hover:bg-zinc-800 hover:text-zinc-200 transition-colors duration-300 cursor-pointer">
+                    <x-lucide-x class="-mx-1 inline-block size-4" />
+                </button>
+                <!-- END Close Button -->
                 <!-- END Header -->
 
                 <!-- Content -->
-                <div class="flex grow flex-col overflow-y-auto p-5 md:p-7">
-                    {{ $slot }}
+                <div class="flex grow flex-col overflow-y-auto">
+                    <div x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 translate-y-4"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        x-transition:leave="transition ease-in duration-200"
+                        x-transition:leave-start="opacity-100 translate-y-0"
+                        x-transition:leave-end="opacity-0 translate-y-4"
+                        class="flex flex-col size-full max-w-xl mx-auto">
+                        {{ $slot }}
+                    </div>
                 </div>
-                <!-- END Content -->
 
-                <div class="mt-auto">Footer</div>
+                @isset($footer)
+                    {{ $footer }}
+                @endisset
+                <!-- END Content -->
             </div>
             <!-- END Offcanvas Sidebar -->
         </div>
     </template>
-    <!-- END Offcanvas Backdrop -->
 </div>
-<!-- END Offcanvas -->

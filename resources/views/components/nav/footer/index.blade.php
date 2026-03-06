@@ -1,3 +1,3 @@
-<div {{ $attributes->class('flex flex-col gap-y-1.5') }}>
+<div {{ $attributes->class('flex flex-col gap-y-2.5') }}>
     {{ $slot }}
 </div>

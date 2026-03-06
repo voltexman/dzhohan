@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums;
+namespace App\Enums\Order;
 
 use BackedEnum;
 use Filament\Support\Contracts\HasIcon;

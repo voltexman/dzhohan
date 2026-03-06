@@ -1,13 +1,11 @@
-@props(['color' => 'soft'])
+@props(['color' => 'light'])
 
 @php
     $colors = [
         'dark' =>
             'bg-stone-50 border-stone-200 text-stone-900 placeholder:text-stone-400 focus:bg-white focus:ring-stone-950/5',
         'light' =>
-            'bg-white/10 border-white/20 text-white placeholder:text-white/40 backdrop-blur-md focus:bg-white/20 focus:ring-white/10',
-        'soft' =>
-            'bg-stone-50 border-stone-200 text-stone-700 placeholder:text-stone-400 focus:bg-stone-50/80 focus:ring-stone-200/50 hover:bg-stone-100',
+            'bg-zinc-100 border-zinc-200 text-zinc-700 placeholder:text-zinc-400 focus:bg-zinc-50/80 focus:ring-zinc-200/50 hover:bg-zinc-100',
     ];
 
     $currentColor = $colors[$color] ?? $colors['soft'];

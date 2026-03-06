@@ -64,10 +64,6 @@ new class extends Component {
             <span class="text-orange-500">Огляди</span> та <span class="text-orange-500">статті</span> <br>
             про <span class="text-orange-500">ножі</span> та інше
         </div>
-        <div class="text-sm text-gray-600">
-            Майстерність виготовлення ножів, корисні поради для колекціонерів і
-            ентузіастів. Про все, що зазвичай приховане від очей покупців.
-        </div>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">

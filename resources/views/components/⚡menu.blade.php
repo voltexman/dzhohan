@@ -109,6 +109,7 @@ new class extends Component {
                             <x-nav.item label="Товари" url="products" icon="package" />
                             <x-nav.item label="Галерея" url="gallery" icon="images" />
                             <x-nav.item label="Блог" url="blog" icon="newspaper" />
+                            <x-nav.item label="Замовлення" url="order" icon="package-open" />
                             <x-nav.item label="Контакти" url="contacts" icon="notebook-text" />
                         </x-nav>
 

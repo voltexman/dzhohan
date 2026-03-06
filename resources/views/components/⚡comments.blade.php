@@ -135,24 +135,7 @@ new class extends Component {
 
     @island('comment-list', lazy: true, always: true)
         @placeholder
-            <div class="space-y-6 w-full">
-                @foreach (range(1, 3) as $i)
-                    <div class="border-b border-zinc-200/60 pb-5 animate-pulse">
-                        <div class="flex justify-between">
-                            <div class="h-4 bg-zinc-200 rounded w-1/4"></div>
-                            <div class="h-3 bg-zinc-100 rounded w-1/6"></div>
-                        </div>
-                        <div class="mt-4 space-y-2">
-                            <div class="h-3 bg-zinc-100 rounded w-full"></div>
-                            <div class="h-3 bg-zinc-100 rounded w-5/6"></div>
-                        </div>
-                        <div class="mt-4 flex gap-4">
-                            <div class="h-3 bg-zinc-100 rounded w-16"></div>
-                            <div class="h-3 bg-zinc-100 rounded w-16"></div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
+            @include('partials.placeholders.comments')
         @endplaceholder
 
         <div class="space-y-5" wire:poll.15s.visible>
@@ -297,10 +280,11 @@ new class extends Component {
             @endforelse
         </div>
 
-        {{-- 3. Додаємо пагінацію --}}
+        {{-- Пагінація --}}
         <div class="mt-5 mx-auto w-fit">
             @if ($this->comments->hasPages())
                 <nav class="flex items-center gap-2 mt-8">
+
                     {{-- Кнопка Назад --}}
                     @if ($this->comments->onFirstPage())
                         <x-button variant="circle" color="light" size="sm" icon>
@@ -333,8 +317,7 @@ new class extends Component {
 
                     {{-- Кнопка Вперед --}}
                     @if ($this->comments->hasMorePages())
-                        <x-button variant="circle" color="light" size="sm" icon
-                            wire:click="nextPage('commentsPage')">
+                        <x-button variant="circle" color="light" size="sm" icon wire:click="nextPage('commentsPage')">
                             <x-lucide-chevron-right class="size-4 stroke-gray-800" />
                         </x-button>
                     @else

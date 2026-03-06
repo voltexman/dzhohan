@@ -43,7 +43,7 @@ new #[Layout('layouts::cart')] class extends Component {
                             // Отримуємо реальні розміри зображення для PhotoSwipe
                             [$width, $height] = getimagesize($media->getPath());
                         @endphp
-                        <a class="block embla__slide min-w-0 relative flex-[0_0_100%]! h-full pointer-eventsnone"
+                        <a class="block embla__slide min-w-0 relative flex-[0_0_100%]! h-full pointer-eventsnone cursor-pointer"
                             wire:key="main-{{ $media->id }}" data-pswp-src="{{ $media->getFullUrl() }}"
                             data-pswp-width="{{ $width }}" data-pswp-height="{{ $height }}">
                             <img src="{{ $media->getFullUrl() }}" alt="{{ $product->name }}"
@@ -53,12 +53,7 @@ new #[Layout('layouts::cart')] class extends Component {
                 </div>
             </div>
 
-            <button type="button"
-                class="btn-fullscreen absolute bottom-32 left-1/2 -translate-x-1/2 lg:top-5 lg:right-5 bg-white/5 lg:bg-white/10 backdrop-blur-xs size-12 lg:size-10 flex justify-center items-center rounded-full opacity-90 lg:opacity-70 hover:opacity-100 transition-opacity duration-200 cursor-pointer">
-                <x-lucide-fullscreen class="size-6 lg:size-5.5 stroke-zinc-50" />
-            </button>
-
-            <div class="embla-thumbs absolute bottom-8 left-1/2 -translate-x-1/2 w-full max-w-xl px-4">
+            <div class="embla-thumbs absolute bottom-8 left-1/2 -translate-x-1/2 w-full max-w-lg px-4">
                 <div class="embla-thumbs__viewport overflow-hidden">
                     <div class="embla-thumbs__container flex gap-2.5 justify-center p-5">
                         @foreach ($product->getMedia('products') as $media)

@@ -2,7 +2,7 @@
 
 <a href="{{ route('product.show', ['category' => $product->category->value, 'product' => $product->slug]) }}"
     @class([
-        'relative transition group overflow-hidden',
+        'relative transition group rounded-sm overflow-hidden',
         'bg-white border border-zinc-200/50 hover:border-zinc-200' =>
             $view === 'grid',
         'flex gap-5 items-center' => $view === 'list',
@@ -12,7 +12,7 @@
 
     <!-- Зображення -->
     <div @class([
-        'relative overflow-hidden transition duration-500',
+        'relative overflow-hidden transition duration-500 rounded-sm',
         'w-full h-48 lg:h-72' => $view === 'grid',
         'size-32 flex-shrink-0' => $view === 'list',
         'absolute inset-0 size-full' => $view === 'cards',

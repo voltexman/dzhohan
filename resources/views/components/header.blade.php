@@ -1,6 +1,6 @@
 @props(['title', 'description', 'image'])
 
-<header class="relative top-0 h-[45vh] bg-cover bg-center bg-no-repeat"
+<header class="relative top-0 h-[45vh] bg-cover bg-center bg-no-repeat bg-fixed"
     style="background-image: url('{{ $image }}')">
 
     <!-- затемнення -->

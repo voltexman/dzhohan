@@ -35,7 +35,7 @@ class CartService
         $cart = $this->getRawCart(); // Беремо масив
 
         if (! isset($cart[$productId])) {
-            $product = Product::find($productId);
+            $product = Product::with('media')->find($productId);
             if (! $product) {
                 return;
             }
@@ -44,7 +44,7 @@ class CartService
                 'id' => $product->id,
                 'name' => $product->name,
                 'price' => $product->price,
-                'image' => $product->image_url, // не забудьте про фото
+                'image' => $product->getFirstMediaUrl('products', 'thumb'),
                 'qty' => 0,
             ];
         }

@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Enums\DeliveryMethod;
-use App\Enums\OrderStatus;
-use App\Enums\OrderType;
+use App\Enums\Order\DeliveryMethod;
+use App\Enums\Order\OrderStatus;
+use App\Enums\Order\OrderType;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -15,9 +15,10 @@ class OrderFactory extends Factory
     {
         return [
             'number' => now()->format('dy').'-'.fake()->unique()->numberBetween(1000, 9999),
-            'name' => fake()->name(),
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
             'phone' => fake()->phoneNumber(),
-            'email' => fake()->optional()->safeEmail(),
+            'email' => fake()->safeEmail(),
             'delivery_method' => fake()->randomElement(DeliveryMethod::cases()),
             'city' => fake()->city(),
             'address' => 'Відділення №'.fake()->numberBetween(1, 50),
@@ -25,7 +26,6 @@ class OrderFactory extends Factory
             'total_price' => 0, // Буде перераховано після додавання товарів
             'type' => fake()->randomElement(OrderType::cases()),
             'status' => fake()->randomElement(OrderStatus::cases()),
-            'created_at' => fake()->dateTimeBetween('-1 month', 'now'),
         ];
     }
 
