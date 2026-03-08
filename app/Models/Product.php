@@ -32,7 +32,7 @@ class Product extends Model implements HasMedia
         'price',
         'quantity',
         'is_active',
-        'category',
+        'collection',
 
         'total_length',    // Загальна довжина
         'blade_length',    // Довжина леза
@@ -48,7 +48,7 @@ class Product extends Model implements HasMedia
 
     protected $casts = [
         // Базові фільтри
-        'category' => ProductCategory::class,
+        'collection' => ProductCategory::class,
 
         // Характеристики леза
         'steel' => SteelType::class,
@@ -68,6 +68,12 @@ class Product extends Model implements HasMedia
         'is_active' => 'boolean',
     ];
 
+    // Додайте в Product.php
+    public function getStockAttribute()
+    {
+        return $this->quantity;
+    }
+
     public function hasStock(): bool
     {
         return $this->quantity > 0;
@@ -75,7 +81,7 @@ class Product extends Model implements HasMedia
 
     public function scopeFilter($query, array $filters)
     {
-        return $query->when($filters['categories'] ?? null, fn ($q, $cat) => $q->whereIn('category', $cat))
+        return $query->when($filters['collections'] ?? null, fn ($q, $cat) => $q->whereIn('collection', $cat))
             //    Фільтр наявності (виправив 'stock' на 'in_stock' згідно з вашим UI)
             ->when(isset($filters['status']) && $filters['status'] !== 'all', function ($q) use ($filters) {
                 return $filters['status'] === 'in_stock'

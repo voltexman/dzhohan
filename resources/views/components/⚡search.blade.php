@@ -151,7 +151,7 @@ new class extends Component {
                                         Результати пошуку
                                     </span>
                                     @foreach ($this->results as $product)
-                                        <a href="{{ route('product.show', ['category' => $product->category->value, 'product' => $product->slug]) }}"
+                                        <a href="{{ route('product.show', ['collection' => $product->collection->value, 'product' => $product->slug]) }}"
                                             wire:navigate
                                             class="flex items-center gap-5 p-1.5 rounded-md hover:bg-zinc-50 transition-colors">
                                             <div class="size-14 bg-zinc-100 shrink-0 overflow-hidden">

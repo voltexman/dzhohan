@@ -1,3 +1,4 @@
+@use(App\Enums\ProductCategory)
 @use(App\Enums\SteelType)
 @use(App\Enums\BladeShape)
 @use(App\Enums\BladeGrind)
@@ -5,9 +6,10 @@
 @use(App\Enums\HandleMaterial)
 @use(App\Enums\SheathType)
 
+
 <div x-data="{
     sheath: 'none'
-}" class="space-y-10 border-b border-zinc-200 pb-10">
+}" class="space-y-10 border-b border-zinc-200 pb-10 hidden">
 
     {{-- Параметри ножа --}}
     <div class="space-y-5">

@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Cookie;
 use App\Enums\ProductCategory;
+use Illuminate\Support\Facades\Cookie;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Url;
@@ -13,12 +13,12 @@ use App\Models\Product;
 new class extends Component {
     use WithPagination;
 
-    public ?string $category = null;
+    public ?string $collection = null;
 
     public string $search = '';
 
     #[Session]
-    public array $categories = [];
+    public array $collections = [];
 
     #[Session]
     public array $steels = [];
@@ -71,7 +71,7 @@ new class extends Component {
 
     public function resetFilters()
     {
-        $this->categories = [];
+        $this->collectios = [];
         $this->status = 'all';
         $this->handle_materials = [];
         $this->blade_shapes = [];
@@ -80,8 +80,8 @@ new class extends Component {
         $this->price_from = $this->minLimit;
         $this->price_to = $this->maxLimit;
 
-        if ($this->category) {
-            $this->categories = [$this->category];
+        if ($this->collection) {
+            $this->collections = [$this->collection];
         }
     }
 
@@ -114,11 +114,10 @@ new class extends Component {
     public function products()
     {
         return Product::query()
-            // 1. Додаємо фільтрацію за категорією, якщо вона передана в URL
-            ->when($this->category, fn($q) => $q->where('category', $this->category))
+            ->when($this->collection, fn($q) => $q->where('collection', $this->collection))
             ->filter([
                 'search' => $this->search,
-                'categories' => $this->categories,
+                'collections' => $this->collections,
                 'steels' => $this->steels,
                 'blade_shapes' => $this->blade_shapes,
                 'handle_materials' => $this->handle_materials,
@@ -134,21 +133,15 @@ new class extends Component {
     #[Computed]
     public function categoryCounts()
     {
-        return Product::query()
-            //
-            ->select('category')
-            ->selectRaw('count(*) as total')
-            ->groupBy('category')
-            ->pluck('total', 'category')
-            ->toArray();
+        return Product::query()->select('collection')->selectRaw('count(*) as total')->groupBy('collection')->pluck('total', 'collection')->toArray();
     }
 };
 ?>
 
 @section('header')
-    <x-header :image="Vite::asset('resources/images/' . (ProductCategory::tryFrom($category)?->images() ?? 'header.png'))">
+    <x-header :image="Vite::asset('resources/images/' . (ProductCategory::tryFrom($collection)?->images() ?? 'header.png'))">
         <x-slot:title>
-            {{ ProductCategory::tryFrom($category)?->getLabel() ?? 'Каталог товарів' }}
+            {{ ProductCategory::tryFrom($collection)?->getLabel() ?? 'Каталог товарів' }}
         </x-slot:title>
         <x-slot:description>
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quas, tenetur animi voluptas
@@ -258,17 +251,17 @@ new class extends Component {
                     </div>
 
                     <!-- 3. КОЛЕКЦІЇ -->
-                    @if (!$this->category)
-                        <div class="space-y-5" x-data="{ expanded: $persist(true).as('categories-expanded') }"
-                            wire:loading.class="animate-pulse pointer-events-none" wire:target="categories" x-cloak>
+                    @if (!$this->collection)
+                        <div class="space-y-5" x-data="{ expanded: $persist(true).as('collection-expanded') }"
+                            wire:loading.class="animate-pulse pointer-events-none" wire:target="collections" x-cloak>
                             <div class="flex items-center justify-between w-full group outline-none">
                                 <div
                                     class="flex items-center gap-1.5 text-sm font-extrabold uppercase text-neutral-600 font-[Oswald] tracking-wide">
                                     <x-lucide-layers class="size-4" />
                                     Колекції
                                 </div>
-                                @if (count($categories))
-                                    <button wire:click="$set('categories', [])" type="button"
+                                @if (count($collections))
+                                    <button wire:click="$set('collections', [])" type="button"
                                         class="flex items-center text-xs ms-auto me-1.5 text-neutral-400 hover:text-neutral-500 font-medium transition-colors duration-250 cursor-pointer">
                                         <x-lucide-x-circle
                                             class="size-4 border border-neutral-200 rounded-full flex-none me-0.5" />
@@ -285,8 +278,8 @@ new class extends Component {
                             <!-- Контент акордеона (Badge Cloud) -->
                             <div x-show="expanded" x-collapse>
                                 <div class="flex flex-wrap gap-2.5">
-                                    @foreach (App\Enums\ProductCategory::cases() as $category)
-                                        @php $isActive = in_array($category->value, $categories); @endphp
+                                    @foreach (ProductCategory::cases() as $collection)
+                                        @php $isActive = in_array($collection->value, $collections); @endphp
 
                                         <label
                                             class="relative inline-flex items-center px-2.5 py-1.5 rounded-md border cursor-pointer transition-all duration-300 select-none
@@ -294,11 +287,11 @@ new class extends Component {
                             ? 'bg-neutral-900 border-neutral-900 text-white'
                             : 'bg-white border-neutral-200 text-gray-600 hover:border-neutral-200 hover:bg-neutral-100' }}">
 
-                                            <input type="checkbox" value="{{ $category->value }}"
-                                                wire:model.live="categories" class="hidden">
+                                            <input type="checkbox" value="{{ $collection->value }}"
+                                                wire:model.live="collections" class="hidden">
 
                                             <span class="text-xs font-semibold tracking-tight">
-                                                {{ $category->getLabel() }}
+                                                {{ $collection->getLabel() }}
                                             </span>
 
                                             @if ($isActive)
@@ -471,66 +464,9 @@ new class extends Component {
         </aside>
 
         <main class="flex-1 px-5 lg:px-0 lg:col-span-2 my-10">
-            @if (!$this->category)
-                <div class="hidden lg:grid lg:grid-cols-2 gap-2.5 mb-5">
-                    @foreach (App\Enums\ProductCategory::cases() as $category)
-                        @php
-                            $count = $this->categoryCounts[$category->value] ?? 0;
-                        @endphp
-                        <a href="{{ $category->url() }}"
-                            class="first:col-span-full rounded-sm flex-none relative block overflow-hidden aspect-video group transition-all duration-700"
-                            wire:navigate>
-
-                            <!-- Зображення -->
-                            <img src="{{ Vite::asset('resources/images/' . $category->images()) }}"
-                                alt="{{ $category->getLabel() }}"
-                                class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
-
-                            <!-- Градієнтне затемнення -->
-                            <div
-                                class="absolute inset-0 bg-linear-to-t from-15% from-black/90 via-black/30 to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-80">
-                            </div>
-
-                            <div class="absolute top-8 left-8">
-                                <span class="text-2xl font-[Oswald] text-neutral-100/70 font-black">
-                                    {{ $count }}
-                                    <span class="text-base">
-                                        {{ trans_choice('товар|товари|товарів', $count, [], 'uk') }}
-                                    </span>
-                                </span>
-                            </div>
-
-                            <!-- Контент -->
-                            <div class="absolute inset-0 flex flex-col justify-end p-8">
-                                <div class="flex flex-col gap-1.5">
-
-                                    <!-- Заголовок -->
-                                    <h3
-                                        class="text-white text-xl md:text-2xl font-black uppercase tracking-wide leading-tight font-[Oswald]">
-                                        {{ $category->getLabel() }}
-                                    </h3>
-                                    <!-- Опис (спочатку невидимий) -->
-                                    <p
-                                        class="text-white/70 text-xs md:text-sm font-medium leading-relaxed line-clamp-2 opacity-0 max-h-0 overflow-hidden transition-all duration-500 group-hover:opacity-100 group-hover:max-h-20">
-                                        {{ $category->description() }}
-                                    </p>
-
-                                    <!-- Кнопка "Переглянути" -->
-                                    <div class="">
-                                        <span
-                                            class="inline-flex items-center gap-2.5 text-xs font-bold uppercase text-orange-500 group-hover:text-amber-400 transition-colors">
-                                            Переглянути
-                                            <x-lucide-arrow-right
-                                                class="size-3 transition-transform duration-300 group-hover:translate-x-1" />
-                                        </span>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
-            @endif
+            @includeWhen($this->collection === null, 'partials.product.collections', [
+                'collections' => ProductCategory::cases(),
+            ])
 
             <div class="flex justify-between 2.5 py-2.5 sticky top-16 z-40 bg-zinc-50">
                 <!-- 🔍 Пошук + 🔽 Фільтр (Перший ряд на моб) -->
@@ -661,7 +597,7 @@ new class extends Component {
                     'lg:grid-cols-2' => $view === 'list' || $view === 'cards',
                 ])>
                     @forelse($this->products as $product)
-                        <x-product-card :$product :$view :category="$this->category" />
+                        <x-product-card :$product :$view :collection="$this->collection" />
 
                         @includeWhen($loop->iteration % 10 == 0, 'partials.product.manufacture-section')
                     @empty
@@ -676,7 +612,7 @@ new class extends Component {
 
                     {{-- Секція плейсхолдерів --}}
                     <div wire:loading.grid wire:target="loadMore" @class([
-                        'w-full gap-5 transition-all duration-500', // Прибрали grid з @class, бо wire:loading.grid його додасть
+                        'w-full gap-5 transition-all duration-500',
                         'grid-cols-2 lg:grid-cols-2' => $view === 'grid',
                         'grid-cols-1 lg:grid-cols-2' => $view === 'list' || $view === 'cards',
                     ])>

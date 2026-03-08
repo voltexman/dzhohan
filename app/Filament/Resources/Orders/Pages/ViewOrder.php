@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Orders\Pages;
 
-use App\Enums\OrderStatus;
+use App\Enums\Order\OrderStatus;
 use App\Filament\Resources\Orders\OrderResource;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;

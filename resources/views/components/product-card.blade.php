@@ -1,6 +1,6 @@
-@props(['product', 'view', 'category'])
+@props(['product', 'view', 'collection'])
 
-<a href="{{ route('product.show', ['category' => $product->category->value, 'product' => $product->slug]) }}"
+<a href="{{ route('product.show', ['collection' => $product->collection->value, 'product' => $product->slug]) }}"
     @class([
         'relative transition group rounded-sm overflow-hidden',
         'bg-white border border-zinc-200/50 hover:border-zinc-200' =>
@@ -62,13 +62,13 @@
             {{ $product->name }}
         </h3>
 
-        @if (!$category)
+        @if (!$collection)
             <div @class([
                 'font-[Oswald] tracking-wide w-full',
                 'text-gray-600' => $view !== 'cards',
                 'text-gray-400' => $view === 'cards',
             ])>
-                {{ $product->category->getLabel() }}
+                {{ $product->collection->getLabel() }}
             </div>
         @endif
 

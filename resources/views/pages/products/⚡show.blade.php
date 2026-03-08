@@ -96,7 +96,7 @@ new #[Layout('layouts::cart')] class extends Component {
     <div class="flex flex-col mt-2.5 px-6 lg:px-10">
         <div class="text-black font-[SN_Pro] text-xl font-semibold">{{ $product->name }}</div>
         <div class="text-gray-600 text-sm font-[Oswald] font-medium tracking-wide leading-none">
-            {{ $product->category->getLabel() }}
+            {{ $product->collection->getLabel() }}
         </div>
     </div>
 
@@ -125,7 +125,7 @@ new #[Layout('layouts::cart')] class extends Component {
         @endif
     </div>
 
-    <x-table class="flex-none lg:ms-10 mt-10 w-full max-w-md">
+    <x-table class="flex-none lg:ms-10 mt-10 w-full lg:max-w-md">
         @if ($product->sku)
             <x-table.row>
                 <x-table.cell class="font-semibold text-black text-nowrap">Артикул (SKU)</x-table.cell>
@@ -138,30 +138,50 @@ new #[Layout('layouts::cart')] class extends Component {
             <x-table.cell class="text-gray-700">{{ $product->steel->label() }}</x-table.cell>
         </x-table.row>
 
-        <x-table.row>
-            <x-table.cell class="font-semibold text-black text-nowrap">Матеріал руків'я</x-table.cell>
-            <x-table.cell class="text-gray-700">{{ $product->handle_material->label() }}</x-table.cell>
-        </x-table.row>
+        {{-- НОВЕ: Тип спусків --}}
+        @if ($product->blade_grind)
+            <x-table.row>
+                <x-table.cell class="font-semibold text-black text-nowrap">Тип спусків</x-table.cell>
+                <x-table.cell class="text-gray-700">{{ $product->blade_grind->label() }}</x-table.cell>
+            </x-table.row>
+        @endif
 
         <x-table.row>
             <x-table.cell class="font-semibold text-black text-nowrap">Профіль клинка</x-table.cell>
             <x-table.cell class="text-gray-700">{{ $product->blade_shape->label() }}</x-table.cell>
         </x-table.row>
 
+        {{-- НОВЕ: Фінішна обробка --}}
+        @if ($product->blade_finish)
+            <x-table.row>
+                <x-table.cell class="font-semibold text-black text-nowrap">Фінішна обробка</x-table.cell>
+                <x-table.cell class="text-gray-700">{{ $product->blade_finish->label() }}</x-table.cell>
+            </x-table.row>
+        @endif
+
+        <x-table.row>
+            <x-table.cell class="font-semibold text-black text-nowrap">Матеріал руків'я</x-table.cell>
+            <x-table.cell class="text-gray-700">{{ $product->handle_material->label() }}</x-table.cell>
+        </x-table.row>
+
+        {{-- НОВЕ: Піхви / Чохол --}}
+        @if ($product->sheath)
+            <x-table.row>
+                <x-table.cell class="font-semibold text-black text-nowrap">Піхви / Чохол</x-table.cell>
+                <x-table.cell class="text-gray-700">{{ $product->sheath->label() }}</x-table.cell>
+            </x-table.row>
+        @endif
+
         <x-table.row>
             <x-table.cell class="font-semibold text-black text-nowrap">Наявність</x-table.cell>
             <x-table.cell>
                 @if ($product->hasStock())
                     <x-lucide-check-circle class="size-5 stroke-green-500 inline-flex mr-1" />
-                    @if ($product->quantity === 1)
-                        <span class="text-green-500 text-sm">
-                            В наявності
-                        </span>
-                    @endif
+                    <span class="text-green-500 text-sm font-medium">В наявності</span>
                 @else
-                    <span class="text-red-500 text-sm block">
-                        Немає в наявності <br>
-                        <span class="text-xs text-gray-500 leading-4 block">
+                    <span class="text-red-500 text-sm block font-medium">
+                        Немає в наявності
+                        <span class="text-[11px] text-gray-500 leading-4 block font-normal">
                             можемо виготовити спеціально для вас
                         </span>
                     </span>
@@ -170,23 +190,14 @@ new #[Layout('layouts::cart')] class extends Component {
         </x-table.row>
     </x-table>
 
+
     <div class="max-w-2xl mt-10 space-y-2 px-6 lg:px-10">
         <h3 class="text-lg font-semibold font-[SN_Pro]">Огляд та особливості</h3>
         <p class="text-gray-700 font-[Inter]">{{ $product->description }}</p>
     </div>
 
     <div class="px-6 lg:px-10 mt-6 flex flex-wrap gap-2.5">
-        @foreach ($product->tags as $tag)
-            <a href="{{ route('products', ['filters[tags][]' => $tag->id]) }}"
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 transition-colors group">
-
-                <x-lucide-tag class="size-3.5 text-zinc-500 group-hover:text-zinc-900 transition-colors" />
-
-                <span class="text-xs font-medium text-zinc-700 group-hover:text-zinc-900">
-                    {{ $tag->name }}
-                </span>
-            </a>
-        @endforeach
+        @each('partials.product.show.tags', $product->tags, 'tag')
     </div>
 
     <div class="max-w-lg mt-10 scroll-mt-6 lg:scroll-mt-10 px-6 lg:px-10" id="comments-section">

@@ -45,18 +45,17 @@ class OrderSubmitted extends Notification
             ->line('🚚 <b>Адреса:</b> '.e("{$o->city}, {$o->address}"))
 
             // Список товарів
-            // Правильний варіант для товарів
             ->when($o->products->isNotEmpty(), function ($m) use ($o) {
                 $o->products->each(function ($p) use ($m) {
                     $m->line('• '.e($p->product_name)." ({$p->qty}шт.)");
                 });
             })
 
-            // Характеристики виготовлення (з примусовим кастом до bool)
+            // Характеристики виготовлення
             ->when(
                 $o->type === OrderType::Manufacturing,
                 fn ($m) => $m
-                    ->line("\n🔪 <b>ХАРАКТЕРИСТИКИ:</b>")
+                    ->line("\n🔪 <b>ВИГОТОВЛЕННЯ:</b>")
                     ->lineIf((bool) $v = $c->get('shape'), "• Форма: {$v}")
                     ->lineIf((bool) $v = $c->get('steel'), "• Сталь: {$v}")
                     ->lineIf((bool) $v = $c->get('grind'), "• Спуски: {$v}")

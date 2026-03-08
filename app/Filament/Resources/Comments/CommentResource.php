@@ -12,10 +12,13 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class CommentResource extends Resource
 {
     protected static ?string $model = Comment::class;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Зворотний зв`язок';
 
     protected static ?int $navigationSort = 4;
 
@@ -23,7 +26,7 @@ class CommentResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Коментарі';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleLeftRight;
 
     public static function form(Schema $schema): Schema
     {

@@ -24,9 +24,9 @@ class ProductFactory extends Factory
             'sku' => fake()->unique()->bothify('??-####'),
             'description' => fake()->paragraph(3),
             'price' => fake()->randomFloat(2, 1500, 12000),
-            'quantity' => fake()->numberBetween(0, 20),
+            'quantity' => fake()->numberBetween(0, 1),
             'is_active' => fake()->boolean(90),
-            'category' => fake()->randomElement(ProductCategory::cases()),
+            'collection' => fake()->randomElement(ProductCategory::cases()),
 
             // Характеристики (Enums)
             'steel' => fake()->randomElement(SteelType::cases()),

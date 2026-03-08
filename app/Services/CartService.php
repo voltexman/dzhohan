@@ -46,6 +46,7 @@ class CartService
                 'price' => $product->price,
                 'image' => $product->getFirstMediaUrl('products', 'thumb'),
                 'qty' => 0,
+                'stock' => $product->quantity,
             ];
         }
 

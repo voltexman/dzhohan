@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\PostType;
+use App\Enums\Blog\PostType;
 use Livewire\Attributes\Session;
 use Livewire\Component;
 use App\Models\Post;

@@ -41,6 +41,19 @@
 }
 
 @layer utilities {
+    .animate-ricochet {
+        animation: ricochet 35s linear alternate infinite;
+    }
+
+    @keyframes ricochet {
+        0% {
+            background-position: left center;
+        }
+        100% {
+            background-position: right center;
+        }
+    }
+
     .no-native-time-icon::-webkit-calendar-picker-indicator {
         display: none;
         -webkit-appearance: none;

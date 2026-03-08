@@ -17,9 +17,9 @@ enum ProductCategory: string implements HasLabel
         return match ($this) {
             self::TACTICAL => 'Тактичні ножі',
             self::KITCHEN => 'Кухонні ножі',
-            self::HUNTING => 'Ножі для полювання',
-            self::EDC => 'Ножі на кожен день',
-            self::OUTDOOR => 'Ножі для походів',
+            self::HUNTING => 'Для полювання',
+            self::EDC => 'На кожен день',
+            self::OUTDOOR => 'Для походів',
         };
     }
 
@@ -31,6 +31,17 @@ enum ProductCategory: string implements HasLabel
             self::HUNTING => 'hunting-category-bg.png',
             self::EDC => 'everyday-category-bg.png',
             self::OUTDOOR => 'outdoor-category-bg.png',
+        };
+    }
+
+    public function icons(): string
+    {
+        return match ($this) {
+            self::TACTICAL => 'tactical-icon.png',
+            self::KITCHEN => 'kitchen-icon.png',
+            self::HUNTING => 'hunting-icon.png',
+            self::EDC => 'everyday-icon.png',
+            self::OUTDOOR => 'outdoor-icon.png',
         };
     }
 
@@ -58,20 +69,20 @@ enum ProductCategory: string implements HasLabel
 
     public function url(): string
     {
-        return route('products.category', [
-            'category' => $this->value,
+        return route('products.collection', [
+            'collection' => $this->value,
         ]);
     }
 
     public static function options(): array
     {
         return collect(self::cases())
-            ->mapWithKeys(fn ($case) => [$case->value => $case->getLabel()])
+            ->mapWithKeys(fn($case) => [$case->value => $case->getLabel()])
             ->toArray();
     }
 
     public static function values(): array
     {
-        return array_map(fn ($case) => $case->value, self::cases());
+        return array_map(fn($case) => $case->value, self::cases());
     }
 }

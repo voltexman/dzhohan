@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Orders;
 
-use App\Enums\OrderStatus;
+use App\Enums\Order\OrderStatus;
 use App\Filament\Resources\Orders\Pages\ListOrders;
 use App\Filament\Resources\Orders\Pages\ViewOrder;
 use App\Filament\Resources\Orders\Schemas\OrderForm;

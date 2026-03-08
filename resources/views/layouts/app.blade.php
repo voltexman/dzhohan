@@ -43,7 +43,7 @@
         <div class="flex gap-1 ms-auto">
             <livewire:search position="end" />
 
-            @if (!request()->routeIs('order'))
+            @if (!request()->routeIs('checkout'))
                 <livewire:cart position="end" />
             @endif
 

@@ -139,7 +139,7 @@ new class extends Component {
                     'max-w-72': !mobileFullWidth && !(position === 'top' || position === 'bottom'),
                 }">
                 <!-- Header -->
-                <div class="flex min-h-16 flex-none items-center justify-between border-b border-zinc-50 px-6 md:px-10">
+                <div class="flex min-h-16 flex-none items-center justify-between border-b border-zinc-50 px-5 md:px-10">
                     <h3 id="offcanvas-title" class="py-5 font-medium">Кошик</h3>
 
                     <!-- Close Button -->
@@ -152,7 +152,7 @@ new class extends Component {
                 <!-- END Header -->
 
                 <!-- Content -->
-                <div class="flex grow flex-col overflow-y-auto p-5 md:p-7">
+                <div class="flex grow flex-col overflow-y-auto px-5 py-2.5 md:px-10 md:py-5">
                     <div x-transition:enter="transition ease-out duration-300"
                         x-transition:enter-start="opacity-0 translate-y-4"
                         x-transition:enter-end="opacity-100 translate-y-0"
@@ -160,6 +160,7 @@ new class extends Component {
                         x-transition:leave-start="opacity-100 translate-y-0"
                         x-transition:leave-end="opacity-0 translate-y-4"
                         class="flex flex-col size-full max-w-xl mx-auto">
+
                         <div class="flex flex-col grow overflow-y-auto">
                             @if ($this->cartItems->isEmpty())
                                 <!-- Стан: Порожньо -->
@@ -190,32 +191,32 @@ new class extends Component {
                                     </div>
                                 </div>
                             @endif
-
-                            <!-- Нижня частина з підсумком -->
-                            @if ($this->cartItems->isNotEmpty())
-                                <div class="pt-5 border-t border-zinc-100 mt-auto">
-                                    <div class="flex justify-between items-center mb-6">
-                                        <span class="text-gray-500 font-semibold">Разом до сплати:</span>
-                                        <span class="text-2xl font-bold text-gray-900">
-                                            {{ number_format($this->total, 0, '.', ' ') }} грн
-                                        </span>
-                                    </div>
-
-                                    <div class="flex flex-col gap-2.5 items-center">
-                                        <a href="{{ route('order') }}"
-                                            class="bg-black hover:bg-gray-900 text-white py-3.5 px-10 text-sm inline-flex items-center justify-center rounded-md font-medium w-fit"
-                                            wire:navigate>
-                                            Оформити замовлення
-                                        </a>
-                                        <button wire:click="open = null"
-                                            class="w-fit text-sm text-gray-500 font-medium py-2.5 cursor-pointer">
-                                            Продовжити покупки
-                                        </button>
-                                    </div>
-                                </div>
-                            @endif
                         </div>
                     </div>
+
+                    <!-- Нижня частина з підсумком -->
+                    @if ($this->cartItems->isNotEmpty())
+                        <div class="pt-1.5 border-t border-zinc-100 mt-auto grow">
+                            <div class="flex justify-between items-center mb-5">
+                                <span class="text-gray-500 font-semibold">Разом до сплати:</span>
+                                <span class="text-2xl font-bold text-gray-900">
+                                    {{ number_format($this->total, 0, '.', ' ') }} грн
+                                </span>
+                            </div>
+
+                            <div class="flex flex-col gap-2.5 items-center">
+                                <a href="{{ route('checkout') }}"
+                                    class="bg-black hover:bg-gray-900 text-white py-3.5 px-10 text-sm inline-flex items-center justify-center rounded-md font-medium w-fit"
+                                    wire:navigate>
+                                    Оформити замовлення
+                                </a>
+                                <button wire:click="open = null"
+                                    class="w-fit text-sm text-gray-500 font-medium py-2.5 cursor-pointer">
+                                    Продовжити покупки
+                                </button>
+                            </div>
+                        </div>
+                    @endif
                 </div>
                 <!-- END Content -->
             </div>

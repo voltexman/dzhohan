@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Orders\RelationManagers;
 
-use App\Enums\OrderType;
+use App\Enums\Order\OrderType;
 use App\Models\Order;
 use Filament\Actions\AssociateAction;
 use Filament\Actions\BulkActionGroup;

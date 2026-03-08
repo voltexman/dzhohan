@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\PostType;
+use App\Enums\Blog\PostType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
