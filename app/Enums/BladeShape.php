@@ -2,7 +2,9 @@
 
 namespace App\Enums;
 
-enum BladeShape: string
+use Filament\Support\Contracts\HasLabel;
+
+enum BladeShape: string implements HasLabel
 {
     case CLASSIC = 'classic';
     case PERSIAN = 'persian';
@@ -16,7 +18,7 @@ enum BladeShape: string
     case HAWKBILL = 'hawkbill';
     case TANTO = 'tanto';
 
-    public function label(): string
+    public function getLabel(): string
     {
         return match ($this) {
             self::CLASSIC => 'Класичний',

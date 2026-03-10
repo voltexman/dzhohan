@@ -2,19 +2,20 @@
 
 namespace App\Enums;
 
-enum BladeFinish: string
+use Filament\Support\Contracts\HasLabel;
+
+enum BladeFinish: string implements HasLabel
 {
-    // Візуальні фініші (Поверхня)
     case SATIN = 'satin';
     case STONEWASH = 'stonewash';
     case BLACK_STONEWASH = 'black_stonewash';
     case BEAD_BLAST = 'bead_blast';
     case MIRROR_POLISH = 'mirror_polish';
     case BLACK_OXIDE = 'black_oxide';
-    case DLC = 'dlc_coating'; // Diamond Like Carbon (преміум покриття)
-    case CERAKOTE = 'cerakote'; // Керамічне покриття
+    case DLC = 'dlc_coating';
+    case CERAKOTE = 'cerakote';
 
-    public function label(): string
+    public function getLabel(): string
     {
         return match ($this) {
             self::SATIN => 'Сатин (Satin Finish)',

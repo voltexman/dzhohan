@@ -2,7 +2,9 @@
 
 namespace App\Enums;
 
-enum HandleMaterial: string
+use Filament\Support\Contracts\HasLabel;
+
+enum HandleMaterial: string implements HasLabel
 {
     case G10 = 'g10';
     case MICARTA = 'micarta';
@@ -16,7 +18,7 @@ enum HandleMaterial: string
     case PARACORD = 'paracord';
     case ELASTRON = 'elastron';
 
-    public function label(): string
+    public function getLabel(): string
     {
         return match ($this) {
             self::G10 => 'G10 (Склотекстоліт)',

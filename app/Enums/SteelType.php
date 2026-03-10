@@ -2,7 +2,9 @@
 
 namespace App\Enums;
 
-enum SteelType: string
+use Filament\Support\Contracts\HasLabel;
+
+enum SteelType: string implements HasLabel
 {
     // Бюджетні та середні
     case S440C = '440c';
@@ -31,7 +33,7 @@ enum SteelType: string
     case M398 = 'm398';
     case S90V = 's90v';
 
-    public function label(): string
+    public function getLabel(): string
     {
         return match ($this) {
             self::S440C => '440C',

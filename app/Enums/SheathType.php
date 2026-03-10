@@ -2,7 +2,9 @@
 
 namespace App\Enums;
 
-enum SheathType: string
+use Filament\Support\Contracts\HasLabel;
+
+enum SheathType: string implements HasLabel
 {
     case LEATHER = 'leather';
     case KYDEX = 'kydex';
@@ -11,7 +13,7 @@ enum SheathType: string
     case WOOD = 'wood';
     case NONE = 'none';
 
-    public function label(): string
+    public function getLabel(): string
     {
         return match ($this) {
             self::LEATHER => 'Натуральна шкіра',

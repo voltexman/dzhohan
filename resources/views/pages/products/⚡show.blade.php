@@ -135,40 +135,40 @@ new #[Layout('layouts::cart')] class extends Component {
 
         <x-table.row>
             <x-table.cell class="font-semibold text-black text-nowrap">Марка сталі</x-table.cell>
-            <x-table.cell class="text-gray-700">{{ $product->steel->label() }}</x-table.cell>
+            <x-table.cell class="text-gray-700">{{ $product->steel->getLabel() }}</x-table.cell>
         </x-table.row>
 
         {{-- НОВЕ: Тип спусків --}}
         @if ($product->blade_grind)
             <x-table.row>
                 <x-table.cell class="font-semibold text-black text-nowrap">Тип спусків</x-table.cell>
-                <x-table.cell class="text-gray-700">{{ $product->blade_grind->label() }}</x-table.cell>
+                <x-table.cell class="text-gray-700">{{ $product->blade_grind->getLabel() }}</x-table.cell>
             </x-table.row>
         @endif
 
         <x-table.row>
             <x-table.cell class="font-semibold text-black text-nowrap">Профіль клинка</x-table.cell>
-            <x-table.cell class="text-gray-700">{{ $product->blade_shape->label() }}</x-table.cell>
+            <x-table.cell class="text-gray-700">{{ $product->blade_shape->getLabel() }}</x-table.cell>
         </x-table.row>
 
         {{-- НОВЕ: Фінішна обробка --}}
         @if ($product->blade_finish)
             <x-table.row>
                 <x-table.cell class="font-semibold text-black text-nowrap">Фінішна обробка</x-table.cell>
-                <x-table.cell class="text-gray-700">{{ $product->blade_finish->label() }}</x-table.cell>
+                <x-table.cell class="text-gray-700">{{ $product->blade_finish->getLabel() }}</x-table.cell>
             </x-table.row>
         @endif
 
         <x-table.row>
             <x-table.cell class="font-semibold text-black text-nowrap">Матеріал руків'я</x-table.cell>
-            <x-table.cell class="text-gray-700">{{ $product->handle_material->label() }}</x-table.cell>
+            <x-table.cell class="text-gray-700">{{ $product->handle_material->getLabel() }}</x-table.cell>
         </x-table.row>
 
         {{-- НОВЕ: Піхви / Чохол --}}
         @if ($product->sheath)
             <x-table.row>
                 <x-table.cell class="font-semibold text-black text-nowrap">Піхви / Чохол</x-table.cell>
-                <x-table.cell class="text-gray-700">{{ $product->sheath->label() }}</x-table.cell>
+                <x-table.cell class="text-gray-700">{{ $product->sheath->getLabel() }}</x-table.cell>
             </x-table.row>
         @endif
 

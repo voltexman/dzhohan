@@ -2,14 +2,16 @@
 
 namespace App\Enums;
 
-enum BladeGrind: string
+use Filament\Support\Contracts\HasLabel;
+
+enum BladeGrind: string implements HasLabel
 {
     case FLAT = 'flat';
     case HOLLOW = 'hollow';
     case SCANDI = 'scandi';
     case CONVEX = 'convex';
 
-    public function label(): string
+    public function getLabel(): string
     {
         return match ($this) {
             self::FLAT => 'Прямі спуски',
