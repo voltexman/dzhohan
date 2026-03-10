@@ -14,14 +14,13 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'number' => str_replace('.', '', microtime(true)) . rand(10, 99),
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'phone' => fake()->phoneNumber(),
             'email' => fake()->unique()->safeEmail(),
             'delivery_method' => fake()->randomElement(DeliveryMethod::cases()),
             'city' => fake()->city(),
-            'address' => 'Відділення №' . fake()->numberBetween(1, 50),
+            'address' => 'Відділення №'.fake()->numberBetween(1, 50),
             'comment' => fake()->optional()->sentence(15),
             'type' => fake()->randomElement(OrderType::cases()),
             'status' => fake()->randomElement(OrderStatus::cases()),

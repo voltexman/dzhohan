@@ -24,7 +24,7 @@ class ProductFactory extends Factory
             'sku' => fake()->unique()->bothify('??-####'),
             'description' => fake()->paragraph(3),
             'price' => fake()->randomFloat(2, 1500, 12000),
-            'quantity' => fake()->numberBetween(0, 2),
+            'quantity' => fake()->numberBetween(0, 1),
             'is_active' => fake()->boolean(90),
             'collection' => fake()->randomElement(ProductCategory::cases()),
 
@@ -47,7 +47,7 @@ class ProductFactory extends Factory
     {
         return $this->afterCreating(function (Product $product) {
             collect(range(1, rand(2, 6)))->each(function () use ($product) {
-                $path = database_path('seeders/images/product-test-' . rand(1, 12) . '.jpg');
+                $path = database_path('seeders/images/product-test-'.rand(1, 12).'.jpg');
 
                 if (file_exists($path)) {
                     $product->addMedia($path)

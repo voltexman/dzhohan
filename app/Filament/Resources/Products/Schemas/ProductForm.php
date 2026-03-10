@@ -19,7 +19,6 @@ class ProductForm
         return $schema
             ->components([
 
-
                 Tabs::make('Product Details')
                     ->columnSpanFull()
                     ->tabs([
@@ -49,7 +48,7 @@ class ProductForm
                                         \Filament\Forms\Components\TextInput::make('name')
                                             ->required()
                                             ->live(onBlur: true)
-                                            ->afterStateUpdated(fn($set, $state) => $set('slug', \Illuminate\Support\Str::slug($state))),
+                                            ->afterStateUpdated(fn ($set, $state) => $set('slug', \Illuminate\Support\Str::slug($state))),
                                         \Filament\Forms\Components\TextInput::make('slug')
                                             ->required()
                                             ->unique('tags', 'slug'),

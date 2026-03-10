@@ -50,12 +50,10 @@ class DatabaseSeeder extends Seeder
             $post->tags()->attach($tags->random(rand(1, 3)));
         });
 
-        Feedback::factory(50)->create();
+        Feedback::factory()->count(50)->create();
 
-        Order::withoutEvents(function () {
-            Order::factory()->count(50)->create();
-        });
+        Order::factory()->count(50)->create();
 
-        Subscriber::factory(50)->create();
+        Subscriber::factory()->count(50)->create();
     }
 }

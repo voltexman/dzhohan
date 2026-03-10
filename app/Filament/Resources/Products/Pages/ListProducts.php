@@ -12,11 +12,6 @@ class ListProducts extends ListRecords
 {
     protected static string $resource = ProductResource::class;
 
-    // public function getHeading(): string
-    // {
-    //     return '';
-    // }
-
     protected function getHeaderActions(): array
     {
         return [
@@ -30,7 +25,7 @@ class ListProducts extends ListRecords
 
         return [
             'all' => Tab::make('Всі')
-                ->label('Всі товари')
+                ->label('Всі')
                 ->icon('heroicon-m-list-bullet'),
 
             'in_stock' => Tab::make('В наявності')

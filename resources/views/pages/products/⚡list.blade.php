@@ -151,7 +151,7 @@ new class extends Component {
 @endsection
 
 <div x-data="{ open: false }" class="lg:min-h-screen bg-neutral-50">
-    <div class="max-w-6xl lg:grid lg:grid-cols-3 lg:gap-10 mx-auto">
+    <div class="max-w-5xl xl:max-w-6xl mx-auto lg:grid lg:grid-cols-3 lg:gap-10">
         <aside
             class="sticky top-16 lg:top-14 z-40 lg:h-screen w-full border-b lg:border-b-0 lg:border-r border-zinc-200 bg-linear-to-b lg:bg-linear-to-r from-zinc-50 lg:from-transparent to-zinc-100">
             <div class="h-16 w-full bg-zinc-100 px-5 lg:hidden flex justify-center items-center overflow-hidden">

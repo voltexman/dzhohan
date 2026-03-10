@@ -2,11 +2,10 @@
 
 namespace App\Filament\Resources\Orders\Pages;
 
-use App\Enums\Order\OrderStatus;
+use App\Enums\Order\OrderType;
 use App\Filament\Resources\Orders\OrderResource;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
-use Illuminate\Database\Eloquent\Builder;
 
 class ListOrders extends ListRecords
 {
@@ -28,31 +27,19 @@ class ListOrders extends ListRecords
 
         return [
             'all' => Tab::make('Всі')
-                ->label('Всі'),
+                ->badge($model::count()),
 
-            'new' => Tab::make('Нові')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', OrderStatus::Pending))
-                ->icon('heroicon-m-sparkles')
-                ->badge($model::where('status', OrderStatus::Pending)->count())
-                ->badgeColor('danger'),
-
-            'manufacturing' => Tab::make('У виробництві')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', OrderStatus::Manufacturing))
-                ->icon('heroicon-m-wrench-screwdriver')
-                ->badge($model::where('status', OrderStatus::Manufacturing)->count())
-                ->badgeColor('info'),
-
-            'completed' => Tab::make('Виконані')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', OrderStatus::Completed))
-                ->icon('heroicon-m-check-badge')
-                ->badge($model::where('status', OrderStatus::Completed)->count())
+            'purchase' => Tab::make('Купівля')
+                ->modifyQueryUsing(fn ($query) => $query->where('type', OrderType::Purchase))
+                ->icon('heroicon-m-shopping-cart')
+                ->badge($model::where('type', OrderType::Purchase)->count())
                 ->badgeColor('success'),
 
-            'cancelled' => Tab::make('Скасовані')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', OrderStatus::Cancelled))
-                ->icon('heroicon-m-x-circle')
-                ->badge($model::where('status', OrderStatus::Cancelled)->count())
-                ->badgeColor('gray'),
+            'manufacturing' => Tab::make('Виготовлення')
+                ->modifyQueryUsing(fn ($query) => $query->where('type', OrderType::Manufacturing))
+                ->icon('heroicon-m-wrench-screwdriver')
+                ->badge($model::where('type', OrderType::Manufacturing)->count())
+                ->badgeColor('warning'),
         ];
     }
 }

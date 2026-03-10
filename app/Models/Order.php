@@ -37,7 +37,7 @@ class Order extends Model
         parent::boot();
 
         static::creating(function ($order) {
-            $order->number = (now()->getTimestamp() % 86400) . rand(100, 999);
+            $order->number = (now()->getTimestamp() % 86400).rand(100, 999);
         });
     }
 

@@ -9,7 +9,7 @@ use App\Livewire\Forms\OrderForm;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use App\Enums\Order\DeliveryMethod;
-use App\Notifications\OrderSubmitted;
+use App\Notifications\OrderPurchaseSubmitted;
 
 new class extends Component {
     public OrderForm $form;
@@ -43,7 +43,10 @@ new class extends Component {
 
         $this->subscribe && Subscriber::firstOrCreate(['email' => $this->form->email]);
 
-        Notification::route('telegram', env('TELEGRAM_CHAT_ID'))->notify(new OrderSubmitted($order));
+        Notification::routes([
+            'mail' => env('ADMIN_EMAIL'),
+            'telegram' => env('TELEGRAM_CHAT_ID'),
+        ])->notify(new OrderPurchaseSubmitted($order));
 
         $this->cartService()->clear();
 

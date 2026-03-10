@@ -12,6 +12,8 @@ use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
@@ -26,17 +28,14 @@ class ProductsTable
                     ->conversion('preview')
                     ->square()
                     ->limit(1)
+                    ->circular()
                     ->label(false),
 
                 TextColumn::make('name')
                     ->searchable()
-                    ->weight(FontWeight::Medium)
-                    ->label('Назва'),
-
-                TextColumn::make('sku')
-                    ->label('SKU')
-                    ->weight(FontWeight::Bold)
-                    ->searchable(),
+                    ->weight(FontWeight::SemiBold)
+                    ->description(fn($record) => $record->sku)
+                    ->label('Товар'),
 
                 TextColumn::make('price')
                     ->money()
@@ -52,26 +51,32 @@ class ProductsTable
                         $state === 1 => 'В наявності',
                         default => 'Проданий',
                     })
+                    ->alignCenter()
                     ->sortable(),
 
-                IconColumn::make('is_active')
+                ToggleColumn::make('is_active')
                     ->label('Видимість')
-                    ->icon(fn($state): string => $state ? 'heroicon-o-eye' : 'heroicon-o-eye-slash')
-                    ->color(fn($state): string => $state ? 'success' : 'gray')
                     ->alignCenter(),
 
-                TextColumn::make('category')
+                TextColumn::make('collection')
                     ->badge()
                     ->searchable()
-                    ->label('Категорія'),
+                    ->label('Колекція'),
 
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->striped()
             ->filters([
                 TrashedFilter::make(),
+                TernaryFilter::make('stock')
+                    ->label('В наявності')
+                    ->queries(
+                        true: fn($q) => $q->where('stock', '>', 0),
+                        false: fn($q) => $q->where('stock', 0),
+                    ),
             ])
             ->recordActions([
                 ViewAction::make(),

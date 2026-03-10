@@ -59,7 +59,7 @@
     <footer class="flex flex-col border-t border-zinc-200"
         style="background-image: linear-gradient(to top, rgb(250 250 250), rgb(228 228 231 / 0.6)), url('{{ Vite::asset('resources/images/bg-footer.svg') }}'); background-size: cover, cover; background-repeat: no-repeat, repeat;">
         <div
-            class="max-w-5xl mx-auto px-6 py-20 lg:px-0 flex flex-col lg:flex-row gap-y-7.5 items-center justify-between w-full">
+            class="max-w-5xl xl:max-w-6xl mx-auto px-6 py-20 lg:px-0 flex flex-col lg:flex-row gap-y-7.5 items-center justify-between w-full">
 
             {{-- СОЦІАЛЬНІ МЕРЕЖІ --}}
             <div class="flex flex-col items-center lg:items-start order-3 lg:order-1">

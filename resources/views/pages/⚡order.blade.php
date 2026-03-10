@@ -8,7 +8,7 @@ use App\Enums\BladeShape;
 use App\Models\Order;
 use App\Models\Subscriber;
 use App\Livewire\Forms\OrderForm;
-use App\Notifications\OrderSubmitted;
+use App\Notifications\OrderManufactureSubmitted;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Attributes\Validate;
 use Livewire\Attributes\Computed;
@@ -63,6 +63,11 @@ new class extends Component {
         $order->manufacture()->create($this->all());
 
         $this->subscribe && Subscriber::firstOrCreate(['email' => $this->form->email]);
+
+        Notification::routes([
+            'mail' => env('ADMIN_EMAIL'),
+            'telegram' => env('TELEGRAM_CHAT_ID'),
+        ])->notify(new OrderManufactureSubmitted($order));
 
         session()->flash('success-order', $order->number);
     }

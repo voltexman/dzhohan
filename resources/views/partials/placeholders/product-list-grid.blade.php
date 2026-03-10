@@ -1,6 +1,6 @@
 <div class="relative flex flex-col overflow-hidden bg-white border border-zinc-200/50 animate-pulse">
     <!-- Зображення -->
-    <div class="w-full h-48 lg:h-72 bg-zinc-200"></div>
+    <div class="w-full h-40 lg:h-72 bg-zinc-200"></div>
 
     <!-- Контент -->
     <div class="p-4 flex flex-col flex-1">
