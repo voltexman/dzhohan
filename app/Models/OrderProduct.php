@@ -10,14 +10,9 @@ class OrderProduct extends Model
     protected $fillable = [
         'order_id',
         'product_id',
-        'product_name',
-        'custom_options',
+        'name',
         'qty',
         'price',
-    ];
-
-    protected $casts = [
-        'custom_options' => 'array',
     ];
 
     public function order(): BelongsTo

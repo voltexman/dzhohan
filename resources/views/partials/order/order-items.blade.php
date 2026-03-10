@@ -1,4 +1,4 @@
-<div class="py-5 flex flex-col gap-2">
+<div class="py-5 flex flex-col">
     <div class="flex justify-between gap-5">
         <div class="flex flex-col">
             <span class="font-bold text-gray-900 leading-tight">{{ $item->name }}</span>

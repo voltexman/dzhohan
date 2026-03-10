@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('sku')->nullable()->unique();
-            $table->longText('description')->nullable();
+            $table->text('description')->nullable();
 
             $table->decimal('price', 10, 2);
             $table->unsignedInteger('quantity')->default(1);

@@ -34,7 +34,7 @@ class ProductsRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                TextInput::make('product_name')
+                TextInput::make('name')
                     ->required()
                     ->label('Назва')
                     ->maxLength(255),
@@ -44,12 +44,12 @@ class ProductsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('product_name')
+            ->recordTitleAttribute('name')
             ->paginated(false)
             ->heading('Список товарів')
             ->description('Перелік товарів в замовленні.')
             ->columns([
-                TextColumn::make('product_name')->label('Назва товару'),
+                TextColumn::make('name')->label('Назва товару'),
                 TextColumn::make('qty')->label('Кількість'),
                 TextColumn::make('price')->label('Вартість'),
             ])

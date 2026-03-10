@@ -30,11 +30,12 @@ class ProductsTable
 
                 TextColumn::make('name')
                     ->searchable()
+                    ->weight(FontWeight::Medium)
                     ->label('Назва'),
 
                 TextColumn::make('sku')
                     ->label('SKU')
-                    ->weight(FontWeight::SemiBold)
+                    ->weight(FontWeight::Bold)
                     ->searchable(),
 
                 TextColumn::make('price')
@@ -42,13 +43,22 @@ class ProductsTable
                     ->sortable()
                     ->label('Ціна'),
 
-                TextColumn::make('stock')
-                    ->numeric()
-                    ->sortable()
-                    ->label('Наявність'),
+                IconColumn::make('stock')
+                    ->label('Наявність')
+                    ->color(fn($state) => $state > 0 ? 'success' : 'gray')
+                    ->icon(fn($state) => $state > 0 ? 'heroicon-o-check-circle' : 'heroicon-o-minus-circle')
+                    ->tooltip(fn($state) => match (true) {
+                        $state > 1 => "В наявності: {$state}",
+                        $state === 1 => 'В наявності',
+                        default => 'Проданий',
+                    })
+                    ->sortable(),
 
                 IconColumn::make('is_active')
-                    ->boolean(),
+                    ->label('Видимість')
+                    ->icon(fn($state): string => $state ? 'heroicon-o-eye' : 'heroicon-o-eye-slash')
+                    ->color(fn($state): string => $state ? 'success' : 'gray')
+                    ->alignCenter(),
 
                 TextColumn::make('category')
                     ->badge()

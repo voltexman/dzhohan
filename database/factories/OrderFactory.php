@@ -14,16 +14,15 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'number' => now()->format('dy').'-'.fake()->unique()->numberBetween(1000, 9999),
+            'number' => str_replace('.', '', microtime(true)) . rand(10, 99),
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'phone' => fake()->phoneNumber(),
-            'email' => fake()->safeEmail(),
+            'email' => fake()->unique()->safeEmail(),
             'delivery_method' => fake()->randomElement(DeliveryMethod::cases()),
             'city' => fake()->city(),
-            'address' => 'Відділення №'.fake()->numberBetween(1, 50),
+            'address' => 'Відділення №' . fake()->numberBetween(1, 50),
             'comment' => fake()->optional()->sentence(15),
-            'total_price' => 0, // Буде перераховано після додавання товарів
             'type' => fake()->randomElement(OrderType::cases()),
             'status' => fake()->randomElement(OrderStatus::cases()),
         ];
@@ -39,7 +38,6 @@ class OrderFactory extends Factory
                 return;
             }
 
-            $totalPrice = 0;
             $itemsCount = rand(1, 5);
 
             for ($i = 0; $i < $itemsCount; $i++) {
@@ -49,17 +47,11 @@ class OrderFactory extends Factory
 
                 $order->products()->create([
                     'product_id' => $product->id,
-                    'product_name' => $product->name,
+                    'name' => $product->name,
                     'qty' => $qty,
                     'price' => $price,
-                    'custom_options' => null, // Можна додати JSON, якщо потрібно
                 ]);
-
-                $totalPrice += ($price * $qty);
             }
-
-            // Оновлюємо фінальну ціну замовлення
-            $order->update(['total_price' => $totalPrice]);
         });
     }
 }

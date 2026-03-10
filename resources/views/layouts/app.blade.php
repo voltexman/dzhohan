@@ -32,7 +32,6 @@
 
         <x-nav class="hidden lg:flex lg:mx-auto" x-cloak>
             <x-nav.item label="Головна" url="home" icon="home" />
-            <x-nav.item label="Про мене" url="about" icon="user-round" />
             <x-nav.item label="Товари" url="products" icon="package" />
             <x-nav.item label="Галерея" url="gallery" icon="images" />
             <x-nav.item label="Блог" url="blog" icon="newspaper" />

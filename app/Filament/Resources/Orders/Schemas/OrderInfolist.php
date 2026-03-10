@@ -25,28 +25,43 @@ class OrderInfolist
                             ->size(TextSize::Large)
                             ->copyable()
                             ->color(Color::Amber),
+
                         TextEntry::make('status')
                             ->label('Статус')
                             ->badge(),
+
+                        TextEntry::make('type')
+                            ->label('Тип')
+                            ->color('success')
+                            ->weight(FontWeight::Medium),
+
                         TextEntry::make('total_price')
                             ->label('Сума до сплати')
+                            // 1. Рахуємо суму лише для покупок
+                            ->state(fn($record) => $record->type === \App\Enums\Order\OrderType::Purchase
+                                ? $record->products->sum(fn($i) => $i->qty * $i->price)
+                                : null)
+                            // 2. Якщо повернувся null (виготовлення) — показуємо плейсхолдер
+                            ->placeholder('Договірна')
+                            // 3. Форматуємо як гроші (тільки якщо є число)
                             ->money('UAH')
+                            // 4. Стилізація: зелений та великий (спрацює лише для суми)
                             ->color('success')
                             ->weight(FontWeight::Bold)
                             ->size(TextSize::Large),
+
                         TextEntry::make('created_at')
                             ->label('Дата замовлення')
                             ->dateTime('d.m.Y H:i')
                             ->weight(FontWeight::Bold),
                     ])
-                    ->columns(4)
-                    ->columnSpanFull()
-                    ->maxWidth('3xl'),
+                    ->columns(5)
+                    ->columnSpanFull(),
 
                 Section::make('Параметри виготовлення')
                     ->icon('heroicon-o-wrench-screwdriver')
                     ->description('Деталі індивідуального замовлення')
-                    ->visible(fn ($record) => $record->type->value === 'manufacturing')
+                    ->visible(fn($record) => $record->type->value === 'manufacturing')
                     ->schema([
                         Grid::make(3)
                             ->schema([
@@ -68,7 +83,6 @@ class OrderInfolist
                             ]),
                     ])
                     ->columnSpanFull()
-                    ->maxWidth('4xl')
                     ->collapsible(),
 
                 Group::make([
@@ -78,7 +92,7 @@ class OrderInfolist
                             TextEntry::make('first_name')
                                 ->label('ПІБ')
                                 ->icon('heroicon-o-user')
-                                ->formatStateUsing(fn ($record) => "{$record->first_name} {$record->last_name}"),
+                                ->formatStateUsing(fn($record) => "{$record->first_name} {$record->last_name}"),
                             TextEntry::make('phone')
                                 ->label('Телефон')
                                 ->icon('heroicon-o-phone')

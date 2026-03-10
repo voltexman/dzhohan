@@ -34,42 +34,24 @@ class OrderSubmitted extends Notification
 
     public function toTelegram(): TelegramMessage
     {
-        $o = $this->order;
-        $c = collect($o->custom_options)->collapse(); // Схлопуємо всі вкладені масиви в один
-
-        return TelegramMessage::create()
+        $message = TelegramMessage::create()
             ->options(['parse_mode' => 'html'])
-            ->line("📦 <b>Замовлення:</b> №{$o->number}")
-            ->line('👤 <b>Замовник:</b> '.e("{$o->first_name} {$o->last_name}"))
-            ->line("📞 <b>Тел:</b> {$o->phone}")
-            ->line('🚚 <b>Адреса:</b> '.e("{$o->city}, {$o->address}"))
+            ->line("📦 <b>Замовлення:</b> №{$this->order->number}")
+            ->line("👤 <b>Замовник:</b> " . e("{$this->order->first_name} {$this->order->last_name}"))
+            ->line("📞 <b>Телефон:</b> {$this->order->phone}")
+            ->line("🚚 <b>Адреса:</b> " . e("{$this->order->city}, {$this->order->address}"))
+            ->line("\n<b>🛒 Товари:</b>");
 
-            // Список товарів
-            ->when($o->products->isNotEmpty(), function ($m) use ($o) {
-                $o->products->each(function ($p) use ($m) {
-                    $m->line('• '.e($p->product_name)." ({$p->qty}шт.)");
-                });
-            })
+        $this->order->products->each(
+            fn($product) =>
+            $message->line("• " . e($product->product_name) . " ({$product->qty} шт.)")
+        );
 
-            // Характеристики виготовлення
-            ->when(
-                $o->type === OrderType::Manufacturing,
-                fn ($m) => $m
-                    ->line("\n🔪 <b>ВИГОТОВЛЕННЯ:</b>")
-                    ->lineIf((bool) $v = $c->get('shape'), "• Форма: {$v}")
-                    ->lineIf((bool) $v = $c->get('steel'), "• Сталь: {$v}")
-                    ->lineIf((bool) $v = $c->get('grind'), "• Спуски: {$v}")
-                    ->lineIf((bool) $v = $c->get('finish'), "• Фініш: {$v}")
-                    ->lineIf((bool) $v = $c->get('length'), "• Довжина: {$v} мм")
-                    ->lineIf((bool) $v = $c->get('thickness'), "• Товщина: {$v} мм")
-                    ->lineIf((bool) $v = $c->get('material'), "• Руків'я: {$v}")
-                    ->lineIf((bool) $v = $c->get('color'), "• Колір: {$v}")
-                    ->lineIf((bool) $v = $c->get('type'), "• Піхви: {$v}")
-                    ->lineIf((bool) $v = $c->get('carry'), "• Носіння: {$v}")
-            )
+        $total = $this->order->products->sum(fn($product) => $product->price * $product->qty);
 
-            ->line("\n💰 <b>СУМА:</b> ".number_format($o->total_price, 0).' грн')
-            ->lineIf((bool) $o->comment, '💬 '.e($o->comment))
-            ->button('В адмінку', route('filament.admin.resources.orders.view', $o));
+        return $message
+            ->line("\n💰 <b>СУМА:</b> " . number_format($total, 0) . " грн")
+            ->lineIf($this->order->comment, "💬 " . e($this->order->comment))
+            ->button('В адмінку', route('filament.admin.resources.orders.view', $this->order));
     }
 }

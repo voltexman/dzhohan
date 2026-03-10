@@ -50,7 +50,7 @@
     <div class="relative">
         {{-- Індикатор обов'язкового поля --}}
         @if ($attributes->has('required'))
-            <span class="absolute -top-1 -right-1 flex h-2 w-2 z-20">
+            <span class="absolute top-1.5 right-1.5 flex h-2 w-2 z-20">
                 <span
                     class="relative inline-flex rounded-full h-2 w-2 {{ $hasError ? 'bg-red-600' : 'bg-red-500' }}"></span>
             </span>

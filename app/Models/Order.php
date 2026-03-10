@@ -7,6 +7,7 @@ use App\Enums\Order\OrderType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
 {
@@ -22,8 +23,6 @@ class Order extends Model
         'city',
         'address',
         'comment',
-        'total_price',
-        'custom_options',
         'type',
         'status',
     ];
@@ -31,7 +30,6 @@ class Order extends Model
     protected $casts = [
         'type' => OrderType::class,
         'status' => OrderStatus::class,
-        'custom_options' => 'array',
     ];
 
     protected static function boot()
@@ -39,16 +37,17 @@ class Order extends Model
         parent::boot();
 
         static::creating(function ($order) {
-            do {
-                $number = now()->format('ymd').'-'.random_int(10000, 99999);
-            } while (static::where('number', $number)->exists());
-
-            $order->number = $number;
+            $order->number = (now()->getTimestamp() % 86400) . rand(100, 999);
         });
     }
 
     public function products(): HasMany
     {
         return $this->hasMany(OrderProduct::class);
+    }
+
+    public function manufacture(): HasOne
+    {
+        return $this->hasOne(OrderManufacture::class);
     }
 }

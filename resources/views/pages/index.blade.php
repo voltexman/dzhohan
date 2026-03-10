@@ -6,7 +6,7 @@ name('home');
 ?>
 
 @section('header')
-    <header class="relative h-screen w-full bg-cover bg-center bg-no-repeat animate-ricochet"
+    <header class="relative h-screen w-full bg-cover bg-center bg-no-repeat animate-ricochet lg:animate-none"
         style="background-image: url('{{ Vite::asset('resources/images/header.png') }}')">
 
         {{-- затемнення --}}

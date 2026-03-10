@@ -1,19 +1,23 @@
 <?php
 
-use App\Enums\ProductCategory;
-use App\Models\Order;
+use App\Livewire\Forms;
+use App\Enums\SteelType;
 use App\Enums\Order\OrderType;
-use App\Enums\Order\DeliveryMethod;
+use App\Enums\ProductCategory;
+use App\Enums\BladeShape;
+use App\Models\Order;
+use App\Models\Subscriber;
+use App\Livewire\Forms\OrderForm;
 use App\Notifications\OrderSubmitted;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Attributes\Validate;
-use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Transition;
-use App\Services\CartService;
 use Livewire\Component;
 
 new class extends Component {
+    public OrderForm $form;
+
     public $step = 1;
 
     #[Transition(type: 'forward')]
@@ -28,7 +32,7 @@ new class extends Component {
         $this->step--;
     }
 
-    public $type = '';
+    public $knife_type = '';
 
     public $blade_shape = '';
     public $blade_steel = '';
@@ -43,10 +47,24 @@ new class extends Component {
     public $sheath_type = '';
     public $sheath_carry = '';
 
+    public $engraving = '';
+    public $engraving_text = '';
+
+    public string $notes = '';
+
+    public bool $subscribe = false;
+
     public function send()
     {
-        // dd($this);
         $this->validate();
+
+        $order = Order::create($this->form->all() + ['type' => OrderType::Manufacturing]);
+
+        $order->manufacture()->create($this->all());
+
+        $this->subscribe && Subscriber::firstOrCreate(['email' => $this->form->email]);
+
+        session()->flash('success-order', $order->number);
     }
 };
 ?>
@@ -71,7 +89,7 @@ new class extends Component {
         </div>
     </div>
 @else
-    <x-section sidebar-position="right">
+    <x-section sidebar-position="right" x-data="knifeConfigurator($wire)">
         <div class="relative outline-hidden">
             <!-- progress -->
             <div class="mb-5">
@@ -86,8 +104,8 @@ new class extends Component {
                 </div>
             </div>
 
-            <div wire:show="step === 1" wire:transition="step">
-                <h2 class="text-2xl font-semibold mb1.5">Тип ножа</h2>
+            <div wire:show="step === 1" x-cloak>
+                <h2 class="text-2xl font-semibold">Тип ножа</h2>
 
                 <button type="button" wire:click="$set('step', 1)"
                     class="mb-5 text-sm font-medium text-orange-500/80 hover:text-orange-600 transition-colors flex items-center gap-1.5 cursor-pointer">
@@ -97,14 +115,14 @@ new class extends Component {
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 lg:gap-5">
                     @foreach (ProductCategory::cases() as $type)
-                        <button type="button" wire:click="type = '{{ $type->getLabel() }}'"
-                            :class="$wire.type === '{{ $type->getLabel() }}' ? 'border-orange-500 bg-orange-50' :
+                        <button type="button" wire:click="knife_type = '{{ $type->getLabel() }}'"
+                            :class="$wire.knife_type === '{{ $type->getLabel() }}' ? 'border-orange-500 bg-orange-50' :
                                 'border-gray-200'"
-                            class="relative border-2 rounded-md p-0 text-center transition hover:border-orange-400 cursor-pointer h-40 lg:h-50 w-full sm:w-auto overflow-hidden flex items-end justify-center">
+                            class="relative border-2 rounded-md p-0 text-center transition hover:border-orange-400 cursor-pointer h-40 lg:h-50 w-full sm:w-auto overflow-hidden flex items-end justify-center group">
 
                             <!-- фон через img -->
                             <img src="{{ Vite::asset("resources/images/{$type->icons()}") }}"
-                                class="absolute inset-0 size-full object-contain -rotate-35 drop-shadow-xl"
+                                class="absolute inset-0 size-full object-contain -rotate-35 drop-shadow-xl group-hover:scale-105 group-hover:drop-shadow-2xl group-hover:-rotate-40 transition-all duration-500"
                                 alt="{{ $type->getLabel() }}">
 
                             <!-- текст поверх картинки -->
@@ -113,13 +131,14 @@ new class extends Component {
                             </div>
                         </button>
                     @endforeach
-                    <button type="button" wire:click="type = 'Інший'"
+                    <button type="button" wire:click="knife_type = 'Інший'"
                         :class="$wire.type === 'Інший' ? 'border-orange-500 bg-orange-50' : 'border-gray-200'"
-                        class="relative border-2 rounded-md p-0 text-center transition hover:border-orange-400 cursor-pointer h-40 lg:h-50 w-full sm:w-auto overflow-hidden flex items-end justify-center">
+                        class="relative border-2 rounded-md p-0 text-center transition hover:border-orange-400 cursor-pointer h-40 lg:h-50 w-full sm:w-auto overflow-hidden flex items-end justify-center group">
 
                         <!-- фон через img -->
                         <img src="{{ Vite::asset('resources/images/other-icon.png') }}"
-                            class="absolute inset-0 size-full object-contain -rotate-35 drop-shadow-xl" alt="Інший">
+                            class="absolute inset-0 size-full object-contain -rotate-35 drop-shadow-xl group-hover:scale-105 group-hover:drop-shadow-2xl group-hover:-rotate-40 transition-all duration-500"
+                            alt="Інший">
 
                         <!-- текст поверх картинки -->
                         <div class="relative z-10 text-zinc-800 text-sm font-medium py-1.5">
@@ -129,170 +148,160 @@ new class extends Component {
                 </div>
             </div>
 
-            <div wire:show="step === 2" wire:transition="step">
-                <h2 class="text-2xl font-semibold mb-6">Клинок</h2>
-                <div class="space-y-5">
-                    <label class="block text-sm mb-3 font-medium">Форма клинка</label>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div wire:show="step === 2" x-cloak>
+                <h2 class="text-2xl font-semibold">Клинок</h2>
 
-                        {{-- <template x-for="shape in bladeShapes"> --}}
-                        <button type="button" @click="form.bladeShape = shape.name"
-                            :class="form.bladeShape === shape.name ?
-                                'border-orange-500 bg-orange-50' :
-                                'border-gray-200'"
-                            class="border rounded-lg p-4 text-center transition hover:border-orange-400">
-                            <img :src="shape.image" class="h-12 mx-auto mb-2 object-contain">
-                            <div class="text-sm font-medium" x-text="shape.name"></div>
-                        </button>
-                        {{-- </template> --}}
+                <button type="button" wire:click="$set('step', 1)"
+                    class="mb-5 text-sm font-medium text-orange-500/80 hover:text-orange-600 transition-colors flex items-center gap-1.5 cursor-pointer">
+                    <x-lucide-info class="size-4" />
+                    Які бувають види?
+                </button>
+
+                <x-form.group>
+                    <x-form.label>Форма клинка</x-form.label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 lg:gap-5">
+                        @foreach (BladeShape::cases() as $item)
+                            <button type="button" @click="form.bladeShape = '{{ $item->label() }}'"
+                                :class="form.bladeShape === '{{ $item->label() }}' ?
+                                    'border-orange-500 bg-orange-50' :
+                                    'border-gray-200'"
+                                class="relative border-2 rounded-md p-0 text-center transition hover:border-orange-400 h-40 lg:h-30 w-full overflow-hidden flex items-end justify-center cursor-pointer">
+
+                                <img src="{{ Vite::asset("resources/images/icons/{$item->icon()}") }}"
+                                    class="absolute inset-0 size-full object-contain">
+
+                                <div class="relative z-10 text-zinc-800 text-sm font-medium py-1.5">
+                                    {{ $item->label() }}
+                                </div>
+                            </button>
+                        @endforeach
                     </div>
+                </x-form.group>
 
+                <x-form.group class="max-w-xs mt-5">
+                    <x-form.label>Тип сталі</x-form.label>
+                    <x-form.select wire:model="blade_steel">
+                        <option value="">Оберіть</option>
+                        @foreach (SteelType::cases() as $item)
+                            <option value={{ $item->label() }}>{{ $item->label() }}</option>
+                        @endforeach
+                    </x-form.select>
+                </x-form.group>
+
+                <div class="grid grid-cols-2 max-w-sm gap-5 mt-5">
                     <x-form.group>
-                        <x-form.label class="block text-sm mb-1">Тип сталі</x-form.label>
-                        <x-form.select x-model="form.steel">
-                            <option value="">Оберіть</option>
-                            <option>D2</option>
-                            <option>N690</option>
-                            <option>Elmax</option>
-                            <option>M390</option>
-                            <option>Damascus</option>
-                        </x-form.select>
+                        <x-form.label>Довжина клинка (мм)</x-form.label>
+                        <x-form.input type="number" wire:model="blade_length" />
                     </x-form.group>
 
-                    <div class="grid grid-cols-2 gap-5">
-                        <x-form.group>
-                            <x-form.label class="block text-sm mb-1">Довжина клинка (мм)</x-form.label>
-                            <x-form.input type="number" x-model="form.bladeLength" />
-                        </x-form.group>
-
-                        <x-form.group>
-                            <x-form.label class="block text-sm mb-1">Товщина (мм)</x-form.label>
-                            <x-form.input type="number" x-model="form.bladeThickness" />
-                        </x-form.group>
-                    </div>
+                    <x-form.group>
+                        <x-form.label>Товщина (мм)</x-form.label>
+                        <x-form.input type="number" wire:model="blade_thickness" />
+                    </x-form.group>
                 </div>
             </div>
 
-            <div wire:show="step === 3" wire:transition="step">
+            <div wire:show="step === 3" x-cloak>
+                <h2 class="text-2xl font-semibold">Руків’я</h2>
 
-                <h2 class="text-2xl font-semibold mb-6">Руків’я</h2>
+                <button type="button" wire:click="$set('step', 1)"
+                    class="text-sm font-medium text-orange-500/80 hover:text-orange-600 transition-colors flex items-center gap-1.5 cursor-pointer">
+                    <x-lucide-info class="size-4" />
+                    Як обрати?
+                </button>
 
-                <div class="space-y-5">
+                <x-form.group class="max-w-xs mt-5">
+                    <x-form.label>Матеріал</x-form.label>
+                    <x-form.select wire:model="handle_material">
+                        <option value="">Оберіть</option>
+                        <option>Дерево</option>
+                        <option>Micarta</option>
+                        <option>G10</option>
+                        <option>Carbon Fiber</option>
+                        <option>Ріг</option>
+                    </x-form.select>
+                </x-form.group>
 
-                    <div>
-                        <label class="block text-sm mb-1">Матеріал</label>
-
-                        <x-form.select x-model="form.handleMaterial">
-                            <option value="">Оберіть</option>
-                            <option>Дерево</option>
-                            <option>Micarta</option>
-                            <option>G10</option>
-                            <option>Carbon Fiber</option>
-                            <option>Ріг</option>
-                        </x-form.select>
-                    </div>
-
-                    <div>
-                        <x-form.label>Колір руків’я</x-form.label>
-
-                        <!-- кольори -->
-                        <div class="flex flex-wrap gap-3 mb-4">
-                            {{-- <template x-for="color in handleColors"> --}}
-                            <button type="button" @click="form.handleColor = color.value"
-                                :class="form.handleColor === color.value ? 'ring-2 ring-orange-500 scale-110' : ''"
-                                class="w-10 h-10 rounded-full border transition transform hover:scale-110"
+                <x-form.group class="mt-5">
+                    <x-form.label>Колір руків’я</x-form.label>
+                    <div class="flex flex-wrap gap-2.5 mb-5">
+                        <template x-for="color in handleColors" :key="color.value">
+                            <button type="button" x-on:click="$wire.handle_color = color.value"
+                                :class="$wire.handle_color === color.value ?
+                                    'ring-2 ring-offset-2 ring-orange-500 scale-110' : ''"
+                                class="w-10 h-10 rounded-full transition transform hover:scale-105 cursor-pointer"
                                 :style="`background:${color.value}`" :title="color.name">
                             </button>
-                            {{-- </template> --}}
-                        </div>
-
-                        <!-- кастомний колір -->
-                        <div class="flex items-center gap-3">
-                            <span class="text-sm text-gray-500">Свій колір</span>
-                            <input type="color" x-model="form.handleColor"
-                                class="w-12 h-10 border rounded cursor-pointer">
-                            <span class="text-sm font-mono" x-text="form.handleColor"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div wire:show="step === 4" wire:transition="step">
-
-                <h2 class="text-2xl font-semibold mb-6">Додаткові опції</h2>
-
-                <div class="space-y-5">
-
-                    <label class="flex items-center gap-2">
-                        <input type="checkbox" x-model="form.sheath">
-                        Потрібні піхви
-                    </label>
-
-                    <label class="flex items-center gap-2">
-                        <input type="checkbox" x-model="form.engraving">
-                        Гравіювання
-                    </label>
-
-                    <div x-show="form.engraving">
-
-                        <label class="block text-sm mb-1">Текст гравіювання</label>
-
-                        <input type="text" x-model="form.engravingText" class="w-full border rounded p-2">
-
+                        </template>
                     </div>
 
-                    <div>
-                        <label class="block text-sm mb-1">Додаткові побажання</label>
-
-                        <textarea x-model="form.notes" rows="4" class="w-full border rounded p-2"></textarea>
-                    </div>
-
-                </div>
+                    <!-- кастомний колір -->
+                    <x-form.group>
+                        <x-form.label class="text-sm text-gray-500">Свій колір</x-form.label>
+                        <input type="color" wire:model="handle_color" class="w-16 h-10 rounded-md cursor-pointer">
+                        <span class="text-sm font-mono" wire:text="handle_color"></span>
+                    </x-form.group>
+                </x-form.group>
             </div>
 
-            <div wire:show="step === 5" wire:transition="step">
+            <div wire:show="step === 4" x-cloak>
+                <h2 class="text-2xl font-semibold">Додаткові опції</h2>
 
-                <h2 class="text-2xl font-semibold mb-6">Контакти</h2>
-
-                <div class="space-y-4">
-
-                    <input type="text" placeholder="Ім’я" x-model="form.name" class="w-full border rounded p-2">
-
-                    <input type="email" placeholder="Email" x-model="form.email" class="w-full border rounded p-2">
-
-                    <input type="tel" placeholder="Телефон" x-model="form.phone" class="w-full border rounded p-2">
-
+                <div class="flex gap-5 mt-5">
+                    <x-form.checkbox label="Потрібні піхви" wire:model="sheath" />
+                    <x-form.checkbox label="Гравіювання" wire:model="engraving" />
                 </div>
 
+                <div wire:show="engraving" class="mt-5">
+                    <x-form.label>Текст гравіювання</x-form.label>
+                    <x-form.input wire:model="engraving_text" />
+                </div>
+
+                <x-form.group class="max-w-lg mt-5">
+                    <x-form.label>Додаткові побажання</x-form.label>
+                    <x-form.textarea wire:model="notes" rows="4"></x-form.textarea>
+                </x-form.group>
             </div>
 
-            <!-- navigation -->
-            <div class="flex justify-between mt-10">
-                <button type="button" wire:show="step > 1" wire:click="previousStep" wire:loading.attr="disabled"
-                    wire:target="previousStep"
-                    class="me-auto px-5 py-2 bg-orange-500 text-white text-sm rounded-md flex items-center gap-1.5 hover:bg-orange-600 transition-colors duration-300 cursor-pointer disabled:opacity-50 disabled:pointer-events-none">
-                    <x-lucide-move-left wire:loading.remove wire:target="previousStep" class="size-4 shrink-0" />
-                    <x-lucide-loader wire:loading wire:target="previousStep" class="size-4 shrink-0 animate-spin" />
-                    Назад
-                </button>
+            <div wire:show="step === 5" x-cloak>
 
-                <button type="button" wire:show="step < 5" wire:click="nextStep" wire:loading.attr="disabled"
-                    wire:target="nextStep"
-                    class="ml-auto px-5 py-2 bg-orange-500 text-white text-sm rounded-md flex items-center gap-1.5 hover:bg-orange-600 transition-colors duration-300 cursor-pointer disabled:opacity-50 disabled:pointer-events-none">
-                    Далі
-                    <x-lucide-move-right wire:loading.remove wire:target="nextStep" class="size-4 shrink-0" />
-                    <x-lucide-loader wire:loading wire:target="nextStep" class="size-4 shrink-0 animate-spin" />
-                </button>
+                <h2 class="text-2xl font-semibold">Контакти</h2>
 
-                <button wire:show="step === 5" class="ml-auto px-6 py-2 bg-orange-500 text-white rounded">
-                    Надіслати замовлення
-                </button>
+                @include('partials.order.order-form')
+
             </div>
+        </div>
+
+        <!-- navigation -->
+        <div class="flex justify-between mt-10" x-cloak>
+            <button type="button" wire:show="step > 1" @click="previousStep()" wire:loading.attr="disabled"
+                wire:target="previousStep"
+                class="me-auto px-5 py-2 bg-orange-500 text-white text-sm rounded-md flex items-center gap-1.5 hover:bg-orange-600 transition-colors duration-300 cursor-pointer disabled:opacity-50 disabled:pointer-events-none">
+                <x-lucide-move-left wire:loading.remove wire:target="previousStep" class="size-4 shrink-0" />
+                <x-lucide-loader wire:loading wire:target="previousStep" class="size-4 shrink-0 animate-spin" />
+                Назад
+            </button>
+
+            <button type="button" wire:show="step < 5" @click="nextStep()" wire:loading.attr="disabled"
+                wire:target="nextStep"
+                class="ml-auto px-5 py-2 bg-orange-500 text-white text-sm rounded-md flex items-center gap-1.5 hover:bg-orange-600 transition-colors duration-300 cursor-pointer disabled:opacity-50 disabled:pointer-events-none">
+                Далі
+                <x-lucide-move-right wire:loading.remove wire:target="nextStep" class="size-4 shrink-0" />
+                <x-lucide-loader wire:loading wire:target="nextStep" class="size-4 shrink-0 animate-spin" />
+            </button>
+
+            <button type="button" wire:show="step === 5" wire:click="send" wire:loading.attr="disabled"
+                wire:target="send"
+                class="ml-auto px-5 py-2 bg-orange-500 text-white text-sm rounded-md flex items-center gap-1.5 hover:bg-orange-600 transition-colors duration-300 cursor-pointer disabled:opacity-50 disabled:pointer-events-none">
+                Відправити
+                <x-lucide-send wire:loading.remove wire:target="nextStep" class="size-4 shrink-0" />
+                <x-lucide-loader wire:loading wire:target="nextStep" class="size-4 shrink-0 animate-spin" />
+            </button>
         </div>
 
         <x-slot:sidebar>
             <div class="sticky top-24 lg:h-screen">
-                <div wire:dirty>
+                {{-- <div wire:dirty>
                     <h2 class="font-[Oswald] text-lg font-medium tracking-wide mb-5">Ваше замовлення</h2>
 
                     <div wire:dirty="type">
@@ -331,11 +340,12 @@ new class extends Component {
                     <div class="mt-10 text-xs text-orange-700">
                         <span>Я зателефоную вам для підтвердження замовлення протягом дня.</span>
                     </div>
-                </div>
+                </div> --}}
 
                 <div wire:dirty.remove>
                     <div
-                        class="flex flex-col items-center justify-center p-5 bg-orange-50 border border-orange-100 rounded-lg text-center">
+                        class="flex flex-col
+                    items-center justify-center p-5 bg-orange-50 border border-orange-100 rounded-lg text-center">
                         <div class="bg-white p-2.5 rounded-full mb-5">
                             <x-lucide-info class="size-8 text-orange-500" stroke-width="1.5" />
                         </div>
@@ -353,74 +363,60 @@ new class extends Component {
             </div>
         </x-slot:sidebar>
     </x-section>
+
+    <script>
+        function knifeConfigurator($wire) {
+            return {
+                step: @entangle('step'),
+
+
+                // методи переходу
+                nextStep() {
+                    if (this.step < 5) this.step++;
+                },
+                previousStep() {
+                    if (this.step > 1) this.step--;
+                },
+
+                form: {
+                    bladeShape: $wire.entangle('blade_shape'),
+                    handleColor: $wire.entangle('handle_color'),
+                },
+
+                handleColors: [{
+                        name: 'Чорний',
+                        value: '#111111'
+                    },
+                    {
+                        name: 'Коричневий',
+                        value: '#6b3e26'
+                    },
+                    {
+                        name: 'Пісочний',
+                        value: '#d6b98c'
+                    },
+                    {
+                        name: 'Оливковий',
+                        value: '#556b2f'
+                    },
+                    {
+                        name: 'Червоний',
+                        value: '#8b0000'
+                    },
+                    {
+                        name: 'Синій',
+                        value: '#1e3a8a'
+                    },
+                    {
+                        name: 'Помаранчевий',
+                        value: '#ea580c'
+                    },
+                    {
+                        name: 'Carbon',
+                        value: '#2b2b2b'
+                    }
+                ]
+            }
+        }
+    </script>
 @endsession
-
-<style>
-    html:active-view-transition-type(forward) {
-        &::view-transition-old(content) {
-            animation: 300ms ease-out both slide-out-left;
-        }
-
-        &::view-transition-new(content) {
-            animation: 300ms ease-in both slide-in-right;
-        }
-    }
-
-    html:active-view-transition-type(backward) {
-        &::view-transition-old(content) {
-            animation: 300ms ease-out both slide-out-right;
-        }
-
-        &::view-transition-new(content) {
-            animation: 300ms ease-in both slide-in-left;
-        }
-    }
-
-    @keyframes slide-out-left {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        to {
-            transform: translateX(-100%);
-            opacity: 0;
-        }
-    }
-
-    @keyframes slide-in-right {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-
-    @keyframes slide-out-right {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-
-    @keyframes slide-in-left {
-        from {
-            transform: translateX(-100%);
-            opacity: 0;
-        }
-
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-</style>

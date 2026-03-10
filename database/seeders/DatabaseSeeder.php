@@ -52,7 +52,9 @@ class DatabaseSeeder extends Seeder
 
         Feedback::factory(50)->create();
 
-        Order::factory(50)->create();
+        Order::withoutEvents(function () {
+            Order::factory()->count(50)->create();
+        });
 
         Subscriber::factory(50)->create();
     }

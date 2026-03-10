@@ -22,20 +22,52 @@ return new class extends Migration
             $table->string('city');
             $table->string('address');
             $table->text('comment')->nullable();
-            $table->decimal('total_price', 12, 2);
             $table->enum('type', OrderType::values())->default(OrderType::Purchase->value);
             $table->enum('status', OrderStatus::values())->default(OrderStatus::Pending);
-            $table->json('custom_options')->nullable()->comment('Якщо замовлення на виготовлення');
             $table->timestamps();
         });
 
         Schema::create('order_products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_id')->nullable()->constrained()->onDelete('set null');
-            $table->string('product_name');
-            $table->json('custom_options')->nullable();
+            $table->foreignId('order_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('product_id')->nullable()->constrained('products')->onDelete('set null');
+
+            $table->string('name');
             $table->integer('qty');
+            $table->decimal('price', 12, 2)->default(0);
+            $table->timestamps();
+        });
+
+        Schema::create('order_manufactures', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('order_id')->constrained()->cascadeOnDelete();
+
+            $table->string('knife_type')->nullable();
+
+            // клинок
+            $table->string('blade_shape')->nullable();
+            $table->string('blade_steel')->nullable();
+            $table->string('blade_grind')->nullable();
+            $table->string('blade_finish')->nullable();
+            $table->integer('blade_length')->nullable();
+            $table->integer('blade_thickness')->nullable();
+
+            // руків’я
+            $table->string('handle_material')->nullable();
+            $table->string('handle_color')->nullable();
+
+            // піхви
+            $table->string('sheath_type')->nullable();
+            $table->string('sheath_carry')->nullable();
+
+            // гравіювання
+            $table->boolean('engraving')->default(false);
+            $table->string('engraving_text')->nullable();
+
+            // додатково
+            $table->text('notes')->nullable();
+
+            $table->integer('qty')->nullable()->default(1);
             $table->decimal('price', 12, 2)->default(0);
             $table->timestamps();
         });
@@ -44,6 +76,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('order_products');
+        Schema::dropIfExists('order_manufactures');
         Schema::dropIfExists('orders');
     }
 };
