@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\FeedbackSent;
 use Livewire\Attributes\Validate;
+use App\Models\Feedback;
 use Livewire\Component;
 
 new class extends Component {
@@ -49,6 +50,8 @@ new class extends Component {
             'mail' => env('ADMIN_EMAIL'),
             'telegram' => env('TELEGRAM_CHAT_ID'),
         ])->notify(new FeedbackSent((object) $validated));
+
+        Feedback::create($validated);
 
         $this->reset(['name', 'contact', 'message']);
 

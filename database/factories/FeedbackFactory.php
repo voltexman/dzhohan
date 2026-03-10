@@ -12,7 +12,6 @@ class FeedbackFactory extends Factory
             'name' => fake()->optional()->name(),
             'contact' => fake()->optional()->randomElement([fake()->phoneNumber(), fake()->safeEmail()]),
             'message' => fake()->text(rand(30, 950)),
-            'is_active' => fake()->boolean(),
             'is_visible' => fake()->boolean(),
         ];
     }

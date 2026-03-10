@@ -19,15 +19,15 @@ class FeedbackResource extends Resource
 {
     protected static ?string $model = Feedback::class;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Зворотний зв`язок';
+    protected static string|UnitEnum|null $navigationGroup = 'Комунікація';
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedStar;
 
     protected static ?int $navigationSort = 3;
 
     protected static ?string $modelLabel = 'Відгук';
 
     protected static ?string $pluralModelLabel = 'Відгуки';
-
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedStar;
 
     public static function form(Schema $schema): Schema
     {

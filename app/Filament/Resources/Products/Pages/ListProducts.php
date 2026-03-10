@@ -25,17 +25,17 @@ class ListProducts extends ListRecords
 
         return [
             'all' => Tab::make('Всі')
-                ->label('Всі')
-                ->icon('heroicon-m-list-bullet'),
+                ->badge($model::count())
+                ->label('Всі'),
 
             'in_stock' => Tab::make('В наявності')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('quantity', '>', 0))
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('quantity', '>', 0))
                 ->icon('heroicon-m-check-circle')
                 ->badge($model::where('quantity', '>', 0)->count())
                 ->badgeColor('success'),
 
             'out_of_stock' => Tab::make('Продані')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('quantity', '<=', 0))
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('quantity', '<=', 0))
                 ->icon('heroicon-m-x-circle')
                 ->badge($model::where('quantity', '<=', 0)->count())
                 ->badgeColor('gray'),

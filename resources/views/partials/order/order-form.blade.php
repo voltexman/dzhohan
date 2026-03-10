@@ -1,4 +1,4 @@
-@use(App\Enums\DeliveryMethod)
+@use(App\Enums\Order\DeliveryMethod)
 
 <form class="lg:col-span-7 space-y-10" novalidate>
 
@@ -30,7 +30,7 @@
                         'border-orange-500/50 ring-1 ring-orange-500/50 bg-orange-50 text-orange-700' :
                         'border-zinc-200 bg-zinc-100 hover:border-zinc-300 text-zinc-600'"
                     class="relative flex flex-col items-center justify-center px-2.5 py-5 border rounded-md transition-all duration-300 group cursor-pointer">
-                    <span class="text-sm font-semibold">{{ $method->label() }}</span>
+                    <span class="text-sm font-semibold">{{ $method->getLabel() }}</span>
                     <div x-show="delivery_method === '{{ $method->value }}'" x-transition.scale
                         class="absolute top-1.5 right-1.5">
                         <x-lucide-check-circle-2 class="size-4 fill-orange-50 stroke-orange-600" />

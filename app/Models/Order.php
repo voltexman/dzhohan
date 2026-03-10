@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Order\DeliveryMethod;
 use App\Enums\Order\OrderStatus;
 use App\Enums\Order\OrderType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -30,6 +31,7 @@ class Order extends Model
     protected $casts = [
         'type' => OrderType::class,
         'status' => OrderStatus::class,
+        'delivery_method' => DeliveryMethod::class,
     ];
 
     protected static function boot()
@@ -37,7 +39,7 @@ class Order extends Model
         parent::boot();
 
         static::creating(function ($order) {
-            $order->number = (now()->getTimestamp() % 86400).rand(100, 999);
+            $order->number = (now()->getTimestamp() % 86400) . rand(100, 999);
         });
     }
 

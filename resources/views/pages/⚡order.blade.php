@@ -166,8 +166,8 @@ new class extends Component {
                     <x-form.label>Форма клинка</x-form.label>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 lg:gap-5">
                         @foreach (BladeShape::cases() as $item)
-                            <button type="button" @click="form.bladeShape = '{{ $item->label() }}'"
-                                :class="form.bladeShape === '{{ $item->label() }}' ?
+                            <button type="button" @click="form.bladeShape = '{{ $item->getLabel() }}'"
+                                :class="form.bladeShape === '{{ $item->getLabel() }}' ?
                                     'border-orange-500 bg-orange-50' :
                                     'border-gray-200'"
                                 class="relative border-2 rounded-md p-0 text-center transition hover:border-orange-400 h-40 lg:h-30 w-full overflow-hidden flex items-end justify-center cursor-pointer">
@@ -176,7 +176,7 @@ new class extends Component {
                                     class="absolute inset-0 size-full object-contain">
 
                                 <div class="relative z-10 text-zinc-800 text-sm font-medium py-1.5">
-                                    {{ $item->label() }}
+                                    {{ $item->getLabel() }}
                                 </div>
                             </button>
                         @endforeach
@@ -188,7 +188,7 @@ new class extends Component {
                     <x-form.select wire:model="blade_steel">
                         <option value="">Оберіть</option>
                         @foreach (SteelType::cases() as $item)
-                            <option value={{ $item->label() }}>{{ $item->label() }}</option>
+                            <option value={{ $item->getLabel() }}>{{ $item->getLabel() }}</option>
                         @endforeach
                     </x-form.select>
                 </x-form.group>

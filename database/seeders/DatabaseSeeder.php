@@ -18,17 +18,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Адмін та Роль (Spatie)
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
-
-        $admin = User::firstOrCreate(
-            ['email' => 'admin@admin.com'],
-            ['name' => 'Admin', 'password' => bcrypt('password')]
-        );
-
-        if (! $admin->hasRole('admin')) {
-            $admin->assignRole($adminRole);
-        }
+        $this->command->call('create:admin');
 
         // 2. Теги (створюємо лише якщо база порожня, щоб не було помилок UNIQUE)
         if (Tag::count() === 0) {
@@ -44,11 +34,11 @@ class DatabaseSeeder extends Seeder
         });
 
         // 4. Пости
-        Post::factory(10)->create()->each(function ($post) use ($tags) {
-            Comment::factory(rand(2, 5))->for($post, 'commentable')->create();
-            Like::factory(rand(5, 15))->for($post, 'likeable')->create();
-            $post->tags()->attach($tags->random(rand(1, 3)));
-        });
+        // Post::factory(10)->create()->each(function ($post) use ($tags) {
+        //     Comment::factory(rand(2, 5))->for($post, 'commentable')->create();
+        //     Like::factory(rand(5, 15))->for($post, 'likeable')->create();
+        //     $post->tags()->attach($tags->random(rand(1, 3)));
+        // });
 
         Feedback::factory()->count(50)->create();
 

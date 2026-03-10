@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Orders\Tables;
 use App\Models\Order;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\TextColumn;
@@ -27,14 +28,19 @@ class OrdersTable
 
                 TextColumn::make('name')
                     ->label('Замовник')
-                    ->state(fn (Order $record) => "{$record->first_name} {$record->last_name}")
-                    ->description(fn (Order $record) => $record->phone)
+                    ->state(fn(Order $record) => "{$record->first_name} {$record->last_name}")
+                    ->description(fn(Order $record) => $record->phone)
                     ->weight(FontWeight::SemiBold)
                     ->searchable(['first_name', 'last_name', 'phone']),
 
                 TextColumn::make('total_price')
                     ->label('Ціна')
-                    ->state(fn ($record) => $record->products->sum(fn ($item) => $item->qty * $item->price))
+                    ->state(
+                        fn($record) => $record->type === \App\Enums\Order\OrderType::Purchase
+                            ? $record->products->sum(fn($i) => $i->qty * $i->price)
+                            : null
+                    )
+                    ->placeholder('Договірна')
                     ->money('UAH')
                     ->sortable(),
 
@@ -53,15 +59,16 @@ class OrdersTable
                 TextColumn::make('created_at')
                     ->label('Дата/час')
                     ->date('d.m.Y')
-                    ->description(fn (Order $record) => $record->created_at->format('H:i'))
+                    ->description(fn(Order $record) => $record->created_at->format('H:i'))
                     ->weight(FontWeight::Medium)
                     ->sortable()
                     ->toggleable()
                     ->toggleable(isToggledHiddenByDefault: false),
             ])
+            ->poll('15s')
             ->striped()
             ->defaultSort('created_at', 'desc')
-            ->modifyQueryUsing(fn ($query) => $query->with('products'))
+            ->modifyQueryUsing(fn($query) => $query->with('products'))
             ->filters([
                 SelectFilter::make('status')
                     ->options(\App\Enums\Order\OrderStatus::class)
@@ -69,7 +76,13 @@ class OrdersTable
                     ->label('Статус'),
             ])
             ->recordActions([
-                ViewAction::make(),
+                ViewAction::make()
+                    ->label(false)
+                    ->tooltip('Переглянути'),
+
+                EditAction::make()
+                    ->label(false)
+                    ->tooltip('Редагувати')
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

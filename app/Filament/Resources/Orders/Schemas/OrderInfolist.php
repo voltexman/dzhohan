@@ -38,8 +38,8 @@ class OrderInfolist
                         TextEntry::make('total_price')
                             ->label('Сума до сплати')
                             // 1. Рахуємо суму лише для покупок
-                            ->state(fn ($record) => $record->type === \App\Enums\Order\OrderType::Purchase
-                                ? $record->products->sum(fn ($i) => $i->qty * $i->price)
+                            ->state(fn($record) => $record->type === \App\Enums\Order\OrderType::Purchase
+                                ? $record->products->sum(fn($i) => $i->qty * $i->price)
                                 : null)
                             // 2. Якщо повернувся null (виготовлення) — показуємо плейсхолдер
                             ->placeholder('Договірна')
@@ -61,7 +61,7 @@ class OrderInfolist
                 Section::make('Параметри виготовлення')
                     ->icon('heroicon-o-wrench-screwdriver')
                     ->description('Деталі індивідуального замовлення')
-                    ->visible(fn ($record) => $record->type->value === 'manufacturing')
+                    ->visible(fn($record) => $record->type->value === 'manufacturing')
                     ->schema([
                         Grid::make(3)
                             ->schema([
@@ -90,13 +90,15 @@ class OrderInfolist
                         ->icon('heroicon-o-user')
                         ->schema([
                             TextEntry::make('first_name')
-                                ->label('ПІБ')
+                                ->label('Замовник')
                                 ->icon('heroicon-o-user')
-                                ->formatStateUsing(fn ($record) => "{$record->first_name} {$record->last_name}"),
+                                ->formatStateUsing(fn($record) => "{$record->first_name} {$record->last_name}"),
+
                             TextEntry::make('phone')
                                 ->label('Телефон')
                                 ->icon('heroicon-o-phone')
                                 ->copyable(),
+
                             TextEntry::make('email')
                                 ->label('Email')
                                 ->icon('heroicon-o-envelope')
@@ -109,9 +111,11 @@ class OrderInfolist
                         ->schema([
                             TextEntry::make('delivery_method')
                                 ->label('Спосіб доставки'),
+
                             TextEntry::make('city')
                                 ->label('Місто')
                                 ->icon('heroicon-o-map-pin'),
+
                             TextEntry::make('address')
                                 ->label('Адреса / Відділення')
                                 ->columnSpanFull(),

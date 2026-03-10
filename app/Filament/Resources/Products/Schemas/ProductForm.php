@@ -52,19 +52,34 @@ class ProductForm
                                             ->action(fn($set, $get) => $set('is_slug_editable', ! $get('is_slug_editable')))
                                     ),
 
-                                TextInput::make('price')
-                                    ->label('Ціна')
-                                    ->numeric()
-                                    ->prefix('₴')
-                                    ->required(),
+                                Grid::make(3)
+                                    ->schema([
+                                        TextInput::make('price')
+                                            ->label('Ціна')
+                                            ->numeric()
+                                            ->prefix('₴')
+                                            ->required(),
 
-                                TextInput::make('quantity')
-                                    ->label('Кількість')
-                                    ->numeric()
-                                    ->default(1)
-                                    ->minValue(0)
-                                    ->minLength(0)
-                                    ->required(),
+                                        TextInput::make('quantity')
+                                            ->label('Кількість')
+                                            ->numeric()
+                                            ->default(1)
+                                            ->minValue(0)
+                                            ->required(),
+
+                                        TextInput::make('sku')
+                                            ->label('Артикул (SKU)')
+                                            ->default(fn() => 'KN-' . strtoupper(Str::random(6)))
+                                            ->unique(ignoreRecord: true)
+                                            ->required()
+                                            ->readOnly()
+                                            ->suffixAction(
+                                                Action::make('generateSku')
+                                                    ->icon('heroicon-m-arrow-path')
+                                                    ->action(fn($set) => $set('sku', 'KN-' . strtoupper(Str::random(6))))
+                                            ),
+
+                                    ])->columnSpanFull(),
 
                                 Textarea::make('description')
                                     ->rows(6)

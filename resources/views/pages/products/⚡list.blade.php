@@ -579,7 +579,7 @@ new class extends Component {
             @island('products-list', lazy: true, always: true)
                 @placeholder
                     <div @class([
-                        'grid gap-5 mt-5',
+                        'grid gap-2.5 lg:gap-5 mt-5',
                         'grid-cols-2 lg:grid-cols-2' => $view === 'grid',
                         'lg:grid-cols-2' => $view === 'list' || $view === 'cards',
                     ])>
@@ -592,7 +592,7 @@ new class extends Component {
                 @endplaceholder
 
                 <div @class([
-                    'grid gap-5 transition-all duration-500 mt-5',
+                    'grid gap-2.5 lg:gap-5 transition-all duration-500 mt-5',
                     'grid-cols-2 lg:grid-cols-2' => $view === 'grid',
                     'lg:grid-cols-2' => $view === 'list' || $view === 'cards',
                 ])>

@@ -30,6 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->spa()
             ->breadcrumbs(false)
             ->profile(EditProfile::class)
+            ->globalSearchKeyBindings(['ctrl+k'])
             ->userMenuItems([
                 // Додаємо пряме посилання "До адмінки" в меню юзера, якщо ви на сторінці профілю
                 'home' => MenuItem::make()

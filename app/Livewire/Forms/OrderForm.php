@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Forms;
 
+use Illuminate\Validation\Rules\Enum;
+use App\Enums\Order\DeliveryMethod;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
@@ -56,7 +58,8 @@ class OrderForm extends Form
     ]
     public string $email = '';
 
-    #[Validate('required|in:nova_poshta,ukrposhta,courier')]
+    // #[Validate('required|in:nova_poshta,ukrposhta,courier')]
+    #[Validate(['required', new Enum(DeliveryMethod::class)])]
     public string $delivery_method = 'nova_poshta';
 
     #[

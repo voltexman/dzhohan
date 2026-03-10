@@ -14,10 +14,16 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use UnitEnum;
 
 class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Магазин';
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingCart;
 
     protected static ?int $navigationSort = 2;
 
@@ -25,7 +31,18 @@ class OrderResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Замовлення';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['number', 'first_name', 'last_name'];
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            '#' => $record->number,
+            // '' => $record->,
+        ];
+    }
 
     public static function getNavigationBadge(): ?string
     {

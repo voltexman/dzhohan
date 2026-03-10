@@ -18,15 +18,15 @@ class CommentResource extends Resource
 {
     protected static ?string $model = Comment::class;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Зворотний зв`язок';
+    protected static string|UnitEnum|null $navigationGroup = 'Комунікація';
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleLeftRight;
 
     protected static ?int $navigationSort = 4;
 
     protected static ?string $modelLabel = 'Коментар';
 
     protected static ?string $pluralModelLabel = 'Коментарі';
-
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleLeftRight;
 
     public static function form(Schema $schema): Schema
     {

@@ -15,8 +15,7 @@ return new class extends Migration
             $table->string('contact')->nullable();
             $table->text('message');
 
-            $table->boolean('is_active');
-            $table->boolean('is_visible');
+            $table->boolean('is_visible')->default(false);
 
             $table->timestamps();
         });

@@ -1,45 +1,43 @@
 <?php
 
-namespace App\Filament\Resources\Feedback\Tables;
+namespace App\Filament\Resources\Subscribers\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\IconColumn;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class FeedbackTable
+class SubscribersTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
+                TextColumn::make('email')
+                    ->icon(Heroicon::OutlinedEnvelope)
+                    ->label('Поштова адреса')
+                    ->searchable(),
+
                 TextColumn::make('name')
+                    ->icon(Heroicon::OutlinedUser)
                     ->label('Ім`я')
-                    ->placeholder('Не вказано')
+                    ->placeholder('Відсутнє')
                     ->searchable(),
-
-                TextColumn::make('contact')
-                    ->label('Контакт')
-                    ->placeholder('Не вказано')
-                    ->searchable(),
-
-                IconColumn::make('is_visible')
-                    ->label('')
-                    ->boolean(),
 
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
+                    ->icon(Heroicon::OutlinedCalendarDays)
                     ->label('Дата/час')
+                    ->date('d.m.Y')
+                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: false),
             ])
             ->filters([
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()->label(false),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

@@ -80,7 +80,7 @@ new class extends Component {
                 <div>
                     <x-form.label class="mb-1.5">Передзвонити вам?</x-form.label>
                     <div class="text-sm text-gray-600 mb-2.5 lg:max-w-sm">
-                        Якщо немаєте можливості подзвонити, вкажіть ваш номер телефону і я вам зателефоную
+                        Якщо ви не можете подзвонити, будь ласка, вкажіть номер телефону, і я вам зателефоную.
                     </div>
                     <livewire:callback />
                 </div>
