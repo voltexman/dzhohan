@@ -2,9 +2,12 @@
 
 namespace App\Filament\Resources\Products\Schemas;
 
+use App\Enums\BladeFinish;
 use App\Enums\BladeGrind;
 use App\Enums\BladeShape;
+use App\Enums\HandleMaterial;
 use App\Enums\ProductCategory;
+use App\Enums\SheathType;
 use App\Enums\SteelType;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
@@ -35,8 +38,13 @@ class ProductForm
                                 TextInput::make('name')
                                     ->label('Назва товару')
                                     ->required()
+                                    ->maxLength(255)
                                     ->live(onBlur: true)
-                                    ->afterStateUpdated(fn($set, $state) => $set('slug', Str::slug($state))),
+                                    ->afterStateUpdated(fn($set, $state) => $set('slug', Str::slug($state)))
+                                    ->validationMessages([
+                                        'required' => 'Будь ласка, введіть назву ножа',
+                                        'unique' => 'Ніж з такою назвою вже існує',
+                                    ]),
 
                                 TextInput::make('slug')
                                     ->label('URL адреса (slug)')
@@ -44,28 +52,48 @@ class ProductForm
                                     ->unique(ignoreRecord: true)
                                     ->disabled(fn($get) => ! $get('is_slug_editable'))
                                     ->dehydrated()
-                                    // ->helperText('Натисніть на замок, щоб змінити вручну')
                                     ->suffixAction(
                                         Action::make('toggleSlugEditable')
                                             ->icon('heroicon-m-lock-closed')
                                             ->color('gray')
                                             ->action(fn($set, $get) => $set('is_slug_editable', ! $get('is_slug_editable')))
-                                    ),
+                                    )
+                                    ->validationMessages([
+                                        'required' => 'Будь ласка, вкажіть url адресу',
+                                        'unique' => 'Url адреса має бути унікальною',
+                                    ]),
 
                                 Grid::make(3)
                                     ->schema([
                                         TextInput::make('price')
                                             ->label('Ціна')
                                             ->numeric()
+                                            ->minValue(1)
+                                            ->maxValue(500000)
+                                            ->step(1)
                                             ->prefix('₴')
-                                            ->required(),
+                                            ->required()
+                                            ->extraInputAttributes(['min' => 1])
+                                            ->rule(['required', 'min:1', 'max:500000'])
+                                            ->validationMessages([
+                                                'required' => 'Вкажіть ціну ножа',
+                                                'min' => 'Не має бути менше 1',
+                                                'max' => 'Не має бути більше 500000',
+                                            ]),
 
                                         TextInput::make('quantity')
                                             ->label('Кількість')
                                             ->numeric()
                                             ->default(1)
                                             ->minValue(0)
-                                            ->required(),
+                                            ->required()
+                                            ->extraInputAttributes(['min' => 0])
+                                            ->rule(['required', 'min:0', 'max:100'])
+                                            ->validationMessages([
+                                                'required' => 'Вкажіть кількість ножів',
+                                                'min' => 'Не має бути менше 0',
+                                                'max' => 'Не має бути більше 100',
+                                            ]),
 
                                         TextInput::make('sku')
                                             ->label('Артикул (SKU)')
@@ -91,17 +119,29 @@ class ProductForm
                                     ->options(ProductCategory::class)
                                     ->native(false)
                                     ->label('Колекція')
-                                    ->required(),
+                                    ->required()
+                                    ->rule(['required'])
+                                    ->validationMessages([
+                                        'required' => 'Вкажіть колекцію до якої належить ніж',
+                                    ]),
 
                                 Select::make('tags')
                                     ->relationship('tags', 'name')
                                     ->multiple()
+                                    ->required()
                                     ->searchable()
                                     ->preload()
+                                    ->rule(['min:2', 'max:6'])
+                                    ->validationMessages([
+                                        'required' => 'Вкажіть теги',
+                                        'min' => 'Необхідно мінімум 2 теги',
+                                        'max' => 'Не більше 6 тегів',
+                                    ])
+                                    ->label('Теги')
                                     ->createOptionForm([
                                         TextInput::make('name')
                                             ->required()
-                                            ->live(onBlur: true)
+                                            ->live()
                                             ->afterStateUpdated(fn($set, $state) => $set('slug', Str::slug($state))),
                                         TextInput::make('slug')
                                             ->required()
@@ -109,6 +149,9 @@ class ProductForm
                                     ]),
 
                                 Toggle::make('is_active')
+                                    ->label('Публікація')
+                                    ->helperText('Чи буде товар відображатися на сайті')
+                                    ->default(true)
                                     ->required(),
                             ])->columns(2),
 
@@ -125,6 +168,19 @@ class ProductForm
                                     ->imagePreviewHeight('250')
                                     ->multiple()
                                     ->hiddenLabel()
+                                    ->required()
+                                    ->image()
+                                    ->minFiles(2)
+                                    ->maxFiles(20)
+                                    ->acceptedFileTypes([
+                                        'image/*',
+                                    ])
+                                    ->validationMessages([
+                                        'required' => 'Додайте зображення',
+                                        'min' => 'Не має бути менше 1',
+                                        'max' => 'Може бути не більше 20 зображень',
+                                        'image' => 'Може бути тільки зображення',
+                                    ])
                                     ->columnSpanFull(),
                             ]),
 
@@ -154,16 +210,21 @@ class ProductForm
                                         TextInput::make('blade_length')
                                             ->label('Довжина леза')
                                             ->numeric()
+                                            ->minValue(0)
+                                            ->step(0.1)
                                             ->suffix('мм'),
 
                                         TextInput::make('blade_thickness')
                                             ->label('Товщина леза')
                                             ->numeric()
+                                            ->minValue(0)
+                                            ->step(0.1)
+                                            ->placeholder('напр. 4.2')
                                             ->suffix('мм'),
 
                                         Select::make('blade_finish')
                                             ->label('Покриття')
-                                            ->options(\App\Enums\BladeFinish::class)
+                                            ->options(BladeFinish::class)
                                             ->native(false),
                                     ]),
 
@@ -172,16 +233,19 @@ class ProductForm
                                         TextInput::make('total_length')
                                             ->label('Загальна довжина')
                                             ->numeric()
+                                            ->minValue(0)
+                                            ->maxValue(1000)
+                                            ->step(0.1)
                                             ->suffix('мм'),
 
                                         Select::make('handle_material')
                                             ->label('Матеріал руків’я')
-                                            ->options(\App\Enums\HandleMaterial::class)
+                                            ->options(HandleMaterial::class)
                                             ->native(false),
 
                                         Select::make('sheath')
                                             ->label('Піхви / Чохол')
-                                            ->options(\App\Enums\SheathType::class)
+                                            ->options(SheathType::class)
                                             ->native(false),
                                     ]),
                             ]),

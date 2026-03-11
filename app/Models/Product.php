@@ -68,7 +68,6 @@ class Product extends Model implements HasMedia
         'is_active' => 'boolean',
     ];
 
-    // Додайте в Product.php
     public function getStockAttribute()
     {
         return $this->quantity;

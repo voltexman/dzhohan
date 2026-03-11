@@ -30,9 +30,9 @@ class OrderManufactureSubmitted extends Notification
         return (new MailMessage)
             ->subject("🛠 Замовлення на виготовлення №{$this->order->number}")
             ->greeting("🛠 Деталі замовлення №{$this->order->number}")
-            ->line("**Замовник:** {$this->order->first_name} {$this->order->last_name}")
+            ->line("**Замовник:** {$this->order->first_name} {$this->order?->last_name}")
             ->line("**Телефон:** {$this->order->phone}")
-            ->line("**Адреса:** {$this->order->city}, {$this->order->address}")
+            ->lineIf($this->order->city || $this->order->address, "**Адреса:** {$this->order?->city}, {$this->order?->address}")
             ->line('')
             ->line('**📐 Параметри виробу:**')
 
@@ -58,9 +58,9 @@ class OrderManufactureSubmitted extends Notification
         return TelegramMessage::create()
             ->options(['parse_mode' => 'html'])
             ->line("🛠 <b>Замовлення на виготовлення №{$this->order->number}</b>")
-            ->line('👤 <b>Замовник:</b> '.e("{$this->order->first_name} {$this->order->last_name}"))
+            ->line('👤 <b>Замовник:</b> ' . e("{$this->order->first_name} {$this->order->last_name}"))
             ->line("📞 <b>Телефон:</b> {$this->order->phone}")
-            ->line('🚚 <b>Адреса:</b> '.e("{$this->order->city}, {$this->order->address}"))
+            ->lineIf(($this->order->city || $this->order->address), '🚚 <b>Адреса:</b> ' . e("{$this->order?->city}, {$this->order?->address}"))
             ->line("\n<b>📐 Параметри виробу:</b>")
 
             ->lineIf($manufacture->knife_type, "• <b>Тип:</b> {$manufacture->knife_type}")
@@ -76,7 +76,7 @@ class OrderManufactureSubmitted extends Notification
             ->lineIf($manufacture->notes, "• <b>Нотатки:</b> {$manufacture->notes}")
 
             ->line('')
-            ->when($this->order->comment, fn ($message) => $message->line('💬 <b>Коментар:</b> '.e($this->order->comment)))
+            ->when($this->order->comment, fn($message) => $message->line('💬 <b>Коментар:</b> ' . e($this->order->comment)))
             ->button('В адмінку', route('filament.admin.resources.orders.view', $this->order));
     }
 }

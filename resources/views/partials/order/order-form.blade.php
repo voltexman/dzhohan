@@ -39,50 +39,76 @@
             @endforeach
         </div>
 
-        <!-- Поля для NovaPoshta або UkrPoshta -->
-        <div x-show="delivery_method === '{{ DeliveryMethod::NovaPoshta }}' || delivery_method === '{{ DeliveryMethod::UkrPoshta }}'"
-            class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
-            <x-form.group>
-                <x-form.label>Ім'я</x-form.label>
-                <x-form.input wire:model.trim.live.blur="form.first_name" placeholder="Іван" required />
-            </x-form.group>
+        <template
+            x-if="delivery_method === '{{ DeliveryMethod::NovaPoshta }}' || delivery_method === '{{ DeliveryMethod::UkrPoshta }}'">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+                <x-form.group>
+                    <x-form.label>Ім'я</x-form.label>
+                    <x-form.input wire:model.trim.live.blur="form.first_name" placeholder="Іван" required />
+                </x-form.group>
 
-            <x-form.group>
-                <x-form.label>Прізвище</x-form.label>
-                <x-form.input wire:model.trim.live.blur="form.last_name" placeholder="Іванов" required />
-            </x-form.group>
+                <x-form.group>
+                    <x-form.label>Прізвище</x-form.label>
+                    <x-form.input wire:model.trim.live.blur="form.last_name" placeholder="Іванов" required />
+                </x-form.group>
 
-            <x-form.group>
-                <x-form.label>Номер телефону</x-form.label>
-                <x-form.input wire:model.trim.live.blur="form.phone" x-mask="+999 (99) 999-99-99"
-                    placeholder="+380 (63) 123-44-56" required />
-            </x-form.group>
+                <x-form.group>
+                    <x-form.label>Номер телефону</x-form.label>
+                    <x-form.input wire:model.trim.live.blur="form.phone" x-mask="+999 (99) 999-99-99"
+                        placeholder="+380 (63) 123-44-56" required />
+                </x-form.group>
 
-            <x-form.group>
-                <x-form.label>Місто</x-form.label>
-                <x-form.input wire:model.trim.live.blur="form.city" placeholder="Київ" required />
-            </x-form.group>
+                <x-form.group>
+                    <x-form.label>Місто</x-form.label>
+                    <x-form.input wire:model.trim.live.blur="form.city" placeholder="Київ" required />
+                </x-form.group>
 
-            <x-form.group>
-                <x-form.label>Адреса або відділення</x-form.label>
-                <x-form.input wire:model.trim.live.blur="form.address" placeholder="Відділення/поштомат" required />
-            </x-form.group>
-        </div>
+                <x-form.group>
+                    <x-form.label>Адреса або відділення</x-form.label>
+                    <x-form.input wire:model.trim.live.blur="form.address" placeholder="Відділення/поштомат" required />
+                </x-form.group>
+            </div>
+        </template>
 
-        <!-- Поля для Pickup -->
-        <div x-show="delivery_method === '{{ DeliveryMethod::Pickup }}'"
-            class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
-            <x-form.group>
-                <x-form.label>Ім'я</x-form.label>
-                <x-form.input wire:model.trim.live.blur="form.first_name" placeholder="Ім'я" />
-            </x-form.group>
+        <template x-if="delivery_method === '{{ DeliveryMethod::Pickup }}'">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+                <x-form.group>
+                    <x-form.label>Ім'я</x-form.label>
+                    <x-form.input wire:model.trim.live.blur="form.first_name" placeholder="Ім'я" />
+                </x-form.group>
 
-            <x-form.group>
-                <x-form.label>Номер телефону</x-form.label>
-                <x-form.input wire:model.trim.live.blur="form.phone" x-mask="+999 (99) 999-99-99"
-                    placeholder="Номер телефону" />
-            </x-form.group>
-        </div>
+                <x-form.group>
+                    <x-form.label>Номер телефону</x-form.label>
+                    <x-form.input wire:model.trim.live.blur="form.phone" x-mask="+999 (99) 999-99-99"
+                        placeholder="Номер телефону" />
+                </x-form.group>
+            </div>
+        </template>
+
+        <template x-if="delivery_method === '{{ DeliveryMethod::Courier }}'">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+                <x-form.group>
+                    <x-form.label>Ім'я</x-form.label>
+                    <x-form.input wire:model.trim.live.blur="form.first_name" placeholder="Ім'я" />
+                </x-form.group>
+
+                <x-form.group>
+                    <x-form.label>Номер телефону</x-form.label>
+                    <x-form.input wire:model.trim.live.blur="form.phone" x-mask="+999 (99) 999-99-99"
+                        placeholder="Номер телефону" />
+                </x-form.group>
+
+                <x-form.group>
+                    <x-form.label>Місто</x-form.label>
+                    <x-form.input wire:model.trim.live.blur="form.city" placeholder="Київ" required />
+                </x-form.group>
+
+                <x-form.group>
+                    <x-form.label>Адреса або відділення</x-form.label>
+                    <x-form.input wire:model.trim.live.blur="form.address" placeholder="Відділення/поштомат" required />
+                </x-form.group>
+            </div>
+        </template>
     </div>
 
     <!-- Коментар -->

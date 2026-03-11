@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('number')->unique();
             $table->string('first_name');
-            $table->string('last_name');
+            $table->string('last_name')->nullable();
             $table->string('phone');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->enum('delivery_method', DeliveryMethod::values());
-            $table->string('city');
-            $table->string('address');
+            $table->string('city')->nullable();
+            $table->string('address')->nullable();
             $table->text('comment')->nullable();
-            $table->enum('type', OrderType::values())->default(OrderType::Purchase->value);
+            $table->enum('type', OrderType::values())->default(OrderType::Purchase);
             $table->enum('status', OrderStatus::values())->default(OrderStatus::Pending);
             $table->timestamps();
         });
@@ -34,7 +34,7 @@ return new class extends Migration
 
             $table->string('name');
             $table->integer('qty');
-            $table->decimal('price', 12, 2)->default(0);
+            $table->decimal('price', 10, 2)->default(0);
             $table->timestamps();
         });
 
@@ -49,8 +49,8 @@ return new class extends Migration
             $table->string('blade_steel')->nullable();
             $table->string('blade_grind')->nullable();
             $table->string('blade_finish')->nullable();
-            $table->integer('blade_length')->nullable();
-            $table->integer('blade_thickness')->nullable();
+            $table->decimal('blade_length', 6, 1)->nullable();
+            $table->decimal('blade_thickness', 4, 1)->nullable();
 
             // руків’я
             $table->string('handle_material')->nullable();

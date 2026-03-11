@@ -9,88 +9,55 @@ use Livewire\Form;
 
 class OrderForm extends Form
 {
-    #[
-        Validate(
-            'required|string|min:2|max:50',
-            message: [
-                'required' => 'Вкажіть ваше імʼя.',
-                'string' => 'Імʼя повинно бути текстом.',
-                'min' => 'Імʼя повинно містити щонайменше 2 символи.',
-                'max' => 'Імʼя не може перевищувати 50 символів.',
-            ],
-        ),
-    ]
+    #[Validate('required|string|min:2|max:50', message: [
+        'first_name.required' => 'Вкажіть ваше імʼя.',
+        'first_name.min' => 'Імʼя занадто коротке.',
+    ])]
     public string $first_name = '';
 
-    #[
-        Validate(
-            'required|string|min:2|max:50',
-            message: [
-                'required' => 'Вкажіть ваше прізвище.',
-                'string' => 'Прізвище повинно бути текстом.',
-                'min' => 'Прізвище повинно містити щонайменше 2 символи.',
-                'max' => 'Прізвище не може перевищувати 50 символів.',
-            ],
-        ),
-    ]
-    public string $last_name = '';
-
-    #[
-        Validate(
-            'required|regex:/^\+?[0-9\s\-\(\)]{10,18}$/',
-            message: [
-                'required' => 'Вкажіть номер телефону.',
-                'regex' => 'Вкажіть коректний номер телефону.',
-            ],
-        ),
-    ]
+    #[Validate('required|regex:/^\+?[0-9\s\-\(\)]{10,18}$/', message: [
+        'phone.required' => 'Вкажіть номер телефону.',
+        'phone.regex' => 'Некоректний формат телефону.',
+    ])]
     public string $phone = '';
 
-    #[
-        Validate(
-            'required|email:rfc,dns|max:100',
-            message: [
-                'required' => 'Вкажіть електронну пошту.',
-                'email' => 'Вкажіть коректну адресу.',
-                'max' => 'Занадто багато символів.',
-            ],
-        ),
-    ]
-    public string $email = '';
-
-    // #[Validate('required|in:nova_poshta,ukrposhta,courier')]
-    #[Validate(['required', new Enum(DeliveryMethod::class)])]
+    #[Validate(['required', new Enum(DeliveryMethod::class)], message: [
+        'delivery_method.required' => 'Оберіть спосіб доставки.',
+        'delivery_method.Illuminate\Validation\Rules\Enum' => 'Некоректний спосіб доставки.',
+    ])]
     public string $delivery_method = 'nova_poshta';
 
-    #[
-        Validate(
-            'required|string|min:2|max:100',
-            message: [
-                'required' => 'Вкажіть населений пункт.',
-                'min' => 'Назва міста занадто коротка.',
-            ],
-        ),
-    ]
+    #[Validate('required_if:delivery_method,nova_poshta,ukr_poshta|nullable|string|min:2|max:50', message: [
+        'last_name.required_if' => 'Прізвище обовʼязкове для доставки поштою.',
+    ])]
+    public string $last_name = '';
+
+    #[Validate('required_if:delivery_method,nova_poshta,ukr_poshta|nullable|email:rfc,dns|max:100', message: [
+        'email.required_if' => 'Пошта потрібна для оформлення замовлення.',
+        'email.email' => 'Вкажіть дійсну адресу.',
+    ])]
+    public string $email = '';
+
+    #[Validate('required_unless:delivery_method,pickup|nullable|string|min:2|max:100', message: [
+        'city.required_unless' => 'Вкажіть місто для доставки.',
+    ])]
     public string $city = '';
 
-    #[
-        Validate(
-            'required|string|min:5|max:255',
-            message: [
-                'required' => 'Вкажіть адресу або номер відділення доставки.',
-                'min' => 'Адреса занадто коротка.',
-            ],
-        ),
-    ]
+    #[Validate('required_unless:delivery_method,pickup|nullable|string|min:5|max:255', message: [
+        'address.required_unless' => 'Вкажіть адресу або номер відділення.',
+    ])]
     public string $address = '';
 
-    #[
-        Validate(
-            'nullable|string|max:1500',
-            message: [
-                'string' => 'Коментар повинен бути текстом.',
-            ],
-        ),
-    ]
+    #[Validate('nullable|string|max:1500')]
     public string $comment = '';
+
+    public function updatedFormDeliveryMethod($value)
+    {
+        $this->resetValidation([
+            'form.last_name',
+            'form.email',
+            'form.city',
+            'form.address',
+        ]);
+    }
 }

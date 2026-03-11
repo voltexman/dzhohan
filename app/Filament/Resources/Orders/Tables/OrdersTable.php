@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Orders\Tables;
 
+use App\Enums\Order\OrderStatus;
+use App\Enums\Order\OrderType;
 use App\Models\Order;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -36,7 +38,7 @@ class OrdersTable
                 TextColumn::make('total_price')
                     ->label('Ціна')
                     ->state(
-                        fn($record) => $record->type === \App\Enums\Order\OrderType::Purchase
+                        fn($record) => $record->type === OrderType::Purchase
                             ? $record->products->sum(fn($i) => $i->qty * $i->price)
                             : null
                     )
@@ -71,7 +73,7 @@ class OrdersTable
             ->modifyQueryUsing(fn($query) => $query->with('products'))
             ->filters([
                 SelectFilter::make('status')
-                    ->options(\App\Enums\Order\OrderStatus::class)
+                    ->options(OrderStatus::class)
                     ->native(false)
                     ->label('Статус'),
             ])

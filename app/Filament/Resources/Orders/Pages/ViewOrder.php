@@ -14,7 +14,9 @@ class ViewOrder extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            EditAction::make(),
+            EditAction::make()
+                ->closeModalByClickingAway(false)
+                ->closeModalByEscaping(false),
         ];
     }
 

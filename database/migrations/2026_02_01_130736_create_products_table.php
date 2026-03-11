@@ -19,17 +19,17 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->string('sku')->nullable()->unique();
+            $table->string('sku', 50)->nullable()->unique();
             $table->text('description')->nullable();
 
-            $table->decimal('price', 10, 2);
+            $table->decimal('price', 8, 2);
             $table->unsignedInteger('quantity')->default(1);
             $table->boolean('is_active')->default(true);
             $table->enum('collection', ProductCategory::values())->index();
 
-            $table->decimal('total_length', 8, 2)->nullable()->comment('Загальна довжина, мм');
-            $table->decimal('blade_length', 8, 2)->nullable()->comment('Довжина леза, мм');
-            $table->decimal('blade_thickness', 5, 2)->nullable()->comment('Товщина леза, мм');
+            $table->decimal('total_length', 6, 1)->nullable()->comment('Загальна довжина, мм');
+            $table->decimal('blade_length', 6, 1)->nullable()->comment('Довжина леза, мм');
+            $table->decimal('blade_thickness', 4, 1)->nullable()->comment('Товщина леза, мм');
 
             $table->enum('steel', SteelType::values())->nullable()->index()->comment('Марка сталі');
             $table->enum('blade_shape', BladeShape::values())->nullable()->index()->comment('Профіль клинка');

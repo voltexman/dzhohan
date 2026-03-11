@@ -133,12 +133,13 @@ new #[Layout('layouts::cart')] class extends Component {
             </x-table.row>
         @endif
 
-        <x-table.row>
-            <x-table.cell class="font-semibold text-black text-nowrap">Марка сталі</x-table.cell>
-            <x-table.cell class="text-gray-700">{{ $product->steel->getLabel() }}</x-table.cell>
-        </x-table.row>
+        @if ($product->steel)
+            <x-table.row>
+                <x-table.cell class="font-semibold text-black text-nowrap">Марка сталі</x-table.cell>
+                <x-table.cell class="text-gray-700">{{ $product->steel->getLabel() }}</x-table.cell>
+            </x-table.row>
+        @endif
 
-        {{-- НОВЕ: Тип спусків --}}
         @if ($product->blade_grind)
             <x-table.row>
                 <x-table.cell class="font-semibold text-black text-nowrap">Тип спусків</x-table.cell>
@@ -146,12 +147,13 @@ new #[Layout('layouts::cart')] class extends Component {
             </x-table.row>
         @endif
 
-        <x-table.row>
-            <x-table.cell class="font-semibold text-black text-nowrap">Профіль клинка</x-table.cell>
-            <x-table.cell class="text-gray-700">{{ $product->blade_shape->getLabel() }}</x-table.cell>
-        </x-table.row>
+        @if ($product->blade_shape)
+            <x-table.row>
+                <x-table.cell class="font-semibold text-black text-nowrap">Профіль клинка</x-table.cell>
+                <x-table.cell class="text-gray-700">{{ $product->blade_shape->getLabel() }}</x-table.cell>
+            </x-table.row>
+        @endif
 
-        {{-- НОВЕ: Фінішна обробка --}}
         @if ($product->blade_finish)
             <x-table.row>
                 <x-table.cell class="font-semibold text-black text-nowrap">Фінішна обробка</x-table.cell>
@@ -159,12 +161,13 @@ new #[Layout('layouts::cart')] class extends Component {
             </x-table.row>
         @endif
 
-        <x-table.row>
-            <x-table.cell class="font-semibold text-black text-nowrap">Матеріал руків'я</x-table.cell>
-            <x-table.cell class="text-gray-700">{{ $product->handle_material->getLabel() }}</x-table.cell>
-        </x-table.row>
+        @if ($product->handle_material)
+            <x-table.row>
+                <x-table.cell class="font-semibold text-black text-nowrap">Матеріал руків'я</x-table.cell>
+                <x-table.cell class="text-gray-700">{{ $product->handle_material->getLabel() }}</x-table.cell>
+            </x-table.row>
+        @endif
 
-        {{-- НОВЕ: Піхви / Чохол --}}
         @if ($product->sheath)
             <x-table.row>
                 <x-table.cell class="font-semibold text-black text-nowrap">Піхви / Чохол</x-table.cell>
@@ -204,10 +207,10 @@ new #[Layout('layouts::cart')] class extends Component {
         <livewire:comments :model="$product" />
     </div>
 
-    <div class="max-w-2xl mt-10 space-y-2 px-6 lg:px-10">
+    {{-- <div class="max-w-2xl mt-10 space-y-2 px-6 lg:px-10">
         <h3 class="text-xl font-semibold font-[SN_Pro]">Інші товари</h3>
         <span class="h-20 border border-zinc-100">other products</span>
-    </div>
+    </div> --}}
 
     {{-- <template x-teleport="body"> --}}
     {{-- <div x-show="show" x-transition:enter="transition ease-out duration-300"

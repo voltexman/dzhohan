@@ -69,6 +69,7 @@ class ProductsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('created_at', 'desc')
             ->striped()
             ->filters([
                 TrashedFilter::make(),
