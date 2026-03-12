@@ -9,7 +9,6 @@ enum DeliveryMethod: string implements HasLabel
     case NovaPoshta = 'nova_poshta';
     case UkrPoshta = 'ukr_poshta';
     case Pickup = 'pickup';
-    case Courier = 'courier';
 
     public function getLabel(): string
     {
@@ -17,7 +16,6 @@ enum DeliveryMethod: string implements HasLabel
             self::NovaPoshta => 'Нова Пошта',
             self::UkrPoshta => 'Укрпошта',
             self::Pickup => 'Самовивіз',
-            self::Courier => 'Кур’єр',
         };
     }
 

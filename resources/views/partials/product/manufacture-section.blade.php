@@ -1,4 +1,4 @@
-<div class="col-span-full my-10 p-5 lg:p-10 relative bg-cover bg-center bg-no-repeat"
+<div class="col-span-full my-5 p-5 lg:p-10 relative bg-cover bg-center bg-no-repeat"
     style="background-image: url('{{ Vite::asset('resources/images/products-list-order-bg.png') }}')">
 
     <div class="absolute inset-0 bg-black/35 z-0"></div>

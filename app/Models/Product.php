@@ -81,6 +81,13 @@ class Product extends Model implements HasMedia
     public function scopeFilter($query, array $filters)
     {
         return $query->where('is_active', true)
+            ->when($filters['search'] ?? null, function ($q, $search) {
+                $q->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('sku', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                });
+            })
             ->when($filters['collections'] ?? null, fn($q, $cat) => $q->whereIn('collection', $cat))
             //    Фільтр наявності (виправив 'stock' на 'in_stock' згідно з вашим UI)
             ->when(isset($filters['status']) && $filters['status'] !== 'all', function ($q) use ($filters) {

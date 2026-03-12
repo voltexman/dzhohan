@@ -1,12 +1,12 @@
 @props(['sidebarPosition' => 'left', 'sidebar', 'main'])
 
 <section {{ $attributes->class('lg:min-h-screen bg-neutral-50') }}>
-    <div class="max-w-5xl lg:grid lg:grid-cols-3 gap-10 mx-auto">
+    <div class="max-w-5xl grid lg:grid-cols-3 gap-10 mx-auto">
 
         @if ($sidebar)
             <aside
                 {{ $sidebar->attributes->class([
-                    'order-2 w-full border-zinc-200 from-transparent to-zinc-100 px-5 lg:px-0 border-b lg:border-b-0 bg-linear-to-b',
+                    'order-2 w-full border-zinc-200 from-transparent to-zinc-100 px-5 lg:px-0 border-t lg:border-b-0 bg-linear-to-t lg:bg-linear-to-l',
                 
                     // базові стилі
                     'lg:bg-linear-to-r lg:border-r lg:pr-8 py-10' => $sidebarPosition === 'left',

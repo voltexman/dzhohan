@@ -46,7 +46,7 @@ name('home');
     <section class="bg-zinc-50 py-20 px-5 lg:px-0 scroll-mt-15" id="about-me">
         <div class="max-w-5xl mx-auto grid lg:grid-cols-2 gap-5 lg:gap-10">
             <div class="overflow-hidden">
-                <img src="https://scontent.fvin2-1.fna.fbcdn.net/v/t39.30808-6/568409313_4043281315962181_5024947218087580627_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=1d70fc&_nc_ohc=0OZDGvtj7y4Q7kNvwFKg5gX&_nc_oc=AdlcHIiOTxavpLwCw43tCrg66-Yt9KiV3eHsxZDIV1gkpSfjKxZio4KOOZYwB4gp9Qo&_nc_zt=23&_nc_ht=scontent.fvin2-1.fna&_nc_gid=qljyJMdKS8-j358KxoW3Bw&_nc_ss=8&oh=00_AfwRN8olK2hZiFtgGAry6vet_3cdeerkCeF5ac0NrQZisQ&oe=69B196AE"
+                <img src="{{ Vite::asset('resources/images/i-am.jpg') }}"
                     class="size-full object-cover rounded-sm border-5 border-zinc-200/90" alt="">
             </div>
 

@@ -15,7 +15,7 @@ new class extends Component {
     </x-header>
 @endsection
 
-<div class="max-w-5xl mx-auto px-6 lg:px-0 py-20">
+<div class="max-w-5xl mx-auto px-5 lg:px-0 py-10 lg:py-20">
     <div class="max-w-4xl mx-auto grid lg:grid-cols-4 divide-y lg:divide-x lg:divide-y-0 divide-zinc-200/70">
         <div
             class="flex lg:flex-col items-center gap-x-5 p-5 bg-linear-to-t lg:bg-linear-to-l from-gray-50 to-transparent hover:from-gray-100 transition-colors duration-300">

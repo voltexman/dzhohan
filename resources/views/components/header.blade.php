@@ -16,7 +16,7 @@
 
             @isset($description)
                 <div
-                    {{ $description->attributes->class('text-white drop-shadow-xl font-[SN_Pro] max-w-sm lg:max-w-md mt-2.5 text-balance') }}>
+                    {{ $description->attributes->class('text-white/70 drop-shadow-xl font[SN_Pro] text-sm max-w-sm lg:max-w-md mt-2.5 text-balance') }}>
                     {{ $description }}
                 </div>
             @endisset

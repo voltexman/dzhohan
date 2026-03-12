@@ -46,8 +46,7 @@ class OrderPurchaseSubmitted extends Notification
             ->line('')
             ->line('**💰 СУМА: ' . number_format($total, 0) . ' грн**')
             ->lineIf($this->order->comment, "💬 Коментар: {$this->order->comment}")
-            ->action('Переглянути в адмінці', route('filament.admin.resources.orders.view', $this->order))
-            ->salutation('З повагою, ваш магазин');
+            ->action('Переглянути в адмінці', route('filament.admin.resources.orders.view', $this->order));
     }
 
     public function toTelegram(): TelegramMessage

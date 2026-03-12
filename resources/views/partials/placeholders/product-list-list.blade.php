@@ -1,4 +1,4 @@
-<div class="flex gap-5 items-center p-2 bg-white animate-pulse">
+<div class="flex gap-5 items-center ps-1.5 bg-white animate-pulse">
     <!-- Зображення -->
     <div class="size-32 shrink-0 bg-zinc-200 rounded-sm"></div>
 

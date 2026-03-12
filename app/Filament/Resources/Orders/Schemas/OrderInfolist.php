@@ -92,7 +92,7 @@ class OrderInfolist
                             TextEntry::make('first_name')
                                 ->label('Замовник')
                                 ->icon('heroicon-o-user')
-                                ->formatStateUsing(fn($record) => "{$record->first_name} {$record->last_name}"),
+                                ->formatStateUsing(fn($record) => "{$record->first_name} {$record?->last_name}"),
 
                             TextEntry::make('phone')
                                 ->label('Телефон')
@@ -102,6 +102,7 @@ class OrderInfolist
                             TextEntry::make('email')
                                 ->label('Email')
                                 ->icon('heroicon-o-envelope')
+                                ->hidden(fn($state) => blank($state))
                                 ->copyable()
                                 ->columnSpanFull(),
                         ])->columns(2),
@@ -114,10 +115,12 @@ class OrderInfolist
 
                             TextEntry::make('city')
                                 ->label('Місто')
-                                ->icon('heroicon-o-map-pin'),
+                                ->icon('heroicon-o-map-pin')
+                                ->hidden(fn($state) => blank($state)),
 
                             TextEntry::make('address')
                                 ->label('Адреса / Відділення')
+                                ->hidden(fn($state) => blank($state))
                                 ->columnSpanFull(),
                         ])->columns(2),
                 ])->columns(2)->columnSpanFull(),

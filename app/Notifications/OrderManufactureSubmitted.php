@@ -47,8 +47,7 @@ class OrderManufactureSubmitted extends Notification
 
             ->line('')
             ->lineIf($this->order->comment, "💬 **Коментар:** {$this->order->comment}")
-            ->action('Переглянути в адмінці', route('filament.admin.resources.orders.view', $this->order))
-            ->salutation('З повагою, ваш майстер');
+            ->action('Переглянути в адмінці', route('filament.admin.resources.orders.view', $this->order));
     }
 
     public function toTelegram($notifiable): TelegramMessage
