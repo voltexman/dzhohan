@@ -6,7 +6,7 @@
     "isDynamicEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-CNpnwVht.css",
+    "file": "assets/app-PcYQyy6S.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -61,6 +61,10 @@
   "resources/images/hunting-icon.png": {
     "file": "assets/hunting-icon-CBYIhCAg.png",
     "src": "resources/images/hunting-icon.png"
+  },
+  "resources/images/i-am.jpg": {
+    "file": "assets/i-am-FmL4NO_X.jpg",
+    "src": "resources/images/i-am.jpg"
   },
   "resources/images/icons/bowie.png": {
     "file": "assets/bowie-B2G_sL2K.png",

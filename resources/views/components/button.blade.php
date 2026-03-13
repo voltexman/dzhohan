@@ -13,7 +13,7 @@
 |--------------------------------------------------------------------------
 */
     $base =
-        'inline-flex items-center justify-center font-medium transition rounded-sm duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
+        'inline-flex items-center justify-center font-medium transition rounded-md duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
 
     /*
 |--------------------------------------------------------------------------
@@ -52,7 +52,7 @@
         'light' => [
             'default' => 'bg-zinc-200 text-black hover:bg-zinc-300/90 focus-visible:ring-gray-400',
             'outline' => 'border border-gray-300 text-black hover:bg-gray-200 focus-visible:ring-gray-400',
-            'ghost' => 'text-black hover:bg-gray-200/60 focus-visible:ring-gray-400',
+            'ghost' => 'text-zinc-700 hover:bg-gray-200/60 focus-visible:ring-gray-400',
             'soft' => 'bg-stone-50/50 text-gray-700 hover:bg-stone-200 focus-visible:ring-gray-400',
             'link' => 'bg-transparent text-white underline-offset-4 hover:underline focus-visible:ring-gray-400',
         ],

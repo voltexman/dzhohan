@@ -76,18 +76,20 @@
 
 <x-dropdown class="hidden lg:block">
     <x-slot:trigger>
-        @if ($view === 'grid')
-            <x-lucide-layout-grid class="size-4 me-1.5" />
-            <span>Сітка</span>
-        @elseif ($view === 'list')
-            <x-lucide-list class="size-4 me-1.5" />
-            <span>Список</span>
-        @else
-            <x-lucide-layout-template class="size-4 me-1.5" />
-            <span>Картки</span>
-        @endif
-        <x-lucide-chevron-down class="size-3.5 transition-transform duration-300"
-            x-bind:class="open ? 'rotate-180' : ''" />
+        <x-button variant="ghost" color="light" size="sm" class="gap-x.1.5">
+            @if ($view === 'grid')
+                <x-lucide-layout-grid class="size-4 me-1.5" />
+                <span>Сітка</span>
+            @elseif ($view === 'list')
+                <x-lucide-list class="size-4 me-1.5" />
+                <span>Список</span>
+            @else
+                <x-lucide-layout-template class="size-4 me-1.5" />
+                <span>Картки</span>
+            @endif
+            <x-lucide-chevron-down class="size-3.5 transition-transform duration-300"
+                x-bind:class="open ? 'rotate-180' : ''" />
+        </x-button>
     </x-slot:trigger>
 
     <x-dropdown.content>

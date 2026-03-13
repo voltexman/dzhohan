@@ -26,12 +26,13 @@
         <div class="w-full lg:max-w-lg grid grid-cols-2 lg:grid-cols-4 gap-2.5">
             @foreach (DeliveryMethod::cases() as $method)
                 <button type="button" @click="delivery_method = '{{ $method->value }}'"
+                    wire:key="delivery-{{ $method->value }}"
                     :class="delivery_method === '{{ $method->value }}' ?
                         'border-orange-500/50 ring-1 ring-orange-500/50 bg-orange-50 text-orange-700' :
                         'border-zinc-200 bg-zinc-100 hover:border-zinc-300 text-zinc-600'"
                     class="relative flex flex-col items-center justify-center px-2.5 py-5 border rounded-md transition-all duration-300 group cursor-pointer">
                     <span class="text-sm font-semibold">{{ $method->getLabel() }}</span>
-                    <div x-show="delivery_method === '{{ $method->value }}'" x-transition.scale
+                    <div wire:show="delivery_method === '{{ $method->value }}'" x-transition.scale
                         class="absolute top-1.5 right-1.5">
                         <x-lucide-check-circle-2 class="size-4 fill-orange-50 stroke-orange-600" />
                     </div>
@@ -39,8 +40,8 @@
             @endforeach
         </div>
 
-        <template
-            x-if="delivery_method === '{{ DeliveryMethod::NovaPoshta }}' || delivery_method === '{{ DeliveryMethod::UkrPoshta }}'">
+        <div
+            wire:show="delivery_method === '{{ DeliveryMethod::NovaPoshta }}' || delivery_method === '{{ DeliveryMethod::UkrPoshta }}'">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
                 <x-form.group>
                     <x-form.label>Ім'я</x-form.label>
@@ -68,9 +69,9 @@
                     <x-form.input wire:model.trim.live.blur="form.address" placeholder="Відділення/поштомат" required />
                 </x-form.group>
             </div>
-        </template>
+        </div>
 
-        <template x-if="delivery_method === '{{ DeliveryMethod::Pickup }}'">
+        <div wire:show="delivery_method === '{{ DeliveryMethod::Pickup }}'">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
                 <x-form.group>
                     <x-form.label>Ім'я</x-form.label>
@@ -83,7 +84,12 @@
                         placeholder="Номер телефону" />
                 </x-form.group>
             </div>
-        </template>
+            <div class="mt-4 p-4 bg-stone-100 border border-dashed border-zinc-200 rounded-lg">
+                <p class="text-sm text-zinc-600 flex items-center gap-2">
+                    <x-lucide-map-pin class="size-4" /> м. Вінниця, вул. Прикладна, 12 (Пн-Пт 10:00-18:00)
+                </p>
+            </div>
+        </div>
     </div>
 
     <!-- Коментар -->

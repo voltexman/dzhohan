@@ -56,11 +56,8 @@
                 <div class="relative py-1.5">
                     <div class="relative h-2 w-full rounded-full bg-stone-200">
                         <div class="absolute h-full rounded-full bg-stone-950"
-                            :style="'left: ' + (((from - minL) / (maxL - minL)) * 100) + '%; right: ' + (100 - (
-                                (
-                                    to -
-                                    minL) / (
-                                    maxL - minL)) * 100) + '%'">
+                            :style="'left: ' + (((from - minL) / (maxL - minL)) * 100) + '%; right: ' + (100 - ((to - minL) / (
+                                maxL - minL)) * 100) + '%'">
                         </div>
 
                         <input type="range" :min="minL" :max="maxL" x-model.number="from"

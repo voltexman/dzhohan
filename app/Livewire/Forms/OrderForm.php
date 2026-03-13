@@ -23,7 +23,7 @@ class OrderForm extends Form
 
     #[Validate(['required', new Enum(DeliveryMethod::class)], message: [
         'delivery_method.required' => 'Оберіть спосіб доставки.',
-        'delivery_method.Enum' => 'Некоректний спосіб доставки.',
+        'delivery_method.enum' => 'Некоректний спосіб доставки.',
     ])]
     public string $delivery_method = 'nova_poshta';
 

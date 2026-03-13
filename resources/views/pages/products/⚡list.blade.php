@@ -72,8 +72,9 @@ new class extends Component {
 
     public function resetFilters()
     {
-        $this->collectios = [];
         $this->status = 'all';
+        $this->collections = [];
+        $this->steels = [];
         $this->handle_materials = [];
         $this->blade_shapes = [];
         $this->steels = [];
@@ -84,6 +85,35 @@ new class extends Component {
         if ($this->collection) {
             $this->collections = [$this->collection];
         }
+    }
+
+    #[Computed]
+    public function activeFilters(): array
+    {
+        $filters = [];
+
+        if ($this->search) {
+            $filters[] = 'Пошук: ' . $this->search;
+        }
+
+        if ($this->status !== 'all') {
+            $filters[] = $this->status === 'in_stock' ? 'В наявності' : 'Продані';
+        }
+
+        if ($this->price_from > $this->minLimit || $this->price_to < $this->maxLimit) {
+            $filters[] = "Ціна: {$this->price_from}-{$this->price_to} грн";
+        }
+
+        foreach ($this->collections as $slug) {
+            $filters[] = \App\Enums\ProductCategory::tryFrom($slug)?->getLabel();
+        }
+
+        // Додай аналогічно для steels, blade_shapes тощо
+        foreach ($this->steels as $steel) {
+            $filters[] = $steel;
+        }
+
+        return array_filter($filters);
     }
 
     public function updatedView($value)
@@ -160,34 +190,51 @@ new class extends Component {
             @include('partials.product.filters')
         </aside>
 
-        <main class="flex-1 lg:col-span-2 py-8">
+        <main class="flex-1 lg:col-span-2 py-10">
             @includeWhen($this->collection === null, 'partials.product.collections', [
                 'collections' => ProductCategory::cases(),
             ])
 
             <!-- Кнопка відкриття фільтрів на мобілці -->
-            <div class="sticky top-16 z-40 px-5 py-2.5 bg-zinc-100 border-b border-zinc-200 flex gap-0.5">
-                <x-form.input size="sm" wire:model.trim.live.debounce.300ms="search" placeholder="Пошук ножів" />
+            <div
+                class="sticky top-16 z-40 px-5 py-2.5 lg:px-0 bg-zinc-100 lg:bg-zinc-50 border-b lg:border-0 border-zinc-200 flex flex-col gap-0.5 mt-10">
+                <div class="flex justify-between">
+                    <x-form.input size="sm" wire:model.trim.live.debounce.300ms="search" placeholder="Пошук ножів" />
 
-                @include('partials.product.list.sorting')
-                @include('partials.product.list.viewing')
+                    @include('partials.product.list.sorting')
+                    @include('partials.product.list.viewing')
 
-                <x-drawer class="">
-                    <x-slot:trigger>
-                        <x-button variant="ghost" color="dark" size="sm" icon>
-                            <x-lucide-filter class="size-5 stroke-zinc-800" />
-                        </x-button>
-                    </x-slot:trigger>
-                    <x-slot:header>Фільтри</x-slot:header>
+                    <x-drawer class="">
+                        <x-slot:trigger>
+                            <x-button variant="ghost" color="dark" size="sm" icon>
+                                <x-lucide-filter class="size-5 stroke-zinc-800" />
+                            </x-button>
+                        </x-slot:trigger>
+                        <x-slot:header>Фільтри</x-slot:header>
 
-                    @include('partials.product.filters')
-                </x-drawer>
+                        @include('partials.product.filters')
+                    </x-drawer>
+                </div>
+
+                @if (count($this->activeFilters))
+                    <div class="w-full flex flex-wrap items-center gap-1.5 mt-1.5">
+                        @foreach ($this->activeFilters as $filter)
+                            <div class="flex items-center gap-0.5 text-xs font-semibold text-zinc-700">
+                                {{ $filter }}
+                            </div>
+                        @endforeach
+                        <button wire:click="resetFilters"
+                            class="bg-orange-500 size-4 flex justify-center items-center rounded-full hover:bg-orange-700 transition ml-1.5">
+                            <x-lucide-x class="size-3 stroke-white" />
+                        </button>
+                    </div>
+                @endif
             </div>
 
             @island('products-list', lazy: true, always: true)
                 @placeholder
                     <div @class([
-                        'grid px-5 lg:px-0 py-5',
+                        'grid px-5 lg:px-0 pt-10',
                         'gap-2.5 lg:gap-5 grid-cols-2 lg:grid-cols-2' => $view === 'grid',
                         'gap-2.5 lg:gap-5 lg:grid-cols-2' => $view === 'list',
                         'gap-5 lg:grid-cols-2' => $view === 'cards',
@@ -201,7 +248,7 @@ new class extends Component {
                 @endplaceholder
 
                 <div @class([
-                    'grid transition-all duration-500 px-5 lg:px-0 py-5',
+                    'grid transition-all duration-500 px-5 lg:px-0 pt-10',
                     'gap-2.5 lg:gap-5 grid-cols-2 lg:grid-cols-2' => $view === 'grid',
                     'gap-2.5 lg:gap-5 lg:grid-cols-2' => $view === 'list',
                     'gap-5 lg:grid-cols-2' => $view === 'cards',
@@ -218,7 +265,7 @@ new class extends Component {
 
             {{-- Секція нескінченної прокрутки --}}
             @if ($this->products->hasMorePages())
-                <div x-data x-intersect="$wire.loadMore()" class="w-full px-5 lg:px-0 lg:pb-10">
+                <div x-data x-intersect="$wire.loadMore()" class="w-full px-5 lg:px-0 lg:pt-5">
 
                     {{-- Секція плейсхолдерів --}}
                     <div wire:loading.grid wire:target="loadMore" @class([
@@ -236,7 +283,7 @@ new class extends Component {
 
                     {{-- Текст завантаження --}}
                     <div wire:loading.remove wire:target="loadMore"
-                        class="w-full flex justify-center ph-5 lg:py-10 text-zinc-400 text-sm italic">
+                        class="w-full flex justify-center py5 lg:py10 text-zinc-400 text-sm italic">
                         Шукаємо ще ножі...
                     </div>
                 </div>
