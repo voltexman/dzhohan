@@ -63,13 +63,11 @@
 
             {{-- СОЦІАЛЬНІ МЕРЕЖІ --}}
             <div class="flex flex-col items-center lg:items-start order-3 lg:order-1">
-                <img src="{{ Vite::asset('resources/images/logo_dark.svg') }}"
-                    class="w-22 h-auto mb-2.5 drop-shadow-lg hidden lg:block" alt="">
                 <div class="text-2xl font-[Oswald] text-gray-800 drop-shadow-xl">
-                    +380 (63) 951 88 42
+                    {{ $settings->phone }}
                 </div>
                 <div class="text-xl tracking-wide font-[Oswald] text-gray-800 drop-shadow-xl">
-                    dzhogun@gmail.com
+                    {{ $settings->email }}
                 </div>
                 <div class="mt-5 grid grid-cols-3 gap-2.5">
                     <a href="https://www.instagram.com/dzhohan_knives" target="_blank">

@@ -97,7 +97,6 @@ new class extends Component {
     {
         $filters = [];
 
-        // 1. Пошук та Статус (вже є)
         if ($this->search) {
             $filters[] = 'Пошук: ' . $this->search;
         }
@@ -106,12 +105,10 @@ new class extends Component {
             $filters[] = $this->status === 'in_stock' ? 'В наявності' : 'Продані';
         }
 
-        // 2. Ціна
         if ($this->price_from > $this->minLimit || $this->price_to < $this->maxLimit) {
             $filters[] = "Ціна: {$this->price_from}-{$this->price_to} грн";
         }
 
-        // 3. Колекції (з ігноруванням поточної сторінки)
         foreach ($this->collections as $slug) {
             if (request()->routeIs('products.collection') && $slug === $this->collection) {
                 continue;
@@ -119,25 +116,18 @@ new class extends Component {
             $filters[] = ProductCategory::tryFrom($slug)?->getLabel();
         }
 
-        // 4. Специфічні характеристики ножів (Додаємо ці блоки)
-
-        // Марки сталі
         foreach ($this->steels as $steelSlug) {
-            // Якщо сталі - це Enum, використовуйте getLabel(), якщо просто рядки - $steelSlug
             $filters[] = \App\Enums\SteelType::tryFrom($steelSlug)?->getLabel() ?? $steelSlug;
         }
 
-        // Профіль клинка (Blade Shape)
         foreach ($this->blade_shapes as $shapeSlug) {
             $filters[] = \App\Enums\BladeShape::tryFrom($shapeSlug)?->getLabel() ?? $shapeSlug;
         }
 
-        // Матеріал руків'я (Handle Material)
         foreach ($this->handle_materials as $materialSlug) {
             $filters[] = \App\Enums\HandleMaterial::tryFrom($materialSlug)?->getLabel() ?? $materialSlug;
         }
 
-        // Тип спусків (Blade Grind)
         foreach ($this->blade_grinds as $grindSlug) {
             $filters[] = \App\Enums\BladeGrind::tryFrom($grindSlug)?->getLabel() ?? $grindSlug;
         }
@@ -282,7 +272,7 @@ new class extends Component {
             @island('products-list', lazy: true, always: true)
                 @placeholder
                     <div @class([
-                        'grid px-5 lg:px-0 pt5',
+                        'grid px-5 lg:px-0',
                         'gap-2.5 lg:gap-5 grid-cols-2 lg:grid-cols-2' => $view === 'grid',
                         'gap-2.5 lg:gap-5 lg:grid-cols-2' => $view === 'list',
                         'gap-5 lg:grid-cols-2' => $view === 'cards',
@@ -296,7 +286,7 @@ new class extends Component {
                 @endplaceholder
 
                 <div @class([
-                    'grid transition-all duration-500 px-5 lg:px-0 pt10',
+                    'grid transition-all duration-500 px-5 lg:px-0',
                     'gap-2.5 lg:gap-5 grid-cols-2 lg:grid-cols-2' => $view === 'grid',
                     'gap-2.5 lg:gap-5 lg:grid-cols-2' => $view === 'list',
                     'gap-5 lg:grid-cols-2' => $view === 'cards',
@@ -313,7 +303,7 @@ new class extends Component {
 
             {{-- Секція нескінченної прокрутки --}}
             @if ($this->products->hasMorePages())
-                <div x-data x-intersect="$wire.loadMore()" class="w-full px-5 lg:px-0 lg:pt5">
+                <div x-data x-intersect="$wire.loadMore()" class="w-full px-5 lg:px-0">
 
                     {{-- Секція плейсхолдерів --}}
                     <div wire:loading.grid wire:target="loadMore" @class([

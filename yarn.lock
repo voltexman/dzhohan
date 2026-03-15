@@ -1817,6 +1817,7 @@ __metadata:
     lodash: "npm:^4.17.23"
     photoswipe: "npm:^5.4.4"
     preline: "npm:^4.0.1"
+    simplycountdown.js: "npm:^3.0.1"
     swiper: "npm:^12.1.1"
     tailwindcss: "npm:^4.0.0"
     tom-select: "npm:^2.5.2"
@@ -1854,6 +1855,13 @@ __metadata:
   version: 1.8.3
   resolution: "shell-quote@npm:1.8.3"
   checksum: 10c0/bee87c34e1e986cfb4c30846b8e6327d18874f10b535699866f368ade11ea4ee45433d97bf5eada22c4320c27df79c3a6a7eb1bf3ecfc47f2c997d9e5e2672fd
+  languageName: node
+  linkType: hard
+
+"simplycountdown.js@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "simplycountdown.js@npm:3.0.1"
+  checksum: 10c0/2dc11c8527f63736d6463effafbb4d6695ee5862545ebf261c2c6551e714100b13924aecb11f11423cd8d6998ea67014031c925af64d44859aba616698d041fc
   languageName: node
   linkType: hard
 

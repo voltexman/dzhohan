@@ -61,7 +61,7 @@ class OrderPurchaseSubmitted extends Notification
             ->line("\n<b>🛒 Товари:</b>");
 
         $this->order->products->each(
-            fn($product) => $message->line('• ' . e($product->product_name) . " ({$product->qty} шт.)")
+            fn($product) => $message->line('• ' . e($product->name) . " ({$product->qty} шт.)")
         );
 
         $total = $this->order->products->sum(fn($product) => $product->price * $product->qty);

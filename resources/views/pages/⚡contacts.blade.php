@@ -23,12 +23,8 @@ new class extends Component {
                 <x-lucide-circle-user-round class="size-8 shrink-0 stroke-orange-500" stroke-width="1.5" />
 
                 <div class="lg:text-center lg:mt-5">
-                    <div class="font-[Oswald] text-xl font-medium text-gray-800 uppercase">
-                        Контакт
-                    </div>
-                    <div class="font-[SN_Pro] font-medium text-orange-600 mt-1.5">
-                        Джоган Костянтин
-                    </div>
+                    <div class="font-[Oswald] text-xl font-medium text-gray-800 uppercase">Контакт</div>
+                    <div class="font-[SN_Pro] font-medium text-orange-600 mt-1.5">{{ $settings->contact }}</div>
                 </div>
             </div>
         </div>
@@ -39,12 +35,8 @@ new class extends Component {
                 <x-lucide-phone class="size-8 shrink-0 stroke-orange-500" stroke-width="1.5" />
 
                 <div class="lg:text-center lg:mt-5">
-                    <div class="font-[Oswald] text-xl font-medium text-gray-800 uppercase">
-                        Телефон
-                    </div>
-                    <div class="font-[SN_Pro] font-medium text-orange-600 mt-1.5">
-                        +380 (63) 951 88 42
-                    </div>
+                    <div class="font-[Oswald] text-xl font-medium text-gray-800 uppercase">Телефон</div>
+                    <div class="font-[SN_Pro] font-medium text-orange-600 mt-1.5">{{ $settings->phone }}</div>
                 </div>
             </div>
         </div>
@@ -54,7 +46,7 @@ new class extends Component {
             <x-lucide-mail class="size-8 shrink-0 stroke-orange-500" stroke-width="1.5" />
             <div class="lg:text-center lg:mt-5">
                 <div class="font-[Oswald] text-xl font-medium text-gray-800 uppercase">E-Mail</div>
-                <div class="font-[SN_Pro] font-medium text-orange-600 mt-1.5">voltexman@gmail.com</div>
+                <div class="font-[SN_Pro] font-medium text-orange-600 mt-1.5">{{ $settings->email }}</div>
             </div>
         </div>
 
@@ -63,7 +55,7 @@ new class extends Component {
             <x-lucide-map-pin class="size-8 shrink-0 stroke-orange-500" stroke-width="1.5" />
             <div class="lg:text-center lg:mt-5">
                 <div class="font-[Oswald] text-xl font-medium text-gray-800 uppercase">Локація</div>
-                <div class="font-[SN_Pro] font-medium text-orange-600 mt-1.5">м. Вінниця</div>
+                <div class="font-[SN_Pro] font-medium text-orange-600 mt-1.5">{{ $settings->location }}</div>
             </div>
         </div>
     </div>

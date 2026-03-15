@@ -5,13 +5,13 @@
     'persist' => null, // ключ для запам'ятовування стану
 ])
 
-<div class="space-y-4" x-data="{ expanded: @if ($persist) $persist(true).as('{{ $persist }}') @else true @endif }"
+<div class="group/section space-y-2.5" x-data="{ expanded: @if ($persist) $persist(true).as('{{ $persist }}') @else true @endif }"
     @if ($model) wire:loading.class="opacity-50 pointer-events-none" wire:target="{{ $model }}" @endif
     x-cloak>
 
     <div class="flex items-center justify-between w-full group outline-none">
         <div class="flex items-center gap-2 text-sm font-black uppercase text-zinc-800 font-[Oswald] tracking-wider">
-            <x-dynamic-component :component="'lucide-' . $icon" class="size-4 stroke-[2.5px] text-orange-600" />
+            <x-dynamic-component :component="'lucide-' . $icon" class="size-4 stroke-[2.5px] text-orange-500" />
             {{ $title }}
         </div>
 
@@ -24,8 +24,10 @@
                 </button>
             @endif
 
-            <button @click="expanded = !expanded" type="button" class="cursor-pointer p-1">
-                <x-lucide-chevron-down class="size-4 text-zinc-400 transition-transform duration-300"
+            <button @click="expanded = !expanded" type="button"
+                class="text-zinc-400 cursor-pointer transition-[opacity,colors] duration-250 hover:text-zinc-600"
+                x-bind:class="expanded ? 'lg:opacity-0 lg:group-hover/section:opacity-100' : 'opacity-100 text-orange-600'">
+                <x-lucide-chevron-down class="size-4 transition-transform duration-300"
                     x-bind:class="expanded ? 'rotate-180' : ''" />
             </button>
         </div>

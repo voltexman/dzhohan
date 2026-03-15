@@ -61,7 +61,7 @@ new class extends Component {
 ?>
 
 @session('feedback-sent')
-    <div wire:transition class="flex flex-col justify-center items-center min-h-50 py-5 lg:py-10" x-cloak>
+    <div class="flex flex-col justify-center items-center min-h-50 py-5 lg:py-10" x-cloak>
         <x-lucide-send class="size-40 shrink-0 stroke-zinc-400 mb-10" stroke-width="1.2" />
         <div class="font-[Oswald] text-2xl text-gray-700">Повідомлення відправлено</div>
         <div class="text-sm text-gray-600 text-center mt-2.5 max-w-xs">
@@ -75,7 +75,7 @@ new class extends Component {
         </button>
     </div>
 @else
-    <div wire:transition class="space-y-5" x-cloak>
+    <div class="space-y-5" x-cloak>
         <div class="space-y-1.5">
             <x-form.label text="Ваше ім'я" />
             <x-form.input wire:model.trim="name" placeholder="Ім'я або нік" wire:loading.attr="disabled"

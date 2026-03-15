@@ -19,7 +19,7 @@
 
         @if ($this->{$fromModel} !== (int) $min || $this->{$toModel} !== (int) $max)
             <button type="button" wire:click="{{ $resetMethod }}"
-                class="p-2 rounded-full bg-white text-stone-500 hover:text-stone-800 hover:bg-stone-100 transition-all border border-stone-200 cursor-pointer shadow-sm">
+                class="p-1.5 rounded-full bg-white text-stone-500 hover:text-stone-800 hover:bg-zinc-100 transition-all border border-zinc-200 cursor-pointer">
                 <x-lucide-rotate-ccw class="size-3.5" />
             </button>
         @endif
@@ -27,16 +27,15 @@
 
     <!-- Повзунки -->
     <div class="relative py-1.5">
-        <div class="relative h-2 w-full rounded-full bg-stone-200">
+        <div class="relative h-2 w-full rounded-full bg-zinc-200">
             {{-- Активна полоса --}}
-            <div class="absolute h-full rounded-full bg-stone-950"
-                :style="'left: ' + left + '%; right: ' + right + '%'">
+            <div class="absolute h-full rounded-full bg-zinc-950" :style="'left: ' + left + '%; right: ' + right + '%'">
             </div>
 
             {{-- Лівий повзунок --}}
             <input type="range" :min="minL" :max="maxL" x-model.number="from"
                 @change="$wire.set('{{ $fromModel }}', from)" @input="if(from > to) from = to"
-                class="pointer-events-none absolute -top-3 z-30 h-7 w-full appearance-none bg-transparent 
+                class="cursor-pointer pointer-events-none absolute -top-2.5 z-30 h-7 w-full appearance-none bg-transparent 
                 [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:size-6 [&::-webkit-slider-thumb]:appearance-none 
                 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-[1.5px] 
                 [&::-webkit-slider-thumb]:border-stone-900 [&::-webkit-slider-thumb]:shadow-xl
@@ -47,7 +46,7 @@
             {{-- Правий повзунок --}}
             <input type="range" :min="minL" :max="maxL" x-model.number="to"
                 @change="$wire.set('{{ $toModel }}', to)" @input="if(to < from) to = from"
-                class="pointer-events-none absolute -top-3 z-30 h-7 w-full appearance-none bg-transparent 
+                class="cursor-pointer pointer-events-none absolute -top-2.5 z-30 h-7 w-full appearance-none bg-transparent 
                 [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:size-6 [&::-webkit-slider-thumb]:appearance-none 
                 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-[1.5px] 
                 [&::-webkit-slider-thumb]:border-stone-900 [&::-webkit-slider-thumb]:shadow-xl

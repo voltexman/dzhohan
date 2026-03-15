@@ -1,4 +1,4 @@
-<div class="lg:h-[calc(100vh-4rem)] lg:mt-4 lg:pr-8 flex flex-col justify-between overflow-hidden">
+<div class="lg:h-[calc(100vh-4rem)] lg:mt-4 lg:pr-8 flex flex-col justify-between overflowhidden">
     <x-scrollbar class="space-y-10 lg:pt-4">
         <!-- 1. СТАТУС -->
         <x-filter.tabs>

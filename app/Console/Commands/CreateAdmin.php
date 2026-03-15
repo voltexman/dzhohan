@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Permission\Models\Role;
 
 class CreateAdmin extends Command
@@ -40,5 +42,16 @@ class CreateAdmin extends Command
         } else {
             $this->warn('Користувач вже має роль admin.');
         }
+
+        Setting::firstOrCreate(['id' => 1], [
+            'email' => env('ADMIN_EMAIL'),
+            'phone' => env('ADMIN_PHONE'),
+            'contact' => "Джоган Костянтин",
+            'location' => "м. Вінниця",
+        ]);
+
+        Cache::forget('settings');
+
+        $this->info("Email та телефон додані у налаштування.");
     }
 }

@@ -40,6 +40,7 @@ const RAW_RUNTIME_STATE =
           ["photoswipe", "npm:5.4.4"],\
           ["preline", "npm:4.0.1"],\
           ["root-workspace-0b6124", "workspace:."],\
+          ["simplycountdown.js", "npm:3.0.1"],\
           ["swiper", "npm:12.1.1"],\
           ["tailwindcss", "npm:4.1.18"],\
           ["tom-select", "npm:2.5.2"],\
@@ -2098,6 +2099,7 @@ const RAW_RUNTIME_STATE =
           ["photoswipe", "npm:5.4.4"],\
           ["preline", "npm:4.0.1"],\
           ["root-workspace-0b6124", "workspace:."],\
+          ["simplycountdown.js", "npm:3.0.1"],\
           ["swiper", "npm:12.1.1"],\
           ["tailwindcss", "npm:4.1.18"],\
           ["tom-select", "npm:2.5.2"],\
@@ -2140,6 +2142,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../../C:/Users/volte/AppData/Local/Yarn/Berry/cache/shell-quote-npm-1.8.3-b29f851134-10c0.zip/node_modules/shell-quote/",\
         "packageDependencies": [\
           ["shell-quote", "npm:1.8.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["simplycountdown.js", [\
+      ["npm:3.0.1", {\
+        "packageLocation": "../../../C:/Users/volte/AppData/Local/Yarn/Berry/cache/simplycountdown.js-npm-3.0.1-3ab3e24b10-10c0.zip/node_modules/simplycountdown.js/",\
+        "packageDependencies": [\
+          ["simplycountdown.js", "npm:3.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\
