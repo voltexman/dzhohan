@@ -76,19 +76,21 @@ new class extends Component {
 
     <div class="mt-2.5 text-gray-800">{{ $comment->body }}</div>
 
-    <button wire:click="setReply({{ $comment->id }})"
-        class="text-xs font-medium text-zinc-500 mt-2.5 hover:text-zinc-800 transition-colors duration-250 cursor-pointer">
-        <x-lucide-reply class="size-4 inline-flex mb-1" />
-        Відповісти
-    </button>
+    <div class="flex items-center gap-x-1.5">
+        <button wire:click="setReply({{ $comment->id }})"
+            class="text-xs font-medium text-zinc-500 mt-2.5 hover:text-zinc-800 transition-colors duration-250 cursor-pointer">
+            <x-lucide-reply class="size-4 inline-flex mb-1" />
+            Відповісти
+        </button>
 
-    <button type="button" @click="handleLike()"
-        class="text-xs font-medium mt-2.5 ms-2.5 transition-colors duration-250 cursor-pointer focus:outline-none flex items-center gap-1.5"
-        x-bind:class="active ? 'text-red-600 hover:text-red-800' : 'text-zinc-500 hover:text-zinc-800'">
-        <x-lucide-heart class="size-4 transition-all duration-300"
-            x-bind:class="active ? 'fill-red-600 stroke-red-600 scale-110' : 'stroke-zinc-500'" />
-        <span>Подобається</span>
-    </button>
+        <button type="button" @click="handleLike()"
+            class="text-xs font-medium mt-2.5 ms-2.5 transition-colors duration-250 cursor-pointer focus:outline-none flex items-center gap-1.5"
+            x-bind:class="active ? 'text-red-600 hover:text-red-800' : 'text-zinc-500 hover:text-zinc-800'">
+            <x-lucide-heart class="size-4 transition-all duration-300"
+                x-bind:class="active ? 'fill-red-600 stroke-red-600 scale-110' : 'stroke-zinc-500'" />
+            <span>Подобається</span>
+        </button>
+    </div>
 
     {{-- ПЛОСКИЙ СПИСОК ВСІХ ВІДПОВІДЕЙ --}}
     <div class="mt-2.5 space-y-2.5">

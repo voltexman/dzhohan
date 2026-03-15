@@ -1,190 +1,45 @@
 {
   "C:/Users/volte/AppData/Local/Yarn/Berry/cache/photoswipe-npm-5.4.4-f7a755162f-10c0.zip/node_modules/photoswipe/dist/photoswipe.esm.js": {
-    "file": "assets/photoswipe.esm-BXDdABy_.js",
+    "file": "assets/photoswipe.esm-LPgz5Zzj.js",
     "name": "photoswipe.esm",
     "src": "C:/Users/volte/AppData/Local/Yarn/Berry/cache/photoswipe-npm-5.4.4-f7a755162f-10c0.zip/node_modules/photoswipe/dist/photoswipe.esm.js",
     "isDynamicEntry": true
   },
+  "_preload-helper-DeY0NW3A.js": {
+    "file": "assets/preload-helper-DeY0NW3A.js",
+    "name": "preload-helper"
+  },
   "resources/css/app.css": {
-    "file": "assets/app-PcYQyy6S.css",
-    "src": "resources/css/app.css",
-    "isEntry": true,
+    "file": "assets/app-Br3Slc_4.css",
     "name": "app",
     "names": [
       "app.css"
-    ]
-  },
-  "resources/images/about-section.png": {
-    "file": "assets/about-section-BgkOPGsJ.png",
-    "src": "resources/images/about-section.png"
-  },
-  "resources/images/bg-footer.svg": {
-    "file": "assets/bg-footer-CxwMOdtj.svg",
-    "src": "resources/images/bg-footer.svg"
-  },
-  "resources/images/bg-manufacture.svg": {
-    "file": "assets/bg-manufacture-CrATe_dI.svg",
-    "src": "resources/images/bg-manufacture.svg"
-  },
-  "resources/images/blog-header-bg.png": {
-    "file": "assets/blog-header-bg--TnSJh0J.png",
-    "src": "resources/images/blog-header-bg.png"
-  },
-  "resources/images/contact-header-bg.png": {
-    "file": "assets/contact-header-bg-DXWkWr_G.png",
-    "src": "resources/images/contact-header-bg.png"
-  },
-  "resources/images/contacts-page-phone-bg.png": {
-    "file": "assets/contacts-page-phone-bg-DiE7YZGJ.png",
-    "src": "resources/images/contacts-page-phone-bg.png"
-  },
-  "resources/images/everyday-category-bg.png": {
-    "file": "assets/everyday-category-bg-ChwVugqz.png",
-    "src": "resources/images/everyday-category-bg.png"
-  },
-  "resources/images/everyday-icon.png": {
-    "file": "assets/everyday-icon-CLiNBqW8.png",
-    "src": "resources/images/everyday-icon.png"
-  },
-  "resources/images/header-knife.svg": {
-    "file": "assets/header-knife-BY7sFvGz.svg",
-    "src": "resources/images/header-knife.svg"
-  },
-  "resources/images/header.png": {
-    "file": "assets/header-Ct2RMPZ6.png",
-    "src": "resources/images/header.png"
-  },
-  "resources/images/hunting-category-bg.png": {
-    "file": "assets/hunting-category-bg-BtTo70ph.png",
-    "src": "resources/images/hunting-category-bg.png"
-  },
-  "resources/images/hunting-icon.png": {
-    "file": "assets/hunting-icon-CBYIhCAg.png",
-    "src": "resources/images/hunting-icon.png"
-  },
-  "resources/images/i-am.jpg": {
-    "file": "assets/i-am-FmL4NO_X.jpg",
-    "src": "resources/images/i-am.jpg"
-  },
-  "resources/images/icons/bowie.png": {
-    "file": "assets/bowie-B2G_sL2K.png",
-    "src": "resources/images/icons/bowie.png"
-  },
-  "resources/images/icons/classic.png": {
-    "file": "assets/classic-ZKjYC4Pg.png",
-    "src": "resources/images/icons/classic.png"
-  },
-  "resources/images/icons/clip-point.png": {
-    "file": "assets/clip-point-Cx9oVGr5.png",
-    "src": "resources/images/icons/clip-point.png"
-  },
-  "resources/images/icons/dagger.png": {
-    "file": "assets/dagger-CSF-Khp6.png",
-    "src": "resources/images/icons/dagger.png"
-  },
-  "resources/images/icons/drop-point.png": {
-    "file": "assets/drop-point-Dg0HikUQ.png",
-    "src": "resources/images/icons/drop-point.png"
-  },
-  "resources/images/icons/hawkbill.png": {
-    "file": "assets/hawkbill-D3wTB3vw.png",
-    "src": "resources/images/icons/hawkbill.png"
-  },
-  "resources/images/icons/persian.png": {
-    "file": "assets/persian-BCd2kkY2.png",
-    "src": "resources/images/icons/persian.png"
-  },
-  "resources/images/icons/sheepsfoot.png": {
-    "file": "assets/sheepsfoot-rHfqumkx.png",
-    "src": "resources/images/icons/sheepsfoot.png"
-  },
-  "resources/images/icons/spear-point.png": {
-    "file": "assets/spear-point-CfLQimIf.png",
-    "src": "resources/images/icons/spear-point.png"
-  },
-  "resources/images/icons/tanto.png": {
-    "file": "assets/tanto-8ekCrTPP.png",
-    "src": "resources/images/icons/tanto.png"
-  },
-  "resources/images/icons/wharncliffe.png": {
-    "file": "assets/wharncliffe-CmoDyXVw.png",
-    "src": "resources/images/icons/wharncliffe.png"
-  },
-  "resources/images/kitchen-category-bg.png": {
-    "file": "assets/kitchen-category-bg-BYpB1w6F.png",
-    "src": "resources/images/kitchen-category-bg.png"
-  },
-  "resources/images/kitchen-icon.png": {
-    "file": "assets/kitchen-icon-DvmKiwpN.png",
-    "src": "resources/images/kitchen-icon.png"
-  },
-  "resources/images/knive-2-bg-light.svg": {
-    "file": "assets/knive-2-bg-light-DvJiGCMt.svg",
-    "src": "resources/images/knive-2-bg-light.svg"
-  },
-  "resources/images/knives-bg.svg": {
-    "file": "assets/knives-bg-CFhf7XuF.svg",
-    "src": "resources/images/knives-bg.svg"
-  },
-  "resources/images/logo_dark.svg": {
-    "file": "assets/logo_dark-BIMoeyYF.svg",
-    "src": "resources/images/logo_dark.svg"
-  },
-  "resources/images/logo_light.svg": {
-    "file": "assets/logo_light-BkqmKoZT.svg",
-    "src": "resources/images/logo_light.svg"
-  },
-  "resources/images/made-in-ukraine.png": {
-    "file": "assets/made-in-ukraine-DqKUaK1n.png",
-    "src": "resources/images/made-in-ukraine.png"
-  },
-  "resources/images/other-icon.png": {
-    "file": "assets/other-icon-q4-gSBCQ.png",
-    "src": "resources/images/other-icon.png"
-  },
-  "resources/images/outdoor-category-bg.png": {
-    "file": "assets/outdoor-category-bg-BlyQduEj.png",
-    "src": "resources/images/outdoor-category-bg.png"
-  },
-  "resources/images/outdoor-icon.png": {
-    "file": "assets/outdoor-icon-B3mWF29Q.png",
-    "src": "resources/images/outdoor-icon.png"
-  },
-  "resources/images/products-list-order-bg.png": {
-    "file": "assets/products-list-order-bg-BdzzgnPq.png",
-    "src": "resources/images/products-list-order-bg.png"
-  },
-  "resources/images/steel-section-bg.png": {
-    "file": "assets/steel-section-bg-BeiD5Dp6.png",
-    "src": "resources/images/steel-section-bg.png"
-  },
-  "resources/images/tactical-category-bg.png": {
-    "file": "assets/tactical-category-bg-CsNaB6to.png",
-    "src": "resources/images/tactical-category-bg.png"
-  },
-  "resources/images/tactical-icon.png": {
-    "file": "assets/tactical-icon-Bmyi3VqD.png",
-    "src": "resources/images/tactical-icon.png"
+    ],
+    "src": "resources/css/app.css",
+    "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-Drabqvp1.js",
+    "file": "assets/app-BgZO3D9-.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-DSOpVMR7.css"
+      "assets/app-DfWQA4J0.css"
     ]
   },
   "resources/js/pages/product.js": {
-    "file": "assets/product-BGC6kEMf.js",
+    "file": "assets/product-C4kvGiPK.js",
     "name": "product",
     "src": "resources/js/pages/product.js",
     "isEntry": true,
+    "imports": [
+      "_preload-helper-DeY0NW3A.js"
+    ],
     "dynamicImports": [
       "C:/Users/volte/AppData/Local/Yarn/Berry/cache/photoswipe-npm-5.4.4-f7a755162f-10c0.zip/node_modules/photoswipe/dist/photoswipe.esm.js"
     ],
     "css": [
-      "assets/product-DZU1WGtr.css"
+      "assets/product-DOg8h1BU.css"
     ]
   }
 }

@@ -31,6 +31,9 @@ new class extends Component {
     public array $handle_materials = [];
 
     #[Url, Session]
+    public array $blade_grinds = [];
+
+    #[Url, Session]
     public string $status = 'all';
 
     #[Url, Session]
@@ -72,12 +75,14 @@ new class extends Component {
 
     public function resetFilters()
     {
+        $this->search = '';
+
         $this->status = 'all';
         $this->collections = [];
         $this->steels = [];
         $this->handle_materials = [];
         $this->blade_shapes = [];
-        $this->steels = [];
+        $this->blade_grinds = [];
 
         $this->price_from = $this->minLimit;
         $this->price_to = $this->maxLimit;
@@ -92,6 +97,7 @@ new class extends Component {
     {
         $filters = [];
 
+        // 1. Пошук та Статус (вже є)
         if ($this->search) {
             $filters[] = 'Пошук: ' . $this->search;
         }
@@ -100,17 +106,40 @@ new class extends Component {
             $filters[] = $this->status === 'in_stock' ? 'В наявності' : 'Продані';
         }
 
+        // 2. Ціна
         if ($this->price_from > $this->minLimit || $this->price_to < $this->maxLimit) {
             $filters[] = "Ціна: {$this->price_from}-{$this->price_to} грн";
         }
 
+        // 3. Колекції (з ігноруванням поточної сторінки)
         foreach ($this->collections as $slug) {
-            $filters[] = \App\Enums\ProductCategory::tryFrom($slug)?->getLabel();
+            if (request()->routeIs('products.collection') && $slug === $this->collection) {
+                continue;
+            }
+            $filters[] = ProductCategory::tryFrom($slug)?->getLabel();
         }
 
-        // Додай аналогічно для steels, blade_shapes тощо
-        foreach ($this->steels as $steel) {
-            $filters[] = $steel;
+        // 4. Специфічні характеристики ножів (Додаємо ці блоки)
+
+        // Марки сталі
+        foreach ($this->steels as $steelSlug) {
+            // Якщо сталі - це Enum, використовуйте getLabel(), якщо просто рядки - $steelSlug
+            $filters[] = \App\Enums\SteelType::tryFrom($steelSlug)?->getLabel() ?? $steelSlug;
+        }
+
+        // Профіль клинка (Blade Shape)
+        foreach ($this->blade_shapes as $shapeSlug) {
+            $filters[] = \App\Enums\BladeShape::tryFrom($shapeSlug)?->getLabel() ?? $shapeSlug;
+        }
+
+        // Матеріал руків'я (Handle Material)
+        foreach ($this->handle_materials as $materialSlug) {
+            $filters[] = \App\Enums\HandleMaterial::tryFrom($materialSlug)?->getLabel() ?? $materialSlug;
+        }
+
+        // Тип спусків (Blade Grind)
+        foreach ($this->blade_grinds as $grindSlug) {
+            $filters[] = \App\Enums\BladeGrind::tryFrom($grindSlug)?->getLabel() ?? $grindSlug;
         }
 
         return array_filter($filters);
@@ -139,6 +168,12 @@ new class extends Component {
 
         Cookie::queue('product_sort_by', $by, 60 * 24 * 30);
         Cookie::queue('product_sort_dir', $direction, 60 * 24 * 30);
+    }
+
+    #[Computed]
+    public function currentCollectionLabel()
+    {
+        return ProductCategory::tryFrom((string) $this->collection)?->getLabel();
     }
 
     #[Computed]
@@ -190,15 +225,15 @@ new class extends Component {
             @include('partials.product.filters')
         </aside>
 
-        <main class="flex-1 lg:col-span-2 py-10">
+        <main class="flex-1 lg:col-span-2 flex flex-col gap-5 py-10">
             @includeWhen($this->collection === null, 'partials.product.collections', [
                 'collections' => ProductCategory::cases(),
             ])
 
             <!-- Кнопка відкриття фільтрів на мобілці -->
             <div
-                class="sticky top-16 z-40 px-5 py-2.5 lg:px-0 bg-zinc-100 lg:bg-zinc-50 border-b lg:border-0 border-zinc-200 flex flex-col gap-0.5 mt-10">
-                <div class="flex justify-between">
+                class="sticky top-16 z-40 px-5 py-2.5 lg:px-0 bg-zinc-100 lg:bg-zinc-50 border-b lg:border-0 border-zinc-200 flex flex-col gap-0.5">
+                <div class="flex justify-between lg:gap-x-1.5">
                     <x-form.input size="sm" wire:model.trim.live.debounce.300ms="search" placeholder="Пошук ножів" />
 
                     @include('partials.product.list.sorting')
@@ -216,25 +251,38 @@ new class extends Component {
                     </x-drawer>
                 </div>
 
-                @if (count($this->activeFilters))
+                @php
+                    // Створюємо відфільтровану колекцію один раз для всього блоку
+                    $displayFilters = collect($this->activeFilters)->filter(
+                        fn($f) => $f !== $this->currentCollectionLabel(),
+                    );
+                @endphp
+
+                @if ($displayFilters->isNotEmpty())
                     <div class="w-full flex flex-wrap items-center gap-1.5 mt-1.5">
-                        @foreach ($this->activeFilters as $filter)
-                            <div class="flex items-center gap-0.5 text-xs font-semibold text-zinc-700">
+                        @foreach ($displayFilters as $filter)
+                            <div
+                                class="flex items-center gap-0.5 text-xs font-semibold text-zinc-700 bg-zinc-100 px-2 py-0.5 rounded">
                                 {{ $filter }}
                             </div>
                         @endforeach
-                        <button wire:click="resetFilters"
-                            class="bg-orange-500 size-4 flex justify-center items-center rounded-full hover:bg-orange-700 transition ml-1.5">
-                            <x-lucide-x class="size-3 stroke-white" />
+
+                        {{-- Тепер кнопка з'явиться тільки якщо є що скидати (крім самої колекції) --}}
+                        <button wire:click="resetFilters" wire:loading.attr="disabled"
+                            class="bg-orange-500 size-4 flex justify-center items-center rounded-full hover:bg-orange-700 transition ml-1.5 cursor-pointer disabled:opacity-50">
+                            <x-lucide-x wire:loading.remove wire:target="resetFilters" class="size-3 stroke-white" />
+                            <x-lucide-loader-circle wire:loading wire:target="resetFilters"
+                                class="size-3 stroke-white animate-spin" />
                         </button>
                     </div>
                 @endif
+
             </div>
 
             @island('products-list', lazy: true, always: true)
                 @placeholder
                     <div @class([
-                        'grid px-5 lg:px-0 pt-10',
+                        'grid px-5 lg:px-0 pt5',
                         'gap-2.5 lg:gap-5 grid-cols-2 lg:grid-cols-2' => $view === 'grid',
                         'gap-2.5 lg:gap-5 lg:grid-cols-2' => $view === 'list',
                         'gap-5 lg:grid-cols-2' => $view === 'cards',
@@ -248,7 +296,7 @@ new class extends Component {
                 @endplaceholder
 
                 <div @class([
-                    'grid transition-all duration-500 px-5 lg:px-0 pt-10',
+                    'grid transition-all duration-500 px-5 lg:px-0 pt10',
                     'gap-2.5 lg:gap-5 grid-cols-2 lg:grid-cols-2' => $view === 'grid',
                     'gap-2.5 lg:gap-5 lg:grid-cols-2' => $view === 'list',
                     'gap-5 lg:grid-cols-2' => $view === 'cards',
@@ -265,7 +313,7 @@ new class extends Component {
 
             {{-- Секція нескінченної прокрутки --}}
             @if ($this->products->hasMorePages())
-                <div x-data x-intersect="$wire.loadMore()" class="w-full px-5 lg:px-0 lg:pt-5">
+                <div x-data x-intersect="$wire.loadMore()" class="w-full px-5 lg:px-0 lg:pt5">
 
                     {{-- Секція плейсхолдерів --}}
                     <div wire:loading.grid wire:target="loadMore" @class([

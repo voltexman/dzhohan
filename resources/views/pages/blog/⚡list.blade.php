@@ -55,7 +55,6 @@ new class extends Component {
             </div>
 
             <input type="text" id="input">
-
         </div>
     </x-slot:sidebar>
 

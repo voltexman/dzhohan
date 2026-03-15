@@ -97,14 +97,11 @@ new class extends Component {
         </div>
 
         <div>
-            <x-form.input color="soft" type="text" wire:model.live.blur="author_name" placeholder="Ім’я" />
-            @error('author_name')
-                <x-form.error>{{ $message }}</x-form.error>
-            @enderror
+            <x-form.input color="soft" type="text" wire:model.trim="author_name" placeholder="Ім’я" />
         </div>
 
         <div>
-            <x-form.textarea wire:model.live.blur="body" rows="4" placeholder="Ваш відгук..." />
+            <x-form.textarea wire:model.trim="body" rows="4" placeholder="Ваш відгук..." />
             @error('body')
                 <x-form.error>{{ $message }}</x-form.error>
             @enderror
@@ -131,7 +128,7 @@ new class extends Component {
 
         <div class="space-y-5" wire:poll.15s.visible>
             @forelse ($this->comments as $comment)
-                <livewire:comment :$comment wire:key="comment-item-{{ $comment->id }}" />
+                <livewire:comment :$comment wire:key="comment-{{ $comment->id }}" />
             @empty
                 <div class="text-center py-10 text-zinc-500">
                     Немає коментарів
@@ -142,7 +139,7 @@ new class extends Component {
         @if ($this->comments->hasPages())
             <nav class="flex justify-center items-center gap-2.5">
                 {{-- Кнопка Назад --}}
-                <button wire:click="previousPage('commentsPage')" wire:loading.attr="disabled" {{-- Використовуємо звичайний Blade для disabled --}}
+                <button wire:click="previousPage('commentsPage')" wire:loading.attr="disabled"
                     @if ($this->comments->onFirstPage()) disabled @endif @class([
                         'bg-zinc-200/60 hover:bg-zinc-200/80 size-9 flex items-center justify-center rounded-full text-xs font-bold transition-all cursor-pointer',
                         'opacity-50 pointer-events-none' => $this->comments->onFirstPage(),
@@ -152,7 +149,6 @@ new class extends Component {
 
                 <div class="flex items-center gap-1.5">
                     @foreach ($this->comments->getUrlRange(1, $this->comments->lastPage()) as $page => $url)
-                        {{-- Ваш код циклу сторінок залишається без змін --}}
                         @if ($page == 1 || $page == $this->comments->lastPage() || abs($page - $this->comments->currentPage()) <= 1)
                             <button wire:click="gotoPage({{ $page }}, 'commentsPage')" wire:loading.attr="disabled"
                                 @class([
@@ -170,7 +166,7 @@ new class extends Component {
                 </div>
 
                 {{-- Кнопка Вперед --}}
-                <button wire:click="nextPage('commentsPage')" wire:loading.attr="disabled" {{-- Використовуємо звичайний Blade для disabled --}}
+                <button wire:click="nextPage('commentsPage')" wire:loading.attr="disabled"
                     @if (!$this->comments->hasMorePages()) disabled @endif @class([
                         'bg-zinc-200/60 hover:bg-zinc-200/80 size-9 flex items-center justify-center rounded-full text-xs font-bold transition-all cursor-pointer',
                         'opacity-50 pointer-events-none' => !$this->comments->hasMorePages(),

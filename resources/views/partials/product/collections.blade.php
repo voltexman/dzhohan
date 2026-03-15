@@ -1,4 +1,4 @@
-<div class="hidden lg:grid lg:grid-cols-2 gap-2.5 mt10">
+<div class="hidden lg:grid lg:grid-cols-2 gap-2.5">
     @foreach ($collections as $collection)
         @php
             $count = $this->categoryCounts[$collection->value] ?? 0;

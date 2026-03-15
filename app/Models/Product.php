@@ -101,7 +101,8 @@ class Product extends Model implements HasMedia
 
             ->when($filters['steels'] ?? null, fn($q, $v) => $q->whereIn('steel', $v))
             ->when($filters['blade_shapes'] ?? null, fn($q, $v) => $q->whereIn('blade_shape', $v))
-            ->when($filters['handle_materials'] ?? null, fn($q, $v) => $q->whereIn('handle_material', $v));
+            ->when($filters['handle_materials'] ?? null, fn($q, $v) => $q->whereIn('handle_material', $v))
+            ->when($filters['blade_grinds'] ?? null, fn($q, $v) => $q->whereIn('blade_grinds', $v));
     }
 
     public function tags(): MorphToMany
