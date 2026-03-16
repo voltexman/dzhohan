@@ -73,6 +73,11 @@ class Product extends Model implements HasMedia
         return $this->quantity;
     }
 
+    public function isAvailable(): bool
+    {
+        return $this->is_active && $this->quantity > 0;
+    }
+
     public function hasStock(): bool
     {
         return $this->quantity > 0;

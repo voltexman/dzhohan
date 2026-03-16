@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Forms;
 
-use Illuminate\Validation\Rules\Enum;
 use App\Enums\Order\DeliveryMethod;
+use Illuminate\Validation\Rules\Enum;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 

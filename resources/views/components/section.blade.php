@@ -1,7 +1,13 @@
-@props(['sidebarPosition' => 'left', 'sidebar', 'main'])
+@props([
+    'sidebarPosition' => 'left',
+    'sidebar' => null,
+])
 
 <section {{ $attributes->class('lg:min-h-screen bg-neutral-50') }}>
-    <div class="max-w-5xl grid lg:grid-cols-3 gap-10 mx-auto">
+    <div @class([
+        'max-w-5xl mx-auto gap-10',
+        'grid lg:grid-cols-3' => $sidebar,
+    ])>
 
         @if ($sidebar)
             <aside
@@ -21,13 +27,20 @@
         @endif
 
         <main @class([
-            'order-1 flex-1 px-4 lg:px-0 lg:col-span-2 py-10',
+            'order-1 flex-1 px-4 lg:px-0 py-10',
         
-            // порядок навпаки
-            'lg:order-2' => $sidebarPosition === 'left',
-            'lg:order-1' => $sidebarPosition === 'right',
+            // займає 2 колонки тільки якщо є sidebar
+            'lg:col-span-2' => $sidebar,
+        
+            // центрування якщо sidebar немає
+            'max-w-3xl mx-auto' => !$sidebar,
+        
+            // порядок
+            'lg:order-2' => $sidebar && $sidebarPosition === 'left',
+            'lg:order-1' => $sidebar && $sidebarPosition === 'right',
         ])>
             {{ $slot }}
         </main>
+
     </div>
 </section>

@@ -15,9 +15,9 @@ class SiteStatus
             return $next($request);
         }
 
-        $settings = Cache::rememberForever('settings', fn() => Setting::first());
+        $settings = Cache::rememberForever('settings', fn () => Setting::first());
 
-        if (!($settings->online ?? true)) {
+        if (! ($settings->online ?? true)) {
             return response()->view('errors.maintenance', [], 503);
         }
 

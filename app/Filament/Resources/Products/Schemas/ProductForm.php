@@ -67,7 +67,7 @@ class ProductForm
                                     ->schema([
                                         TextInput::make('price')
                                             ->label('Ціна')
-                                            ->numeric()
+                                            // ->numeric()
                                             ->minValue(1)
                                             ->maxValue(500000)
                                             ->step(1)

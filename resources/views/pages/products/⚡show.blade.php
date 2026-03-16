@@ -221,36 +221,39 @@ new #[Layout('layouts::cart')] class extends Component {
             <x-lucide-chevron-down class="size-5 text-zinc-400 transition-transform duration-300" ::class="open ? 'rotate-180 text-orange-600' : ''" />
         </button>
 
-        <div x-show="open" x-collapse x-cloak class="mt-5 pt-5 border-t border-zinc-200/60">
-            <form wire:submit.prevent="send" class="space-y-5">
-                <div class="space-y-2.5">
-                    <label class="text-sm font-semibold text-zinc-700">Ваша оцінка:</label>
-                    <div class="flex gap-1.5">
-                        @foreach (range(1, 5) as $star)
-                            <button type="button" @click="rating = {{ $star }}"
-                                @mouseenter="hoverRating = {{ $star }}"
-                                class="cursor-pointer transition-all duration-200 transform hover:scale-125 focus:outline-none">
-                                <x-lucide-star class="size-8 transition-colors duration-200" ::class="(hoverRating || rating) >= {{ $star }} ? 'fill-orange-500 stroke-orange-500' :
-                                    'fill-zinc-200 stroke-zinc-300'" />
-                            </button>
-                        @endforeach
+        @if (!$product->hasStock())
+            <div x-show="open" x-collapse x-cloak class="mt-5 pt-5 border-t border-zinc-200/60">
+                <form wire:submit.prevent="send" class="space-y-5">
+                    <div class="space-y-2.5">
+                        <label class="text-sm font-semibold text-zinc-700">Ваша оцінка:</label>
+                        <div class="flex gap-1.5">
+                            @foreach (range(1, 5) as $star)
+                                <button type="button" @click="rating = {{ $star }}"
+                                    @mouseenter="hoverRating = {{ $star }}"
+                                    class="cursor-pointer transition-all duration-200 transform hover:scale-125 focus:outline-none">
+                                    <x-lucide-star class="size-8 transition-colors duration-200" ::class="(hoverRating || rating) >= {{ $star }} ?
+                                        'fill-orange-500 stroke-orange-500' :
+                                        'fill-zinc-200 stroke-zinc-300'" />
+                                </button>
+                            @endforeach
+                        </div>
                     </div>
-                </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <x-form.input wire:model="author_name" placeholder="Ваше ім’я" />
-                    <x-form.input wire:model="email" type="email" placeholder="Email (не публікується)" />
-                </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <x-form.input wire:model="author_name" placeholder="Ваше ім’я" />
+                        <x-form.input wire:model="email" type="email" placeholder="Email (не публікується)" />
+                    </div>
 
-                <x-form.textarea wire:model="body" rows="3"
-                    placeholder="Розкажіть про ніж: як тримає заточку, ергономіку..." />
+                    <x-form.textarea wire:model="body" rows="3"
+                        placeholder="Розкажіть про ніж: як тримає заточку, ергономіку..." />
 
-                <x-button type="submit" size="md" class="w-full sm:w-auto">
-                    <x-lucide-award class="size-4 mr-2" />
-                    Опублікувати відгук
-                </x-button>
-            </form>
-        </div>
+                    <x-button type="submit" size="md" class="w-full sm:w-auto">
+                        <x-lucide-award class="size-4 mr-2" />
+                        Опублікувати відгук
+                    </x-button>
+                </form>
+            </div>
+        @endif
     </div>
 
     <div class="max-w-lg mt-10 scroll-mt-6 lg:scroll-mt-10 px-5 lg:px-10" id="comments-section">

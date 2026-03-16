@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\Enums\Order\DeliveryMethod;
 use App\Enums\Order\OrderStatus;
 use App\Enums\Order\OrderType;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -41,7 +41,7 @@ class Order extends Model
 
         static::creating(function ($order) {
             do {
-                $number = (now()->getTimestamp() % 86400) . rand(100, 999);
+                $number = (now()->getTimestamp() % 86400).rand(100, 999);
             } while (static::where('number', $number)->exists());
 
             $order->number = $number;
@@ -59,9 +59,8 @@ class Order extends Model
 
     protected function fullName(): Attribute
     {
-        return Attribute::get(fn() => "{$this->first_name} {$this->last_name}");
+        return Attribute::get(fn () => "{$this->first_name} {$this->last_name}");
     }
-
 
     public function products(): HasMany
     {

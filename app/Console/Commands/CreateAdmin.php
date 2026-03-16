@@ -46,12 +46,12 @@ class CreateAdmin extends Command
         Setting::firstOrCreate(['id' => 1], [
             'email' => env('ADMIN_EMAIL'),
             'phone' => env('ADMIN_PHONE'),
-            'contact' => "Джоган Костянтин",
-            'location' => "м. Вінниця",
+            'contact' => 'Джоган Костянтин',
+            'location' => 'м. Вінниця',
         ]);
 
         Cache::forget('settings');
 
-        $this->info("Email та телефон додані у налаштування.");
+        $this->info('Email та телефон додані у налаштування.');
     }
 }

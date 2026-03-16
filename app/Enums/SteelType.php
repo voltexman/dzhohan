@@ -6,55 +6,34 @@ use Filament\Support\Contracts\HasLabel;
 
 enum SteelType: string implements HasLabel
 {
-    // Бюджетні та середні
-    case S440C = '440c';
-    case AUS8 = 'aus8';
-    case H8CR13 = '8cr13mov';
-    case S14C28N = '14c28n';
-
-    // Інструментальні та високовуглецеві
-    case D2 = 'd2';
-    case X12MF = 'x12mf';
-    case H65G = '65g';
-    case U8 = 'u8';
-
-    // Високотехнологічні (Middle-High)
-    case N690 = 'n690';
-    case VG10 = 'vg10';
-    case S154CM = '154cm';
-
-    // Преміальні порошкові (Super Steels)
+    case AEBL = 'aebl';
+    case N690CO = 'n690co';
     case M390 = 'm390';
-    case S30V = 's30v';
-    case S35VN = 's35vn';
-    case S45VN = 's45vn';
     case ELMAX = 'elmax';
-    case MAGNACUT = 'magnacut'; // Хіт №1 у світі зараз
+    case MAGNACUT = 'magnacut';
     case M398 = 'm398';
-    case S90V = 's90v';
+    case S90V = 'cpm_s90v';
+    case K390 = 'k390';
+    case S390 = 's390';
+    case SANMAI = 'sanmai';
+    case DAMASCUS = 'damascus';
+    case DAMASTEEL = 'damasteel';
 
     public function getLabel(): string
     {
         return match ($this) {
-            self::S440C => '440C',
-            self::AUS8 => 'AUS-8',
-            self::H8CR13 => '8Cr13MoV',
-            self::S14C28N => 'Sandvik 14C28N',
-            self::D2 => 'D2 (Інструментальна)',
-            self::X12MF => 'Х12МФ (Кована)',
-            self::H65G => '65Г (Ресорна)',
-            self::U8 => 'У8 (Інструментальна)',
-            self::N690 => 'Bohler N690',
-            self::VG10 => 'VG-10',
-            self::S154CM => '154CM',
-            self::M390 => 'Bohler M390',
-            self::S30V => 'CPM S30V',
-            self::S35VN => 'CPM S35VN',
-            self::S45VN => 'CPM S45VN',
+            self::AEBL => 'AEB-L',
+            self::N690CO => 'N690Co',
+            self::M390 => 'Böhler M390',
             self::ELMAX => 'Uddeholm Elmax',
             self::MAGNACUT => 'CPM MagnaCut',
-            self::M398 => 'Bohler M398',
+            self::M398 => 'Böhler M398',
             self::S90V => 'CPM S90V',
+            self::K390 => 'Böhler K390',
+            self::S390 => 'Böhler S390',
+            self::SANMAI => 'San Mai (ламінат)',
+            self::DAMASCUS => 'Damascus (дамаська сталь)',
+            self::DAMASTEEL => 'Damasteel',
         };
     }
 

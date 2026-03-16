@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Orders\Schemas;
 
+use App\Enums\Order\OrderType;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
@@ -38,8 +39,8 @@ class OrderInfolist
                         TextEntry::make('total_price')
                             ->label('Сума до сплати')
                             // 1. Рахуємо суму лише для покупок
-                            ->state(fn($record) => $record->type === \App\Enums\Order\OrderType::Purchase
-                                ? $record->products->sum(fn($i) => $i->qty * $i->price)
+                            ->state(fn ($record) => $record->type === OrderType::Purchase
+                                ? $record->products->sum(fn ($i) => $i->qty * $i->price)
                                 : null)
                             // 2. Якщо повернувся null (виготовлення) — показуємо плейсхолдер
                             ->placeholder('Договірна')
@@ -61,7 +62,7 @@ class OrderInfolist
                 Section::make('Параметри виготовлення')
                     ->icon('heroicon-o-wrench-screwdriver')
                     ->description('Деталі індивідуального замовлення')
-                    ->visible(fn($record) => $record->type->value === 'manufacturing')
+                    ->visible(fn ($record) => $record->type->value === 'manufacturing')
                     ->schema([
                         Grid::make(3)
                             ->schema([
@@ -92,7 +93,7 @@ class OrderInfolist
                             TextEntry::make('first_name')
                                 ->label('Замовник')
                                 ->icon('heroicon-o-user')
-                                ->formatStateUsing(fn($record) => "{$record->first_name} {$record?->last_name}"),
+                                ->formatStateUsing(fn ($record) => "{$record->first_name} {$record?->last_name}"),
 
                             TextEntry::make('phone')
                                 ->label('Телефон')
@@ -102,7 +103,7 @@ class OrderInfolist
                             TextEntry::make('email')
                                 ->label('Email')
                                 ->icon('heroicon-o-envelope')
-                                ->hidden(fn($state) => blank($state))
+                                ->hidden(fn ($state) => blank($state))
                                 ->copyable()
                                 ->columnSpanFull(),
                         ])->columns(2),
@@ -116,11 +117,11 @@ class OrderInfolist
                             TextEntry::make('city')
                                 ->label('Місто')
                                 ->icon('heroicon-o-map-pin')
-                                ->hidden(fn($state) => blank($state)),
+                                ->hidden(fn ($state) => blank($state)),
 
                             TextEntry::make('address')
                                 ->label('Адреса / Відділення')
-                                ->hidden(fn($state) => blank($state))
+                                ->hidden(fn ($state) => blank($state))
                                 ->columnSpanFull(),
                         ])->columns(2),
                 ])->columns(2)->columnSpanFull(),

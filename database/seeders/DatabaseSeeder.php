@@ -10,9 +10,7 @@ use App\Models\Post;
 use App\Models\Product;
 use App\Models\Subscriber;
 use App\Models\Tag;
-use App\Models\User;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {

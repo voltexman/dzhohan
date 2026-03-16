@@ -15,7 +15,6 @@ use Filament\Pages\Page;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Columns\Summarizers\Range;
 use Illuminate\Support\Facades\Cache;
 use UnitEnum;
 
@@ -32,6 +31,7 @@ class Settings extends Page implements HasForms
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
 
     protected static ?string $navigationLabel = 'Налаштування';
+
     protected static ?string $title = 'Налаштування';
 
     public ?array $data = [];
@@ -111,7 +111,7 @@ class Settings extends Page implements HasForms
 
                         DatePicker::make('maintenance_until')
                             ->label('Технічні роботи до')
-                            ->native(false)
+                            ->native(false),
                     ]),
             ])
             ->statePath('data');
@@ -122,7 +122,7 @@ class Settings extends Page implements HasForms
         return [
             Action::make('save')
                 ->label('Зберегти налаштування')
-                ->action(fn() => $this->save()),
+                ->action(fn () => $this->save()),
         ];
     }
 

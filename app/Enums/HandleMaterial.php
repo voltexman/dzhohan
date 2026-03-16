@@ -8,30 +8,32 @@ enum HandleMaterial: string implements HasLabel
 {
     case G10 = 'g10';
     case MICARTA = 'micarta';
-    case CARBON = 'carbon_fiber';
-    case FRN = 'frn';
+    case CARBON_FIBER = 'carbon_fiber';
     case TITANIUM = 'titanium';
-    case ALUMINUM = 'aluminum';
+    case STAINLESS_STEEL = 'stainless_steel';
     case WOOD = 'wood';
-    case STAB_WOOD = 'stab_wood';
+    case RUBBER = 'rubber';
+    case FRN = 'frn';
     case BONE = 'bone';
-    case PARACORD = 'paracord';
-    case ELASTRON = 'elastron';
+    case MAMMOTH_TUSK = 'mammoth_tusk';
+    case MAMMOTH_TOOTH = 'mammoth_tooth';
+    case WALRUS_TUSK = 'walrus_tusk';
 
     public function getLabel(): string
     {
         return match ($this) {
-            self::G10 => 'G10 (Склотекстоліт)',
-            self::MICARTA => 'Мікарта',
-            self::CARBON => 'Карбон (Carbon Fiber)',
-            self::FRN => 'FRN (Термопластик)',
-            self::TITANIUM => 'Титан',
-            self::ALUMINUM => 'Авіаційний алюміній',
-            self::WOOD => 'Натуральне дерево',
-            self::STAB_WOOD => 'Стабілізована деревина',
-            self::BONE => 'Кістка / Ріг',
-            self::PARACORD => 'Обмотка паракордом',
-            self::ELASTRON => 'Еластрон (Гумопластик)',
+            self::G10 => 'G10',
+            self::MICARTA => 'Micarta',
+            self::CARBON_FIBER => 'Carbon Fiber',
+            self::TITANIUM => 'Titanium',
+            self::STAINLESS_STEEL => 'Stainless Steel',
+            self::WOOD => 'Wood',
+            self::RUBBER => 'Rubber',
+            self::FRN => 'FRN (Fiberglass Reinforced Nylon)',
+            self::BONE => 'Bone',
+            self::MAMMOTH_TUSK => 'Mammoth Tusk (бивень мамонта)',
+            self::MAMMOTH_TOOTH => 'Mammoth Tooth (зуб мамонта)',
+            self::WALRUS_TUSK => 'Walrus Tusk (клик моржа)',
         };
     }
 

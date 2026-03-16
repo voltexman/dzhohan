@@ -328,4 +328,51 @@ new class extends Component {
             @endif
         </main>
     </div>
+    {{-- <div class="h-screen px-5 lg:px-0 py-20">
+        <div class="max-w-md mx-auto flex flex-col gap-10 text-center">
+            <!-- Іконка та заклик -->
+            <div>
+                <x-lucide-x-octagon class="size-12 mx-auto text-zinc-300 mb-4" />
+                <h3 class="font-[Oswald] text-xl uppercase font-bold text-zinc-800">Товари відсутні</h3>
+                <div class="max-w-sm text-sm text-zinc-500 text-balance mx-auto text-center mt-2.5">
+                    Наразі ножів у наявності немає. Я працюю над новими виробами — загляньте трохи пізніше.
+                </div>
+            </div>
+
+            <!-- Переваги -->
+            <div class="space-y-4 text-left border-y border-zinc-100 py-6">
+                <div class="flex items-start gap-3">
+                    <x-lucide-shield-check class="size-5 text-orange-600 shrink-0 mt-0.5" />
+                    <div>
+                        <p class="text-sm font-bold text-zinc-800 uppercase tracking-tight">Довічна гарантія</p>
+                        <p class="text-xs text-zinc-500">Я відповідаю за якість кожної деталі та збірки.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-3">
+                    <x-lucide-award class="size-5 text-orange-600 shrink-0 mt-0.5" />
+                    <div>
+                        <p class="text-sm font-bold text-zinc-800 uppercase tracking-tight">Ручна робота</p>
+                        <p class="text-xs text-zinc-500">Кожен ніж створюється в єдиному екземплярі під ваші
+                            завдання.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-3">
+                    <x-lucide-phone-call class="size-5 text-orange-600 shrink-0 mt-0.5" />
+                    <div>
+                        <p class="text-sm font-bold text-zinc-800 uppercase tracking-tight">Є питання?</p>
+                        <p class="text-xs text-zinc-500">Зателефонуйте мені, і я допоможу з вибором сталі чи
+                            форми.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Кнопка повернення -->
+            <a href="{{ route('order') }}" wire:navigate
+                class="inline-flex justify-center items-center px-10 py-3.5 w-fit mx-auto rounded-md bg-zinc-900 text-white text-xs font-bold uppercase tracking-widest hover:bg-orange-600 transition-colors duration-300">
+                Перейти до замовлень
+            </a>
+        </div>
+    </div> --}}
 </section>

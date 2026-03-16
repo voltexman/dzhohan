@@ -22,7 +22,7 @@ class OrderForm
                 TextInput::make('last_name')
                     ->label('Прізвище')
                     // Обов'язкове, якщо доставка — Нова або Укрпошта
-                    ->required(fn($get) => in_array($get('delivery_method'), ['nova_poshta', 'ukr_poshta'])),
+                    ->required(fn ($get) => in_array($get('delivery_method'), ['nova_poshta', 'ukr_poshta'])),
 
                 TextInput::make('phone')
                     ->tel()
@@ -34,7 +34,7 @@ class OrderForm
                 TextInput::make('email')
                     ->label('Поштова адреса')
                     ->email()
-                    ->required(fn($get) => in_array($get('delivery_method'), ['nova_poshta', 'ukr_poshta'])),
+                    ->required(fn ($get) => in_array($get('delivery_method'), ['nova_poshta', 'ukr_poshta'])),
 
                 Grid::make(3)
                     ->schema([
@@ -46,12 +46,12 @@ class OrderForm
                         TextInput::make('city')
                             ->label('Місто')
                             // Обов'язкове для всіх, крім самовивозу (pickup)
-                            ->required(fn($get) => $get('delivery_method') !== 'pickup'),
+                            ->required(fn ($get) => $get('delivery_method') !== 'pickup'),
 
                         TextInput::make('address')
                             ->label('Адреса/відділення пошти')
                             // Обов'язкове для всіх, крім самовивозу (pickup)
-                            ->required(fn($get) => $get('delivery_method') !== 'pickup'),
+                            ->required(fn ($get) => $get('delivery_method') !== 'pickup'),
                     ])->columnSpanFull(),
 
                 Textarea::make('comment')

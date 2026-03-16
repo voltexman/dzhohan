@@ -43,7 +43,7 @@ class ProductResource extends Resource
     {
         return [
             'Колекція' => $record->collection->getLabel(),
-            'Ціна' => $record->price . ' грн',
+            'Ціна' => $record->price.' грн',
         ];
     }
 

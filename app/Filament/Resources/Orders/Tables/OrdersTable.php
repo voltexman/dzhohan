@@ -30,16 +30,16 @@ class OrdersTable
 
                 TextColumn::make('name')
                     ->label('Замовник')
-                    ->state(fn(Order $record) => "{$record->first_name} {$record->last_name}")
-                    ->description(fn(Order $record) => $record->phone)
+                    ->state(fn (Order $record) => "{$record->first_name} {$record->last_name}")
+                    ->description(fn (Order $record) => $record->phone)
                     ->weight(FontWeight::SemiBold)
                     ->searchable(['first_name', 'last_name', 'phone']),
 
                 TextColumn::make('total_price')
                     ->label('Ціна')
                     ->state(
-                        fn($record) => $record->type === OrderType::Purchase
-                            ? $record->products->sum(fn($i) => $i->qty * $i->price)
+                        fn ($record) => $record->type === OrderType::Purchase
+                            ? $record->products->sum(fn ($i) => $i->qty * $i->price)
                             : null
                     )
                     ->placeholder('Договірна')
@@ -61,7 +61,7 @@ class OrdersTable
                 TextColumn::make('created_at')
                     ->label('Дата/час')
                     ->date('d.m.Y')
-                    ->description(fn(Order $record) => $record->created_at->format('H:i'))
+                    ->description(fn (Order $record) => $record->created_at->format('H:i'))
                     ->weight(FontWeight::Medium)
                     ->sortable()
                     ->toggleable()
@@ -70,7 +70,7 @@ class OrdersTable
             ->poll('15s')
             ->striped()
             ->defaultSort('created_at', 'desc')
-            ->modifyQueryUsing(fn($query) => $query->with('products'))
+            ->modifyQueryUsing(fn ($query) => $query->with('products'))
             ->filters([
                 SelectFilter::make('status')
                     ->options(OrderStatus::class)
@@ -84,7 +84,7 @@ class OrdersTable
 
                 EditAction::make()
                     ->label(false)
-                    ->tooltip('Редагувати')
+                    ->tooltip('Редагувати'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

@@ -6,49 +6,28 @@ use Filament\Support\Contracts\HasLabel;
 
 enum BladeShape: string implements HasLabel
 {
-    case CLASSIC = 'classic';
-    case PERSIAN = 'persian';
-    case CLIP_POINT = 'clip_point';
-    case DROP_POINT = 'drop_point';
-    case SPEAR_POINT = 'spear_point';
-    case DAGGER = 'dagger';
-    case BOWIE = 'bowie';
-    case WHARNCLIFFE = 'wharncliffe';
-    case SHEEPFOOT = 'sheepfoot';
-    case HAWKBILL = 'hawkbill';
+    case DROPPONT = 'drop_point';
+    case CLIPPOINT = 'clip_point';
     case TANTO = 'tanto';
+    case SPEARPOINT = 'spear_point';
+    case SHEEPSFOOT = 'sheepsfoot';
+    case WHARNCLIFFE = 'wharncliffe';
+    case TRAILINGPOINT = 'trailing_point';
+    case HAWKBILL = 'hawkbill';
+    case DAGGER = 'dagger';
 
     public function getLabel(): string
     {
         return match ($this) {
-            self::CLASSIC => 'Класичний',
-            self::PERSIAN => 'Перський',
-            self::CLIP_POINT => 'Clip Point',
-            self::DROP_POINT => 'Drop Point',
-            self::SPEAR_POINT => 'Spear Point',
-            self::DAGGER => 'Кинджальний',
-            self::BOWIE => 'Bowie',
-            self::WHARNCLIFFE => 'Wharncliffe',
-            self::SHEEPFOOT => 'Sheepsfoot',
-            self::HAWKBILL => 'Hawkbill',
+            self::DROPPONT => 'Drop Point',
+            self::CLIPPOINT => 'Clip Point',
             self::TANTO => 'Tanto',
-        };
-    }
-
-    public function icon(): string
-    {
-        return match ($this) {
-            self::CLASSIC => 'classic.png',
-            self::PERSIAN => 'persian.png',
-            self::CLIP_POINT => 'clip-point.png',
-            self::DROP_POINT => 'drop-point.png',
-            self::SPEAR_POINT => 'spear-point.png',
-            self::DAGGER => 'dagger.png',
-            self::BOWIE => 'bowie.png',
-            self::WHARNCLIFFE => 'wharncliffe.png',
-            self::SHEEPFOOT => 'sheepsfoot.png',
-            self::HAWKBILL => 'hawkbill.png',
-            self::TANTO => 'tanto.png',
+            self::SPEARPOINT => 'Spear Point',
+            self::SHEEPSFOOT => 'Sheepsfoot',
+            self::WHARNCLIFFE => 'Wharncliffe',
+            self::TRAILINGPOINT => 'Trailing Point',
+            self::HAWKBILL => 'Hawkbill',
+            self::DAGGER => 'Dagger',
         };
     }
 
