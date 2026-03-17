@@ -33,6 +33,8 @@ new #[Layout('layouts::cart')] class extends Component {
         $this->product->reviews()->create($validated);
 
         $this->review->reset();
+
+        session()->flash('review-sent');
     }
 };
 ?>
@@ -115,17 +117,21 @@ new #[Layout('layouts::cart')] class extends Component {
             ${{ number_format($product->price, 2) }}
         </div>
 
-        <x-button size="md" x-data="{ loading: false }"
+        <x-button wire:key="cart-btn-{{ $product->id }}" x-data="{ loading: false }" size="md"
             @click="loading = true; $dispatch('cart:add', { productId: {{ $product->id }} })"
-            @cart-added.window="loading = false" ::disabled="loading">
-            <x-lucide-loader-circle x-show="loading" class="size-5 inline-flex mr-0.5 animate-spin" x-cloak />
-            <template x-if="!loading">
+            @cart-added.window="loading = false" ::disabled="loading" class="relative">
+            {{-- Лоадер (показується тільки при завантаженні) --}}
+            <x-lucide-loader-circle x-show="loading" class="size-5 animate-spin mr-1.5" x-cloak />
+
+            {{-- Блок іконок (ховається при завантаженні) --}}
+            <span x-show="!loading" class="flex items-center">
                 @if ($product->hasStock())
-                    <x-lucide-plus class="size-5 inline-flex mr-0.5 stroke-white" />
+                    <x-lucide-shopping-cart class="size-5 mr-1.5 stroke-white" />
                 @else
-                    <x-lucide-hammer class="size-5 inline-flex mr-0.5 stroke-white" />
+                    <x-lucide-wrench class="size-5 mr-1.5 stroke-white" />
                 @endif
-            </template>
+            </span>
+
             <span>{{ $product->hasStock() ? 'В кошик' : 'Замовити' }}</span>
         </x-button>
     </div>
@@ -253,7 +259,8 @@ new #[Layout('layouts::cart')] class extends Component {
             open: false,
             rating: @entangle('review.rating'),
             hoverRating: 0
-        }" class="bg-zinc-50 max-w-xl lg:mx-10 p-5 border border-zinc-100 mt-10">
+        }"
+            class="bg-zinc-50 max-w-xl lg:mx-10 p-5 border-t border-b lg:border border-zinc-100 mt-10">
             <button @click="open = !open"
                 class="flex items-center justify-between w-full group cursor-pointer text-left">
                 <div class="flex items-center gap-3">
@@ -294,7 +301,8 @@ new #[Layout('layouts::cart')] class extends Component {
                 <x-form.textarea wire:model="review.text" rows="3"
                     placeholder="Розкажіть про ніж: як тримає заточку, ергономіку..." />
 
-                <x-button wire:click="sendReview" size="md" class="w-full sm:w-auto">
+                <x-button wire:click="sendReview" size="md" wire:loading.attr="disabled"
+                    wire:target="sendReview" class="w-full sm:w-auto">
                     <x-lucide-award class="size-4 mr-2" />
                     Надіслати відгук
                 </x-button>
@@ -334,17 +342,21 @@ new #[Layout('layouts::cart')] class extends Component {
             </button>
         </div>
 
-        <x-button size="md" x-data="{ loading: false }"
+        <x-button wire:key="cart-btn-{{ $product->id }}" x-data="{ loading: false }" size="md"
             @click="loading = true; $dispatch('cart:add', { productId: {{ $product->id }} })"
-            @cart-added.window="loading = false" ::disabled="loading">
-            <x-lucide-loader-circle x-show="loading" class="size-5 inline-flex mr-0.5 animate-spin" x-cloak />
-            <template x-if="!loading">
+            @cart-added.window="loading = false" ::disabled="loading" class="relative">
+            {{-- Лоадер (показується тільки при завантаженні) --}}
+            <x-lucide-loader-circle x-show="loading" class="size-5 animate-spin mr-1.5" x-cloak />
+
+            {{-- Блок іконок (ховається при завантаженні) --}}
+            <span x-show="!loading" class="flex items-center">
                 @if ($product->hasStock())
-                    <x-lucide-plus class="size-5 inline-flex mr-0.5 stroke-white" />
+                    <x-lucide-shopping-cart class="size-5 mr-1.5 stroke-white" />
                 @else
-                    <x-lucide-hammer class="size-5 inline-flex mr-0.5 stroke-white" />
+                    <x-lucide-wrench class="size-5 mr-1.5 stroke-white" />
                 @endif
-            </template>
+            </span>
+
             <span>{{ $product->hasStock() ? 'В кошик' : 'Замовити' }}</span>
         </x-button>
     </div>
