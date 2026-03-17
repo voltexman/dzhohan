@@ -20,12 +20,10 @@ return new class extends Migration
             $table->string('author_name')->nullable();
             $table->string('ip_address', 45)->nullable();
 
-            // вкладені відповіді
             $table->foreignId('parent_id')->nullable()->constrained('comments')->cascadeOnDelete();
 
+            $table->boolean('is_active')->default(true);
             $table->text('body');
-
-            $table->unsignedTinyInteger('rating')->nullable();
 
             $table->timestamps();
         });

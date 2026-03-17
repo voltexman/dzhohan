@@ -14,7 +14,7 @@ class Comment extends Model
 {
     use HasFactory, Likeable;
 
-    protected $fillable = ['user_id', 'parent_id', 'commentable_id', 'commentable_type', 'author_name', 'body', 'ip_address'];
+    protected $fillable = ['user_id', 'parent_id', 'commentable_id', 'commentable_type', 'author_name', 'body', 'is_active', 'ip_address'];
 
     public function user()
     {

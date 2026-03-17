@@ -12,6 +12,7 @@ class CommentFactory extends Factory
             'author_name' => fake()->optional()->name(),
             'body' => fake()->sentence(),
             'ip_address' => fake()->ipv4(),
+            'is_active' => fake()->boolean(),
             'parent_id' => null,
         ];
     }

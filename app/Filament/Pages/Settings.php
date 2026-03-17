@@ -70,49 +70,81 @@ class Settings extends Page implements HasForms
 
                             TextInput::make('location')
                                 ->label('Локація'),
+
+                            TextInput::make('address')
+                                ->label('Адреса майстерні (для самовивозу)'),
                         ]),
                     ]),
 
-                Section::make('Соціальні мережі')
-                    ->description('Увімкніть потрібні мережі та додайте посилання на профілі')
+                Section::make('Соціальні мережі та месенджери')
+                    ->description('Увімкніть потрібні мережі та додайте посилання або номери телефонів')
                     ->aside()
+                    ->collapsible()
+                    ->persistCollapsed()
                     ->schema([
                         TextInput::make('fb_url')
-                            ->label('Посилання на Facebook')
-                            ->prefix('https://www.facebook.com/')
+                            ->label('Facebook')
+                            ->placeholder('https://facebook.com')
+                            ->prefixIcon(Heroicon::OutlinedGlobeAlt)
                             ->url(),
 
                         TextInput::make('ig_url')
-                            ->label('Посилання на Instagram')
-                            ->prefix('https://www.instagram.com/')
+                            ->label('Instagram')
+                            ->placeholder('https://instagram.com')
+                            ->prefixIcon(Heroicon::OutlinedGlobeAlt)
                             ->url(),
 
-                        TextInput::make('ig_url')
-                            ->label('Посилання на Pinterest')
-                            ->prefix('https://www.pinterest.com/')
+                        TextInput::make('pin_url')
+                            ->label('Pinterest')
+                            ->placeholder('https://pinterest.com')
+                            ->prefixIcon(Heroicon::OutlinedGlobeAlt)
+                            ->url(),
+
+                        TextInput::make('viber_link')
+                            ->label('Viber')
+                            ->placeholder('380991234567')
+                            ->prefixIcon(Heroicon::OutlinedPhone),
+
+                        TextInput::make('tg_url')
+                            ->label('Telegram')
+                            ->placeholder('@NickName')
+                            ->prefixIcon(Heroicon::OutlinedPhone)
+                            ->url(),
+
+                        TextInput::make('whatsapp_url')
+                            ->label('WhatsApp')
+                            ->placeholder('380991234567')
+                            ->prefixIcon(Heroicon::OutlinedPhone)
                             ->url(),
                     ]),
 
-                Section::make('Додаткові налаштування')
+                Section::make('Статус доступності сайту')
+                    ->description('Керування режимом технічних робіт')
                     ->aside()
+                    ->icon('heroicon-o-signal')
+                    ->compact()
                     ->schema([
-                        TextInput::make('address')
-                            ->label('Адреса майстерні (для самовивозу)'),
+                        Grid::make(2)
+                            ->schema([
+                                Toggle::make('online')
+                                    ->label('Сайт онлайн')
+                                    ->helperText('Показувати сайт користувачам')
+                                    ->onIcon('heroicon-m-check-circle')
+                                    ->offIcon('heroicon-m-x-circle')
+                                    ->onColor('success')
+                                    ->offColor('danger')
+                                    ->reactive()
+                                    ->default(true),
 
-                        TextInput::make('admin_telegram_id')
-                            ->label('Telegram Chat ID (для сповіщень)')
-                            ->helperText('ID чату, куди приходитимуть нові замовлення'),
-
-                        Toggle::make('online')
-                            ->label('Сайт онлайн')
-                            ->helperText('Якщо вимкнути, сайт показуватиме сторінку "Технічні роботи"')
-                            ->reactive()
-                            ->default(true),
-
-                        DatePicker::make('maintenance_until')
-                            ->label('Технічні роботи до')
-                            ->native(false),
-                    ]),
+                                DatePicker::make('maintenance_until')
+                                    ->label('Орієнтовне завершення робіт')
+                                    ->prefixIcon('heroicon-o-calendar-days')
+                                    ->native(false)
+                                    ->displayFormat('d.m.Y')
+                                    ->hidden(fn($get) => $get('online')),
+                            ]),
+                    ])
+                    ->columnSpanFull(),
             ])
             ->statePath('data');
     }
@@ -122,7 +154,7 @@ class Settings extends Page implements HasForms
         return [
             Action::make('save')
                 ->label('Зберегти налаштування')
-                ->action(fn () => $this->save()),
+                ->action(fn() => $this->save()),
         ];
     }
 

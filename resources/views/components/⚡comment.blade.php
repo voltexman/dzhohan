@@ -2,11 +2,15 @@
 
 use Livewire\Component;
 use App\Models\Comment;
+use Livewire\Attributes\Validate;
 
 new class extends Component {
     public Comment $comment;
 
     public bool $isLiked = false;
+
+    #[Validate('required|min:3|max:2000')]
+    public string $replyText = ''; // Окрема змінна для тексту відповіді
 
     public function mount(Comment $comment)
     {
@@ -18,6 +22,28 @@ new class extends Component {
     {
         $this->isLiked ? $this->comment->like() : $this->comment->unlike();
     }
+
+    public function sendReply()
+    {
+        $this->validateOnly('replyText');
+
+        $user = auth()->user();
+
+        // Створюємо відповідь через зв'язок replies()
+        $this->comment->replies()->create([
+            'commentable_id' => $this->comment->commentable_id,
+            'commentable_type' => $this->comment->commentable_type,
+            'body' => $this->replyText,
+            'user_id' => $user?->id,
+            'ip_address' => request()->ip(),
+            'author_name' => $user?->hasRole('admin') ? 'Адміністратор' : $user?->name ?? 'Гість',
+        ]);
+
+        $this->reset('replyText');
+
+        // Подія для батьківського компонента, щоб він оновив список (якщо потрібно)
+        $this->dispatch('comment-added');
+    }
 };
 ?>
 
@@ -28,7 +54,8 @@ new class extends Component {
         this.active = !this.active;
         this.active ? this.count++ : this.count--;
         $wire.like();
-    }
+    },
+    replyBlock: false
 }" class="border-b border-zinc-50 pb-5 last:border-b-0" wire:transition>
 
     <div class="flex items-start justify-between gap-4">
@@ -76,15 +103,17 @@ new class extends Component {
 
     <div class="mt-2.5 text-gray-800">{{ $comment->body }}</div>
 
-    <div class="flex items-center gap-x-1.5">
-        <button wire:click="setReply({{ $comment->id }})"
-            class="text-xs font-medium text-zinc-500 mt-2.5 hover:text-zinc-800 transition-colors duration-250 cursor-pointer">
-            <x-lucide-reply class="size-4 inline-flex mb-1" />
-            Відповісти
+    <div class="flex items-center gap-x-4 mt-2.5">
+        {{-- Кнопка Відповісти --}}
+        <button @click="replyBlock = true" :class="{ 'animate-pulse text-black font-bold': replyBlock }"
+            class="flex items-center gap-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-800 cursor-pointer transition-all duration-300 focus:outline-none">
+            <x-lucide-reply class="size-4" />
+            <span>Відповісти</span>
         </button>
 
+        {{-- Кнопка Подобається --}}
         <button type="button" @click="handleLike()"
-            class="text-xs font-medium mt-2.5 ms-2.5 transition-colors duration-250 cursor-pointer focus:outline-none flex items-center gap-1.5"
+            class="flex items-center gap-1.5 text-xs font-medium transition-colors duration-250 cursor-pointer focus:outline-none"
             x-bind:class="active ? 'text-red-600 hover:text-red-800' : 'text-zinc-500 hover:text-zinc-800'">
             <x-lucide-heart class="size-4 transition-all duration-300"
                 x-bind:class="active ? 'fill-red-600 stroke-red-600 scale-110' : 'stroke-zinc-500'" />
@@ -92,64 +121,116 @@ new class extends Component {
         </button>
     </div>
 
+    <div x-data="{
+        text: @entangle('replyText'),
+        submit() {
+            if (this.text.trim().length < 3) return;
+    
+            $wire.sendReply().then(() => {
+                this.replyBlock = false;
+                // Скидаємо висоту після відправки
+                this.$refs.replyText.style.height = '32px';
+            });
+        }
+    }" x-show="replyBlock" x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0 -translate-y-2" class="mt-5" wire:ignore>
+
+        <div class="flex flex-col gap-5 group">
+            <!-- Поле вводу: залишаємо тільки x-model='text' -->
+            <textarea x-model="text" x-ref="replyText" rows="1"
+                @input="$el.style.height = '32px'; $el.style.height = $el.scrollHeight + 'px'" placeholder="Введіть відповідь..."
+                class="w-full bg-transparent overflow-y-hidden border-0 border-b-2 border-zinc-200 py-0 px-0 text-sm leading-8 focus:ring-0 focus:border-black transition-colors duration-300 resize-none placeholder:text-zinc-500 outline-none box-border"
+                style="height: 32px; min-height: 32px;"></textarea>
+
+            <!-- Кнопки керування -->
+            <div class="flex justify-end gap-1.5">
+                <button @click="replyBlock = false; text = ''; $refs.replyText.style.height = '32px'" type="button"
+                    class="px-5 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 rounded-sm transition cursor-pointer">
+                    Скасувати
+                </button>
+
+                <button type="button" @click="submit()" :disabled="text.trim().length < 3"
+                    class="px-5 py-2 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 rounded-sm transition disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer">
+                    {{-- target має збігатися з назвою методу в PHP --}}
+                    <span wire:loading.remove wire:target="sendReply">Відповісти</span>
+                    <span wire:loading wire:target="sendReply">Надсилаю...</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     {{-- ПЛОСКИЙ СПИСОК ВСІХ ВІДПОВІДЕЙ --}}
     <div class="mt-2.5 space-y-2.5">
         @foreach ($comment->getAllReplies() as $reply)
+            @php
+                $isAdmin = $reply->user?->hasRole('admin');
+            @endphp
+
             <div wire:key="reply-{{ $reply->id }}" @class([
-                'ml-6 px-4 py-3 border-s-2 text-sm relative transition-all group',
-                // Перевірка ролі через Spatie прямо в Blade
-                'bg-orange-50/50 border-orange-500' => $reply->user?->hasRole('admin'),
-                'bg-zinc-50 border-zinc-200' => !$reply->user?->hasRole('admin'),
+                'ml-6 px-4 py-3 border-s-2 text-sm relative transition-all group mb-2',
+                // Колір фону та рамки для Адміна
+                'bg-linear-to-r from-orange-50/80 to-transparent border-orange-500 shadow-xs' => $isAdmin,
+                // Колір фону та рамки для Гостя
+                'bg-linear-to-r from-zinc-50 to-transparent border-zinc-300' => !$isAdmin,
             ]) x-cloak>
+
                 {{-- Контекст: кому саме відповідають --}}
-                <div class="flex items-center gap-1.5 mb-1.5 text-[11px] font-medium text-zinc-400">
-                    <x-lucide-corner-down-right class="size-3 stroke-zinc-400" />
-                    <div class="shrink-0">відповідь для</div>
-                    <div class="text-zinc-600 font-bold italic line-clamp-1">
-                        {{-- Беремо ім'я батьківського юзера або ім'я гостя --}}
+                <div @class([
+                    'flex items-center gap-1.5 mb-1.5 text-[10px] font-medium uppercase tracking-tight',
+                    'text-orange-400' => $isAdmin,
+                    'text-zinc-400' => !$isAdmin,
+                ])>
+                    <x-lucide-corner-down-right class="size-3 stroke-current" />
+                    <div class="shrink-0 opacity-70">відповідь для</div>
+                    <div @class([
+                        'font-bold italic line-clamp-1',
+                        'text-orange-700' => $isAdmin,
+                        'text-zinc-600' => !$isAdmin,
+                    ])>
                         {{ $reply->parent?->user?->name ?? ($reply->parent?->author_name ?: 'Гість') }}
+                    </div>
+                    <div class="ms-auto text-[10px] opacity-60 font-medium whitespace-nowrap">
+                        {{ $reply->created_at->diffForHumans() }}
                     </div>
                 </div>
 
                 <div class="flex items-center justify-between gap-2">
                     <div @class([
-                        'font-semibold flex items-center gap-1.5',
-                        'text-orange-900' => $reply->user?->hasRole('admin'),
-                        'text-zinc-700' => !$reply->user?->hasRole('admin'),
+                        'font-bold flex items-center gap-1.5',
+                        'text-orange-900' => $isAdmin,
+                        'text-zinc-800' => !$isAdmin,
                     ])>
-                        @if ($reply->user?->hasRole('admin'))
+                        @if ($isAdmin)
                             <x-lucide-shield-check class="size-4 shrink-0 stroke-orange-600 fill-orange-100" />
                         @else
-                            <x-lucide-user-round class="size-4 shrink-0 stroke-zinc-500" />
+                            <x-lucide-user-round class="size-4 shrink-0 stroke-zinc-400" />
                         @endif
 
-                        {{-- Пріоритет: ім'я зареєстрованого юзера -> ім'я гостя -> "Гість" --}}
                         <span>{{ $reply->user?->name ?? ($reply->author_name ?: 'Гість') }}</span>
 
-                        @if ($reply->user?->hasRole('admin'))
+                        @if ($isAdmin)
                             <span
-                                class="ms-1 px-1.5 py-0.5 text-[10px] uppercase tracking-wider bg-orange-600/15 text-orange-600 rounded-full font-bold">
-                                Адмін
+                                class="ms-1 px-2 py-0.5 text-[9px] uppercase tracking-widest bg-orange-600 text-white rounded-sm font-black">
+                                Майстер
                             </span>
                         @endif
-                    </div>
-
-                    <div class="text-[10px] text-zinc-400 font-medium">
-                        {{ $reply->created_at->diffForHumans() }}
                     </div>
                 </div>
 
                 <div @class([
-                    'mt-2 leading-relaxed',
-                    'text-orange-800/90' => $reply->user?->hasRole('admin'),
-                    'text-zinc-600' => !$reply->user?->hasRole('admin'),
+                    'mt-2 leading-relaxed text-[13px]',
+                    'text-orange-900/80' => $isAdmin,
+                    'text-zinc-600' => !$isAdmin,
                 ])>
                     {{ $reply->body }}
                 </div>
 
                 {{-- Кнопка відповіді --}}
-                <button wire:click="setReply({{ $reply->id }})"
-                    class="text-[10px] font-medium text-zinc-400 mt-2.5 hover:text-zinc-800 transition-colors cursor-pointer flex items-center gap-1">
+                <button wire:click="setReply({{ $reply->id }})" @class([
+                    'text-[10px] font-bold mt-3 transition-colors cursor-pointer flex items-center gap-1.5 uppercase tracking-wider',
+                    'text-orange-500 hover:text-orange-800' => $isAdmin,
+                    'text-zinc-400 hover:text-zinc-800' => !$isAdmin,
+                ])>
                     <x-lucide-reply class="size-3" />
                     Відповісти
                 </button>

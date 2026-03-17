@@ -24,9 +24,15 @@ class DatabaseSeeder extends Seeder
         }
         $tags = Tag::all();
 
-        // 3. Продукти
         Product::factory(20)->create()->each(function ($product) use ($tags) {
-            Comment::factory(rand(0, 15))->for($product, 'commentable')->create();
+            Comment::factory(rand(0, 15))
+                ->for($product, 'commentable')
+                ->create()
+                ->each(function ($comment) {
+                    Like::factory(rand(0, 10))
+                        ->for($comment, 'likeable')
+                        ->create();
+                });
             Like::factory(rand(0, 25))->for($product, 'likeable')->create();
             $product->tags()->attach($tags->random(rand(1, 3)));
         });

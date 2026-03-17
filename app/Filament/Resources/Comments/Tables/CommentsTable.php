@@ -4,111 +4,143 @@ namespace App\Filament\Resources\Comments\Tables;
 
 use App\Models\Comment;
 use Filament\Actions\Action;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Textarea;
+// use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Support\HtmlString;
+use Filament\Tables\Grouping\Group;
+use Filament\Notifications\Notification;
+use Filament\Support\Enums\FontWeight;
+use Filament\Tables\Columns\ToggleColumn;
+use Illuminate\Database\Eloquent\Builder;
 
 class CommentsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
-            ->columns([
-                TextColumn::make('commentable_type')
-                    ->label(false)
-                    ->formatStateUsing(function ($record) {
-                        // Отримуємо саму модель (Product, Post тощо) через зв'язок
+            ->modifyQueryUsing(
+                fn(Builder $query) =>
+                $query->withCount('likes')
+                    ->orderByRaw('COALESCE(parent_id, id) DESC')
+                    ->orderBy('created_at', 'asc')
+            )
+
+
+            // 2. ГРУПУВАННЯ за товаром/статтею
+            ->groups([
+                Group::make('commentable_id')
+                    ->label('Обговорення')
+                    ->getTitleFromRecordUsing(function ($record) {
                         $model = $record->commentable;
-
-                        // Повертаємо назву товару або заголовок статті
-                        // Використовуємо ?. (null-safe), якщо об'єкт раптом видалено
-                        return $model?->name ?? $model?->title ?? 'Обʼєкт видалено';
+                        $type = $record->commentable_type === 'App\Models\Product' ? 'Товар' : 'Стаття';
+                        return "{$type}: " . ($model?->name ?? $model?->title ?? 'Видалено');
                     })
-                    ->description(fn ($record): string => match ($record->commentable_type) {
-                        'App\Models\Product' => 'Товар (ID: '.$record->commentable_id.')',
-                        'App\Models\Post' => 'Стаття (ID: '.$record->commentable_id.')',
-                        default => 'Тип: '.$record->commentable_type,
-                    })
-                    ->searchable()
-                    ->color('primary')
-                    ->weight('bold'),
+                    ->collapsible(),
+            ])
+            ->defaultGroup('commentable_id')
 
+            ->columns([
                 TextColumn::make('author_name')
                     ->label('Коментатор')
                     ->searchable()
-                    ->default('Гість')
-                    // Додаємо іконку перед ім'ям, якщо це відповідь
-                    ->icon(fn ($record) => $record->parent_id ? 'heroicon-m-arrow-uturn-left' : 'heroicon-m-chat-bubble-left-right')
-                    // Змінюємо колір іконки для відповідей
-                    ->iconColor(fn ($record) => $record->parent_id ? 'warning' : 'success')
-                    // Додаємо текстове пояснення під ім'ям
-                    ->description(fn ($record) => $record->parent_id ? "Відповідь на #$record->parent_id" : null),
+                    ->formatStateUsing(fn($state) => $state ?: 'Ім’я не вказано')
+                    // Візуальне дерево: якщо це відповідь (є parent_id), додаємо іконку та відступ
+                    ->icon(fn($record) => $record->parent_id ? 'heroicon-m-arrow-uturn-left' : null)
+                    ->iconColor('warning')
+                    ->extraAttributes(fn($record) => [
+                        'class' => $record->parent_id ? 'pl-8 opacity-70' : 'font-bold',
+                    ])
+                    ->description(
+                        fn($record) => $record->parent_id
+                            ? 'Ваша відповідь'
+                            : ($record->author_email ?? 'Гість')
+                    ),
+                // ->description(fn($record) => $record->parent_id ? 'Відповідь' : ($record->author_email ?? 'Гість')),
+
+                TextColumn::make('body')
+                    ->label('Текст')
+                    ->wrap()
+                    ->lineClamp(3)
+                    ->tooltip(function ($record): ?string {
+                        return mb_strlen($record->body) > 100 ? $record->body : null;
+                    })
+                    // Виділяємо відповіді адміна фоном
+                    ->extraAttributes(fn($record) => [
+                        'class' => $record->parent_id
+                            ? 'text-sm bg-blue-50/50 p-2 rounded-lg border-l-2 border-blue-200'
+                            : 'text-sm bg-gray-50 p-2 rounded-lg',
+                    ]),
+
+                TextColumn::make('likes_count')
+                    ->label('Лайки')
+                    ->width('1%')
+                    ->badge()
+                    ->color(fn($state) => $state > 0 ? 'danger' : 'gray')
+                    ->icon('heroicon-m-heart')
+                    ->alignCenter()
+                    ->sortable(),
+
+
+                ToggleColumn::make('is_active')
+                    ->label(false)
+                    ->width('1%')
+                    ->alignCenter(),
+
+                // ... у списку колонок Tables\Table :: columns
 
                 TextColumn::make('created_at')
-                    ->date()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: false)
-                    ->label('Залишено'),
+                    ->label('Залишено')
+                    ->width('15')
+                    // Основний текст - тільки дата
+                    ->dateTime('d.m.Y')
+                    // ->fontFamily('mono') // Опційно: моноширинний шрифт для дати виглядає охайно
+                    // ->color('gray')
+                    ->weight(FontWeight::Medium)
+                    // Підпис під датою - тільки час
+                    ->description(fn($record) => $record->created_at->format('H:i'))
+                    ->sortable(),
             ])
-            ->defaultSort('created_at', 'desc')
-            ->filters([
-                //
-            ])
-            ->recordActions([
+            // Сортування: спочатку за групою (товаром), потім за часом (щоб діалог йшов по черзі)
+            ->defaultSort('created_at', 'asc')
+
+            ->actions([
+                // Кнопка тільки для повідомлень користувачів
                 Action::make('reply')
-                    ->label(false) // Приховуємо текст на самій кнопці в таблиці
-                    ->tooltip('Відповісти') // Додаємо підказку при наведенні
-                    ->icon('heroicon-m-arrow-uturn-left')
+                    ->label('Відповісти')
+                    ->icon('heroicon-m-chat-bubble-left-right')
                     ->color('success')
-                    ->iconButton() // Робимо кнопку в таблиці компактною іконкою
-
-                    // Налаштування модального вікна
-                    ->modalWidth('xl')
-                    ->modalHeading(fn (Comment $record) => "Відповідь для {$record->author_name}")
-
-                    // ПРАВИЛЬНІ НАЗВИ КНОПОК ЗГІДНО З ДОКУМЕНТАЦІЄЮ
-                    ->modalSubmitActionLabel('Надіслати відповідь')
-                    ->modalCancelActionLabel('Скасувати')
-
-                    // Вміст форми модалки
+                    ->visible(fn($record) => $record->parent_id === null)
+                    ->slideOver()
+                    ->modalWidth('md')
                     ->form([
-                        Placeholder::make('original_comment')
-                            ->label('Коментар відвідувача:')
-                            ->content(fn (Comment $record) => new HtmlString(
-                                '<div class="text-sm p-3 rounded-lg bg-gray-50 border-l-4 border-gray-300 italic">'
-                                    .e($record->body).
-                                    '</div>'
-                            )),
-
+                        Placeholder::make('context')
+                            ->label('Питання користувача:')
+                            ->content(fn($record) => $record->body),
                         Textarea::make('body')
                             ->label('Ваша відповідь')
-                            ->placeholder('Введіть текст вашої відповіді...')
                             ->required()
-                            ->rows(5)
-                            ->autofocus(),
+                            ->rows(8),
                     ])
-
-                    // Логіка збереження
                     ->action(function (Comment $record, array $data): void {
-                        Comment::create([
-                            'parent_id' => $record->id,
+                        $user = auth()->user();
+
+                        $record->replies()->create([
                             'commentable_id' => $record->commentable_id,
                             'commentable_type' => $record->commentable_type,
                             'body' => $data['body'],
                             'ip_address' => request()->ip(),
-                            'user_id' => auth()->id(),
+                            'user_id' => $user?->id,
+                            // Логіка ролі Spatie
+                            'author_name' => $user?->hasRole('admin') ? 'Адміністратор' : ($user?->name ?? 'Модератор'),
                         ]);
-                    })
-                    ->successNotificationTitle('Відповідь успішно надіслана!'),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+
+                        Notification::make()->title('Відповідь опублікована')->success()->send();
+                    }),
+
+                // DeleteAction::make()->iconButton(),
             ]);
     }
 }

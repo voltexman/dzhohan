@@ -193,6 +193,47 @@ new #[Layout('layouts::cart')] class extends Component {
         </x-table.row>
     </x-table>
 
+    @if ($product->total_length || $product->blade_length || $product->blade_thickness)
+        <div class="flex items-center gap-1.5 ps-5 mt-5 lg:ms-10 lg:ps-0">
+            <div class="flex-none me-1.5">
+                <x-lucide-ruler class="size-8 fill-zinc-100 stroke-zinc-600 stroke-[1.5]" />
+            </div>
+            <div class="flex flex-nowrap items-center gap-x-2.5 gap-y-1.5">
+                @if ($product->total_length > 0)
+                    <div class="flex flex-col">
+                        <span class="textsm font-bold text-zinc-800 leading-none">
+                            {{ number_format($product->total_length, 0) }} <small
+                                class="text-[10px] font-medium text-zinc-500 uppercase">мм</small>
+                        </span>
+                        <span class="text-[10px] uppercase tracking-wider text-zinc-400 font-medium">Загальна</span>
+                    </div>
+                @endif
+
+                @if ($product->blade_length > 0)
+                    <div class="flex flex-col border-l border-zinc-200 pl-2.5">
+                        <span class="text-sm font-bold text-zinc-800 leading-none">
+                            {{ number_format($product->blade_length, 0) }} <small
+                                class="text-[10px] font-medium text-zinc-500 uppercase">мм</small>
+                        </span>
+                        <span class="text-[10px] uppercase tracking-wider text-zinc-400 font-medium">Клинок</span>
+                    </div>
+                @endif
+
+                @if ($product->blade_thickness > 0)
+                    <div class="flex flex-col border-l border-zinc-200 pl-2.5">
+                        <span class="text-sm font-bold text-zinc-800 leading-none">
+                            {{ number_format($product->blade_thickness, 1) }} <small
+                                class="text-[10px] font-medium text-zinc-500 uppercase">мм</small>
+                        </span>
+                        <span class="text-[10px] uppercase tracking-wider text-zinc-400 font-medium">Обух</span>
+                    </div>
+                @endif
+                <img src="{{ Vite::asset('resources/images/made-in-ukraine.png') }}" class="size-15 object-contain"
+                    alt="">
+            </div>
+        </div>
+    @endif
+
     <div class="max-w-2xl mt-10 space-y-2.5 px-5 lg:px-10">
         <h3 class="text-lg font-semibold font-[SN_Pro]">Огляд та особливості</h3>
         <p class="text-gray-700 font-[Inter]">{{ $product->description }}</p>
@@ -202,26 +243,28 @@ new #[Layout('layouts::cart')] class extends Component {
         @each('partials.product.show.tags', $product->tags, 'tag')
     </div>
 
-    <div x-data="{
-        open: false,
-        rating: @entangle('rating'),
-        hoverRating: 0
-    }" class="bg-zinc-50 max-w-xl lg:mx-10 p-5 border border-zinc-100 mt-10">
-        <button @click="open = !open" class="flex items-center justify-between w-full group cursor-pointer text-left">
-            <div class="flex items-center gap-3">
-                <div
-                    class="size-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 shrink-0">
-                    <x-lucide-shopping-bag class="size-5 shrink-0" />
+    @if ($product->isSold())
+        <div x-data="{
+            open: false,
+            rating: @entangle('rating'),
+            hoverRating: 0
+        }" class="bg-zinc-50 max-w-xl lg:mx-10 p-5 border border-zinc-100 mt-10">
+            <button @click="open = !open"
+                class="flex items-center justify-between w-full group cursor-pointer text-left">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="size-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 shrink-0">
+                        <x-lucide-shopping-bag class="size-5 shrink-0" />
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-zinc-900">Ви покупець цього ножа?</h4>
+                        <p class="text-xs text-zinc-500">Поділіться досвідом користування та оцініть якість</p>
+                    </div>
                 </div>
-                <div>
-                    <h4 class="font-bold text-zinc-900">Ви покупець цього ножа?</h4>
-                    <p class="text-xs text-zinc-500">Поділіться досвідом користування та оцініть якість</p>
-                </div>
-            </div>
-            <x-lucide-chevron-down class="size-5 text-zinc-400 transition-transform duration-300" ::class="open ? 'rotate-180 text-orange-600' : ''" />
-        </button>
+                <x-lucide-chevron-down class="size-5 text-zinc-400 transition-transform duration-300"
+                    ::class="open ? 'rotate-180 text-orange-600' : ''" />
+            </button>
 
-        @if (!$product->hasStock())
             <div x-show="open" x-collapse x-cloak class="mt-5 pt-5 border-t border-zinc-200/60">
                 <form wire:submit.prevent="send" class="space-y-5">
                     <div class="space-y-2.5">
@@ -253,8 +296,8 @@ new #[Layout('layouts::cart')] class extends Component {
                     </x-button>
                 </form>
             </div>
-        @endif
-    </div>
+        </div>
+    @endif
 
     <div class="max-w-lg mt-10 scroll-mt-6 lg:scroll-mt-10 px-5 lg:px-10" id="comments-section">
         <livewire:comments :model="$product" />
@@ -274,7 +317,7 @@ new #[Layout('layouts::cart')] class extends Component {
 
         <div class="flex items-center gap-1 px-1">
             <a href="#comments-section" class="text-zinc-400 hover:text-zinc-600 p-2 transition-colors">
-                <x-lucide-message-circle class="size-6 stroke-zinc-700" />
+                <x-lucide-message-circle class="size-6 fill-gray-100 stroke-gray-800" />
             </a>
             <button type="button" x-data="{
                 active: @entangle('isLiked'),

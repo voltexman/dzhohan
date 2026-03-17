@@ -14,8 +14,8 @@ name('home');
 
         {{-- контент поверх --}}
         <div class="relative z-10 flex flex-col items-center justify-center h-full">
-            <img src="{{ Vite::asset('resources/images/logo_light.svg') }}" class="size-50 lg:size-70 drop-shadow-xl"
-                alt="">
+            <img src="{{ Vite::asset('resources/images/logo_light.svg') }}"
+                class="size-50 lg:size-70 drop-shadow-xl logo will-change-transform z-1000!" alt="">
 
             <h1
                 class="text-zinc-100 text-4xl md:text-6xl font-bold uppercase text-center max-w-lg font-[Russo_One] drop-shadow-xl">
@@ -425,3 +425,5 @@ name('home');
         </div>
     </section>
 </x-layouts::app>
+
+@vite('resources/js/pages/main.js')

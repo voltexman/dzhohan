@@ -131,10 +131,10 @@ class ProductForm
                                     ->required()
                                     ->searchable()
                                     ->preload()
-                                    ->rule(['min:2', 'max:6'])
+                                    ->rule(['min:1', 'max:6'])
                                     ->validationMessages([
                                         'required' => 'Вкажіть теги',
-                                        'min' => 'Необхідно мінімум 2 теги',
+                                        'min' => 'Необхідно мінімум 1 теги',
                                         'max' => 'Не більше 6 тегів',
                                     ])
                                     ->label('Теги')

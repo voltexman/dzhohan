@@ -18,51 +18,74 @@ new class extends Component {
     #[Url, Session]
     public string $search = '';
 
-    #[Url, Session]
+    #[Url(history: true)]
+    public $blade_length_from = null;
+    #[Url(history: true)]
+    public $blade_length_to = null;
+
+    #[Url(history: true)]
+    public $blade_thickness_from = null;
+    #[Url(history: true)]
+    public $blade_thickness_to = null;
+
+    #[Url]
     public array $collections = [];
 
-    #[Url, Session]
+    #[Url]
     public array $steels = [];
 
-    #[Url, Session]
+    #[Url]
     public array $blade_shapes = [];
 
-    #[Url, Session]
+    #[Url]
     public array $handle_materials = [];
 
-    #[Url, Session]
+    #[Url]
     public array $blade_grinds = [];
 
-    #[Url, Session]
+    #[Url]
     public string $status = 'all';
 
-    #[Url, Session]
+    #[Url]
     public int $price_from = 0;
-
-    #[Url, Session]
+    #[Url]
     public int $price_to = 0;
 
-    public int $minLimit;
-    public int $maxLimit;
+    public int $minLimit, $maxLimit;
+    public float $minBladeLen, $maxBladeLen;
+    public float $minThickness, $maxThickness;
 
     public $filters = [];
 
-    #[Url, Session]
+    #[Session]
     public $sortBy = 'created_at';
 
-    #[Url, Session]
+    #[Session]
     public $sortDirection = 'desc';
 
-    public $perPage = 12;
+    #[Session]
     public $view = 'grid';
+
+    public $perPage = 12;
 
     public function mount()
     {
         $this->minLimit = (int) Product::min('price') ?: 0;
         $this->maxLimit = (int) Product::max('price') ?: 5000;
-
         $this->price_from = $this->minLimit;
         $this->price_to = $this->maxLimit;
+
+        // 2. Ліміти довжини
+        $this->minBladeLen = (float) Product::min('blade_length') ?: 0;
+        $this->maxBladeLen = (float) Product::max('blade_length') ?: 300;
+        $this->blade_length_from ??= $this->minBladeLen;
+        $this->blade_length_to ??= $this->maxBladeLen;
+
+        // 3. Ліміти товщини
+        $this->minThickness = (float) Product::min('blade_thickness') ?: 0;
+        $this->maxThickness = (float) Product::max('blade_thickness') ?: 10;
+        $this->blade_thickness_from ??= $this->minThickness;
+        $this->blade_thickness_to ??= $this->maxThickness;
 
         $this->view = Cookie::get('product_view', 'grid');
     }
@@ -87,6 +110,16 @@ new class extends Component {
         $this->price_from = $this->minLimit;
         $this->price_to = $this->maxLimit;
 
+        // Скидаємо діапазони до лімітів БД
+        $this->price_from = $this->minLimit;
+        $this->price_to = $this->maxLimit;
+
+        $this->blade_length_from = $this->minBladeLen;
+        $this->blade_length_to = $this->maxBladeLen;
+
+        $this->blade_thickness_from = $this->minThickness;
+        $this->blade_thickness_to = $this->maxThickness;
+
         if ($this->collection) {
             $this->collections = [$this->collection];
         }
@@ -107,6 +140,14 @@ new class extends Component {
 
         if ($this->price_from > $this->minLimit || $this->price_to < $this->maxLimit) {
             $filters[] = "Ціна: {$this->price_from}-{$this->price_to} грн";
+        }
+
+        if ($this->blade_length_from > $this->minBladeLen || $this->blade_length_to < $this->maxBladeLen) {
+            $filters[] = "Довжина: {$this->blade_length_from}-{$this->blade_length_to} мм";
+        }
+
+        if ($this->blade_thickness_from > $this->minThickness || $this->blade_thickness_to < $this->maxThickness) {
+            $filters[] = 'Товщина: ' . round($this->blade_thickness_from, 1) . '-' . round($this->blade_thickness_to, 1) . ' мм';
         }
 
         foreach ($this->collections as $slug) {
@@ -173,6 +214,10 @@ new class extends Component {
             ->when($this->collection, fn($q) => $q->where('collection', $this->collection))
             ->filter([
                 'search' => $this->search,
+                'blade_length_from' => $this->blade_length_from,
+                'blade_length_to' => $this->blade_length_to,
+                'blade_thickness_from' => $this->blade_thickness_from,
+                'blade_thickness_to' => $this->blade_thickness_to,
                 'collections' => $this->collections,
                 'steels' => $this->steels,
                 'blade_shapes' => $this->blade_shapes,
@@ -215,7 +260,7 @@ new class extends Component {
             @include('partials.product.filters')
         </aside>
 
-        <main class="flex-1 lg:col-span-2 flex flex-col gap-5 py-10">
+        <main class="flex-1 lg:col-span-2 flex flex-col gap-5 lg:pt-8 pb-10">
             @includeWhen($this->collection === null, 'partials.product.collections', [
                 'collections' => ProductCategory::cases(),
             ])
@@ -224,7 +269,8 @@ new class extends Component {
             <div
                 class="sticky top-16 z-40 px-5 py-2.5 lg:px-0 bg-zinc-100 lg:bg-zinc-50 border-b lg:border-0 border-zinc-200 flex flex-col gap-0.5">
                 <div class="flex justify-between lg:gap-x-1.5">
-                    <x-form.input size="sm" wire:model.trim.live.debounce.300ms="search" placeholder="Пошук ножів" />
+                    <x-form.input size="sm" wire:model.trim.live.debounce.300ms="search" placeholder="Пошук ножів"
+                        class="lg:py-3.5!" />
 
                     @include('partials.product.list.sorting')
                     @include('partials.product.list.viewing')
@@ -328,51 +374,4 @@ new class extends Component {
             @endif
         </main>
     </div>
-    {{-- <div class="h-screen px-5 lg:px-0 py-20">
-        <div class="max-w-md mx-auto flex flex-col gap-10 text-center">
-            <!-- Іконка та заклик -->
-            <div>
-                <x-lucide-x-octagon class="size-12 mx-auto text-zinc-300 mb-4" />
-                <h3 class="font-[Oswald] text-xl uppercase font-bold text-zinc-800">Товари відсутні</h3>
-                <div class="max-w-sm text-sm text-zinc-500 text-balance mx-auto text-center mt-2.5">
-                    Наразі ножів у наявності немає. Я працюю над новими виробами — загляньте трохи пізніше.
-                </div>
-            </div>
-
-            <!-- Переваги -->
-            <div class="space-y-4 text-left border-y border-zinc-100 py-6">
-                <div class="flex items-start gap-3">
-                    <x-lucide-shield-check class="size-5 text-orange-600 shrink-0 mt-0.5" />
-                    <div>
-                        <p class="text-sm font-bold text-zinc-800 uppercase tracking-tight">Довічна гарантія</p>
-                        <p class="text-xs text-zinc-500">Я відповідаю за якість кожної деталі та збірки.</p>
-                    </div>
-                </div>
-
-                <div class="flex items-start gap-3">
-                    <x-lucide-award class="size-5 text-orange-600 shrink-0 mt-0.5" />
-                    <div>
-                        <p class="text-sm font-bold text-zinc-800 uppercase tracking-tight">Ручна робота</p>
-                        <p class="text-xs text-zinc-500">Кожен ніж створюється в єдиному екземплярі під ваші
-                            завдання.</p>
-                    </div>
-                </div>
-
-                <div class="flex items-start gap-3">
-                    <x-lucide-phone-call class="size-5 text-orange-600 shrink-0 mt-0.5" />
-                    <div>
-                        <p class="text-sm font-bold text-zinc-800 uppercase tracking-tight">Є питання?</p>
-                        <p class="text-xs text-zinc-500">Зателефонуйте мені, і я допоможу з вибором сталі чи
-                            форми.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Кнопка повернення -->
-            <a href="{{ route('order') }}" wire:navigate
-                class="inline-flex justify-center items-center px-10 py-3.5 w-fit mx-auto rounded-md bg-zinc-900 text-white text-xs font-bold uppercase tracking-widest hover:bg-orange-600 transition-colors duration-300">
-                Перейти до замовлень
-            </a>
-        </div>
-    </div> --}}
 </section>

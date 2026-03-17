@@ -34,6 +34,8 @@ new class extends Component {
 
     public $knife_type = '';
 
+    public $sheath = '';
+
     public $blade_shape = '';
     public $blade_steel = '';
     public $blade_grind = '';

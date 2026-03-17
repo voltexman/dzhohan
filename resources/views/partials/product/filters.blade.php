@@ -1,5 +1,5 @@
-<div class="lg:h-[calc(100vh-4rem)] lg:mt-4 lg:pr-8 flex flex-col justify-between overflowhidden">
-    <x-scrollbar class="space-y-10 lg:pt-4">
+<div class=" h-[calc(100vh-120px)] lg:h-[calc(100vh-4rem)] lg:mt-4 lg:pr-8 flex flex-col justify-between">
+    <x-scrollbar class="space-y-10 pt-4">
         <!-- 1. СТАТУС -->
         <x-filter.tabs>
             <x-filter.tabs.item model="status" value="all" :current="$status">Всі</x-filter.tabs.item>
@@ -10,6 +10,31 @@
         <!-- 2. БЮДЖЕТ -->
         <x-filter.group title="Бюджет" icon="wallet" persist="filter-price">
             <x-filter.range :min="$minLimit" :max="$maxLimit" from-model="price_from" to-model="price_to" />
+        </x-filter.group>
+
+        {{-- Для довжини клинка --}}
+        <x-filter.group title="Довжина клинка" icon="ruler" persist="filter-blade-lenght">
+            <div class="space-y-2.5">
+                <span class="text-xs font-medium tracking-wide text-zinc-400">Розмір (мм)</span>
+                <div class="flex items-center gap-2.5">
+                    <x-filter.number model="blade_length_from" :min="$minBladeLen" :max="$maxBladeLen" :step="1" />
+                    <div class="text-zinc-300 text-xs">—</div>
+                    <x-filter.number model="blade_length_to" :min="$minBladeLen" :max="$maxBladeLen" :step="1" />
+                </div>
+            </div>
+        </x-filter.group>
+
+        {{-- Для товщини обуху --}}
+        <x-filter.group title="Товщина обуху" icon="ruler" persist="filter-thickess">
+            <div class="space-y-2.5">
+                <span class="text-xs font-medium tracking-wide text-zinc-400">Товщина (мм)</span>
+                <div class="flex items-center gap-2.5">
+                    <x-filter.number model="blade_thickness_from" :min="$minThickness" :max="$maxThickness"
+                        step="0.1" />
+                    <div class="text-zinc-300 text-xs">—</div>
+                    <x-filter.number model="blade_thickness_to" :min="$minThickness" :max="$maxThickness" step="0.1" />
+                </div>
+            </div>
         </x-filter.group>
 
         <!-- 3. КОЛЕКЦІЇ -->

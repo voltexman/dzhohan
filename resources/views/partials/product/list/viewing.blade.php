@@ -76,7 +76,7 @@
 
 <x-dropdown class="hidden lg:block">
     <x-slot:trigger>
-        <x-button variant="ghost" color="light" size="sm" class="gap-x.1.5">
+        <x-button variant="ghost" color="light" size="sm" class="gap-x.1.5 lg:py-3.5!">
             @if ($view === 'grid')
                 <x-lucide-layout-grid class="size-4 me-1.5" />
                 <span>Сітка</span>

@@ -31,6 +31,21 @@ enum BladeShape: string implements HasLabel
         };
     }
 
+    public function icon(): string
+    {
+        return match ($this) {
+            self::DROPPONT => 'droppont.png',
+            self::CLIPPOINT => 'clippoint.png',
+            self::TANTO => 'tanto.png',
+            self::SPEARPOINT => 'spearpoint.png',
+            self::SHEEPSFOOT => 'sheepsfoot.png',
+            self::WHARNCLIFFE => 'wharncliffe.png',
+            self::TRAILINGPOINT => 'trailingpoint.png',
+            self::HAWKBILL => 'hawkbill.png',
+            self::DAGGER => 'dagger.png',
+        };
+    }
+
     public static function values(): array
     {
         return array_column(self::cases(), 'value');

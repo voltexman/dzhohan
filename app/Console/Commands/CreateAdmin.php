@@ -25,7 +25,7 @@ class CreateAdmin extends Command
         $admin = User::firstOrCreate(
             ['email' => 'admin@admin.com'],
             [
-                'name' => 'Admin',
+                'name' => 'Джоган Костянтин',
                 'password' => bcrypt('password'),
             ]
         );

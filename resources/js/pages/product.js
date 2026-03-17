@@ -3,7 +3,7 @@ import { createScope, utils, animate, onScroll } from "animejs";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import "photoswipe/style.css";
 
-const initAnimations = () =>
+const initAnimations = () => {
     createScope({
         mediaQueries: {
             // Мобільні: все, що менше 768px (Tailwind md)
@@ -34,6 +34,7 @@ const initAnimations = () =>
             }),
         });
     });
+};
 
 const initGallery = () => {
     const lightbox = new PhotoSwipeLightbox({
@@ -122,4 +123,8 @@ document.addEventListener("livewire:init", () => {
     initCarousel();
     initAnimations();
     initGallery();
+});
+
+Livewire.hook("morph.updated", ({ el, component }) => {
+    initAnimations();
 });

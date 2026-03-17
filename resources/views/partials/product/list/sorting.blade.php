@@ -90,7 +90,7 @@
 
 <x-dropdown class="hidden lg:block">
     <x-slot:trigger>
-        <x-button variant="ghost" color="light" size="sm" class="gap-x-1.5">
+        <x-button variant="ghost" color="light" size="sm" class="gap-x-1.5 lg:py-3.5!">
             @if ($sortBy === 'price' && $sortDirection === 'asc')
                 <x-lucide-trending-up class="size-4" />
                 <span>Дешевші</span>
