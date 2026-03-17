@@ -21,13 +21,15 @@ class FeedbackResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Комунікація';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedStar;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleBottomCenter;
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 4;
 
-    protected static ?string $modelLabel = 'Відгук';
+    protected static ?string $navigationLabel = 'Звернення';
 
-    protected static ?string $pluralModelLabel = 'Відгуки';
+    protected static ?string $modelLabel = 'Звернення';
+
+    protected static ?string $pluralModelLabel = 'Звернення';
 
     public static function form(Schema $schema): Schema
     {

@@ -40,7 +40,7 @@ class ProductForm
                                     ->required()
                                     ->maxLength(255)
                                     ->live(onBlur: true)
-                                    ->afterStateUpdated(fn($set, $state) => $set('slug', Str::slug($state)))
+                                    ->afterStateUpdated(fn ($set, $state) => $set('slug', Str::slug($state)))
                                     ->validationMessages([
                                         'required' => 'Будь ласка, введіть назву ножа',
                                         'unique' => 'Ніж з такою назвою вже існує',
@@ -50,13 +50,13 @@ class ProductForm
                                     ->label('URL адреса (slug)')
                                     ->required()
                                     ->unique(ignoreRecord: true)
-                                    ->disabled(fn($get) => ! $get('is_slug_editable'))
+                                    ->disabled(fn ($get) => ! $get('is_slug_editable'))
                                     ->dehydrated()
                                     ->suffixAction(
                                         Action::make('toggleSlugEditable')
                                             ->icon('heroicon-m-lock-closed')
                                             ->color('gray')
-                                            ->action(fn($set, $get) => $set('is_slug_editable', ! $get('is_slug_editable')))
+                                            ->action(fn ($set, $get) => $set('is_slug_editable', ! $get('is_slug_editable')))
                                     )
                                     ->validationMessages([
                                         'required' => 'Будь ласка, вкажіть url адресу',
@@ -97,14 +97,14 @@ class ProductForm
 
                                         TextInput::make('sku')
                                             ->label('Артикул (SKU)')
-                                            ->default(fn() => 'KN-' . strtoupper(Str::random(6)))
+                                            ->default(fn () => 'KN-'.strtoupper(Str::random(6)))
                                             ->unique(ignoreRecord: true)
                                             ->required()
                                             ->readOnly()
                                             ->suffixAction(
                                                 Action::make('generateSku')
                                                     ->icon('heroicon-m-arrow-path')
-                                                    ->action(fn($set) => $set('sku', 'KN-' . strtoupper(Str::random(6))))
+                                                    ->action(fn ($set) => $set('sku', 'KN-'.strtoupper(Str::random(6))))
                                             ),
 
                                     ])->columnSpanFull(),
@@ -142,7 +142,7 @@ class ProductForm
                                         TextInput::make('name')
                                             ->required()
                                             ->live()
-                                            ->afterStateUpdated(fn($set, $state) => $set('slug', Str::slug($state))),
+                                            ->afterStateUpdated(fn ($set, $state) => $set('slug', Str::slug($state))),
                                         TextInput::make('slug')
                                             ->required()
                                             ->unique('tags', 'slug'),

@@ -8,6 +8,7 @@ use App\Models\Like;
 use App\Models\Order;
 use App\Models\Post;
 use App\Models\Product;
+use App\Models\Review;
 use App\Models\Subscriber;
 use App\Models\Tag;
 use Illuminate\Database\Seeder;
@@ -24,7 +25,10 @@ class DatabaseSeeder extends Seeder
         }
         $tags = Tag::all();
 
-        Product::factory(20)->create()->each(function ($product) use ($tags) {
+        Product::factory(10)->create()->each(function ($product) use ($tags) {
+            Review::factory(rand(0, 5))
+                ->for($product)
+                ->create();
             Comment::factory(rand(0, 15))
                 ->for($product, 'commentable')
                 ->create()

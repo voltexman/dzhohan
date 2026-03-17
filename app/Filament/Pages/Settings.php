@@ -141,7 +141,7 @@ class Settings extends Page implements HasForms
                                     ->prefixIcon('heroicon-o-calendar-days')
                                     ->native(false)
                                     ->displayFormat('d.m.Y')
-                                    ->hidden(fn($get) => $get('online')),
+                                    ->hidden(fn ($get) => $get('online')),
                             ]),
                     ])
                     ->columnSpanFull(),
@@ -154,7 +154,7 @@ class Settings extends Page implements HasForms
         return [
             Action::make('save')
                 ->label('Зберегти налаштування')
-                ->action(fn() => $this->save()),
+                ->action(fn () => $this->save()),
         ];
     }
 

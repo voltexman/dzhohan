@@ -56,7 +56,7 @@ new class extends Component {
         $wire.like();
     },
     replyBlock: false
-}" class="border-b border-zinc-50 pb-5 last:border-b-0" wire:transition>
+}" class="border-b border-zinc-50 pb-5 last:border-b-0" wire:transition x-cloak>
 
     <div class="flex items-start justify-between gap-4">
         {{-- Ім'я автора --}}
@@ -67,25 +67,6 @@ new class extends Component {
 
         {{-- Мета-дані (Лайки та Час) --}}
         <div class="flex items-center gap-2.5 shrink-0">
-            {{-- Блок Лайків --}}
-            {{-- Блок Лайків зверху --}}
-            @if ($comment->likes_count > 0)
-                <div @class([
-                    'flex items-center gap-1 font-medium transition-colors duration-200',
-                    $comment->isLiked() ? 'text-red-500' : 'text-zinc-400',
-                ])>
-                    <x-lucide-heart @class([
-                        'size-3.5 shrink-0 mb-0.5 transition-all',
-                        'fill-red-500 stroke-red-500 scale-110' => $comment->isLiked(),
-                        'fill-zinc-100 stroke-zinc-500' => !$comment->isLiked(),
-                    ]) />
-                    <span class="text-xs">{{ $comment->likes_count }}</span>
-                </div>
-
-                {{-- Роздільник --}}
-                <span class="size-1 rounded-full bg-zinc-300"></span>
-            @endif
-
             {{-- Блок Часу --}}
             <div class="flex items-center gap-1 text-xs text-zinc-400 whitespace-nowrap">
                 @if ($comment->created_at->gt(now()->subDays(1)))
@@ -103,7 +84,7 @@ new class extends Component {
 
     <div class="mt-2.5 text-gray-800">{{ $comment->body }}</div>
 
-    <div class="flex items-center gap-x-4 mt-2.5">
+    <div class="flex items-center justify-between gap-x-4 mt-2.5">
         {{-- Кнопка Відповісти --}}
         <button @click="replyBlock = true" :class="{ 'animate-pulse text-black font-bold': replyBlock }"
             class="flex items-center gap-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-800 cursor-pointer transition-all duration-300 focus:outline-none">
@@ -113,12 +94,43 @@ new class extends Component {
 
         {{-- Кнопка Подобається --}}
         <button type="button" @click="handleLike()"
-            class="flex items-center gap-1.5 text-xs font-medium transition-colors duration-250 cursor-pointer focus:outline-none"
+            class="me-auto flex items-center gap-1.5 text-xs font-medium transition-colors duration-250 cursor-pointer focus:outline-none"
             x-bind:class="active ? 'text-red-600 hover:text-red-800' : 'text-zinc-500 hover:text-zinc-800'">
             <x-lucide-heart class="size-4 transition-all duration-300"
                 x-bind:class="active ? 'fill-red-600 stroke-red-600 scale-110' : 'stroke-zinc-500'" />
             <span>Подобається</span>
         </button>
+
+        {{-- Блок Лайків --}}
+        <div class="ms-auto flex items-center gap-2.5">
+            {{-- Блок відповідей --}}
+            @if ($comment->replies->isNotEmpty())
+                <div class="flex items-center gap-0.5">
+                    <x-lucide-message-circle class="size-3.5 shrink-0 fill-zinc-100 stroke-zinc-500 mb-0.5" />
+                    <span class="text-xs font-medium text-zinc-400">{{ $comment->replies->count() }}</span>
+                </div>
+            @endif
+
+            {{-- Роздільник: показуємо тільки якщо є і лайки, і відповіді --}}
+            @if ($comment->likes_count > 0 && $comment->replies->isNotEmpty())
+                <span class="size-1 shrink-0 rounded-full bg-zinc-300"></span>
+            @endif
+
+            {{-- Блок лайків --}}
+            @if ($comment->likes_count > 0)
+                <div @class([
+                    'flex items-center gap-1 font-medium transition-colors duration-200',
+                    $comment->isLiked() ? 'text-red-500' : 'text-zinc-400',
+                ])>
+                    <x-lucide-heart @class([
+                        'size-3.5 shrink-0 mb-0.5 transition-all',
+                        'fill-red-500 stroke-red-500 scale-110' => $comment->isLiked(),
+                        'fill-zinc-100 stroke-zinc-500' => !$comment->isLiked(),
+                    ]) />
+                    <span class="text-xs">{{ $comment->likes_count }}</span>
+                </div>
+            @endif
+        </div>
     </div>
 
     <div x-data="{
@@ -149,9 +161,9 @@ new class extends Component {
                     Скасувати
                 </button>
 
-                <button type="button" @click="submit()" :disabled="text.trim().length < 3"
+                <button type="button" @click="submit()" :disabled="text.trim().length < 3" wire:loading.attr="disabled"
+                    wire:target="sendReply"
                     class="px-5 py-2 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 rounded-sm transition disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer">
-                    {{-- target має збігатися з назвою методу в PHP --}}
                     <span wire:loading.remove wire:target="sendReply">Відповісти</span>
                     <span wire:loading wire:target="sendReply">Надсилаю...</span>
                 </button>
@@ -160,7 +172,7 @@ new class extends Component {
     </div>
 
     {{-- ПЛОСКИЙ СПИСОК ВСІХ ВІДПОВІДЕЙ --}}
-    <div class="mt-2.5 space-y-2.5">
+    <div class="mt-5 space-y-2.5">
         @foreach ($comment->getAllReplies() as $reply)
             @php
                 $isAdmin = $reply->user?->hasRole('admin');
@@ -169,7 +181,7 @@ new class extends Component {
             <div wire:key="reply-{{ $reply->id }}" @class([
                 'ml-6 px-4 py-3 border-s-2 text-sm relative transition-all group mb-2',
                 // Колір фону та рамки для Адміна
-                'bg-linear-to-r from-orange-50/80 to-transparent border-orange-500 shadow-xs' => $isAdmin,
+                'bg-linear-to-r from-orange-50/80 to-transparent border-orange-500' => $isAdmin,
                 // Колір фону та рамки для Гостя
                 'bg-linear-to-r from-zinc-50 to-transparent border-zinc-300' => !$isAdmin,
             ]) x-cloak>

@@ -12,6 +12,7 @@ use App\Enums\SteelType;
 use App\Traits\Likeable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -116,6 +117,11 @@ class Product extends Model implements HasMedia
             ->when($filters['blade_shapes'] ?? null, fn ($q, $v) => $q->whereIn('blade_shape', $v))
             ->when($filters['handle_materials'] ?? null, fn ($q, $v) => $q->whereIn('handle_material', $v))
             ->when($filters['blade_grinds'] ?? null, fn ($q, $v) => $q->whereIn('blade_grinds', $v));
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
     }
 
     public function tags(): MorphToMany

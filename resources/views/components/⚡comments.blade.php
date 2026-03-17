@@ -71,7 +71,16 @@ new class extends Component {
         return $this->model
             ->comments()
             ->whereNull('parent_id')
-            ->with(['replies.user', 'replies.parent.user', 'likes', 'replies.likes'])
+            ->where('is_active', true)
+            ->with([
+                'replies' => function ($query) {
+                    $query->where('is_active', true);
+                },
+                'replies.user',
+                'replies.parent.user',
+                'likes',
+                'replies.likes',
+            ])
             ->withCount('likes')
             ->latest()
             ->paginate(10, ['*'], 'commentsPage');
@@ -86,7 +95,10 @@ new class extends Component {
             <h3 class="text-lg font-semibold font-[SN_Pro]">
                 Залишити коментар
                 @if ($this->comments->count() > 0)
-                    <span class="text-gray-500 text-sm">({{ $this->comments->count() }})</span>
+                    <div
+                        class="size-8 inline-flex justify-center items-center rounded-full bg-orange-50 border border-orange-100 text-orange-500 text-xs">
+                        {{ $this->comments->count() }}
+                    </div>
                 @endif
             </h3>
 
@@ -106,12 +118,6 @@ new class extends Component {
                 <x-form.error>{{ $message }}</x-form.error>
             @enderror
         </div>
-
-        @if ($replyTo)
-            <div class="text-xs text-zinc-500">
-                Відповідь на коментар #{{ $replyTo }}
-            </div>
-        @endif
 
         <x-button type="submit" size="md">
             <span wire:loading.remove wire:target="send">Надіслати</span>
