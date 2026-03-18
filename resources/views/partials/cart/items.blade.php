@@ -11,7 +11,7 @@
                 {{ $item->name }}
             </span>
             <span class="text-sm font-medium text-gray-500">
-                {{ number_format($item->price, 0, '.', ' ') }} грн
+                {{ \App\Enums\CurrencyType::tryFrom($item->currency)?->format($item->price) }}
             </span>
         </div>
 

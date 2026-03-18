@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Enums\BladeFinish;
 use App\Enums\BladeGrind;
 use App\Enums\BladeShape;
+use App\Enums\CurrencyType;
 use App\Enums\HandleMaterial;
 use App\Enums\ProductCategory;
 use App\Enums\SheathType;
@@ -27,6 +28,7 @@ class ProductFactory extends Factory
             'quantity' => fake()->numberBetween(0, 1),
             'is_active' => fake()->boolean(90),
             'collection' => fake()->randomElement(ProductCategory::cases()),
+            'currency' => fake()->randomElement(CurrencyType::cases()),
 
             // Характеристики (Enums)
             'steel' => fake()->randomElement(SteelType::cases()),
@@ -47,7 +49,7 @@ class ProductFactory extends Factory
     {
         return $this->afterCreating(function (Product $product) {
             collect(range(1, rand(2, 6)))->each(function () use ($product) {
-                $path = database_path('seeders/images/product-test-'.rand(1, 12).'.jpg');
+                $path = database_path('seeders/images/product-test-' . rand(1, 12) . '.jpg');
 
                 if (file_exists($path)) {
                     $product->addMedia($path)

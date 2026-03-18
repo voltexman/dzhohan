@@ -7,6 +7,7 @@ use App\Enums\HandleMaterial;
 use App\Enums\ProductCategory;
 use App\Enums\SheathType;
 use App\Enums\SteelType;
+use App\Enums\CurrencyType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->unsignedInteger('quantity')->default(1);
             $table->boolean('is_active')->default(true);
             $table->enum('collection', ProductCategory::values())->index();
+            $table->enum('currency', CurrencyType::cases())->default();
 
             $table->decimal('total_length', 6, 1)->nullable()->comment('Загальна довжина, мм');
             $table->decimal('blade_length', 6, 1)->nullable()->comment('Довжина леза, мм');

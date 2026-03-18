@@ -1,16 +1,20 @@
+@use('App\Enums\CurrencyType')
+
 <div class="py-5 flex flex-col" wire:key="order-item-{{ $item->id }}">
     <div class="flex justify-between gap-5">
         <div class="flex flex-col">
             <span class="font-bold text-gray-900 leading-tight">{{ $item->name }}</span>
             <span class="text-sm text-gray-500">
                 <span class="font-semibold">{{ $item->qty }}</span>
-                шт. × <span class="font-medium">{{ number_format($item->price, 0, '.', ' ') }}
-                    грн</span>
+                шт. ×
+                <span class="font-medium">
+                    {{ CurrencyType::tryFrom($item->currency)?->format($item->price) }}
+                </span>
             </span>
         </div>
         <div class="flex flex-col items-end">
             <span class="font-bold whitespace-nowrap text-gray-900">
-                {{ number_format($item->price * $item->qty, 0, '.', ' ') }} грн
+                {{ CurrencyType::tryFrom($item->currency)?->format($item->price * $item->qty) }}
             </span>
         </div>
     </div>

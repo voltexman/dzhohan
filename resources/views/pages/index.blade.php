@@ -180,12 +180,11 @@ name('home');
                 Відповіді на питання, які найчастіше виникають при замовленні або купівлі ножа.
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 items-start mt-10" x-data="{ open: null }">
-
+            <div class="md:columns-2 gap-x-10 items-start mt-10" x-data="{ open: null }">
                 @foreach ($settings->faqs as $faq)
                     <div class="overflow-hidden transition-all duration-300 border-b border-gray-200">
                         <button @click="open === {{ $loop->index }} ? open = null : open = {{ $loop->index }}"
-                            class="w-full py-5 text-left flex justify-between items-center group">
+                            class="w-full py-5 text-left flex justify-between items-center outline-none cursor-pointer group">
                             <span
                                 class="font-semibold text-gray-900 text-lg transition-colors group-hover:text-amber-700">
                                 {{ $faq['question'] }}
@@ -201,7 +200,6 @@ name('home');
                         </div>
                     </div>
                 @endforeach
-
             </div>
         </div>
     </section>

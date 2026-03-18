@@ -96,7 +96,7 @@
                     'text-base' => $view === 'list',
                     'text-xl' => $view === 'cards',
                 ])>
-                    {{ number_format($product->price, 0, '.', ' ') }} <span class="text-xs uppercase ml-0.5">грн</span>
+                    {{ $product->currency->format($product->price) }}
                 </div>
 
                 {{-- Метрики (Лайки / Коментарі) --}}

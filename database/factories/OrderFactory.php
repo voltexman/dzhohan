@@ -21,7 +21,7 @@ class OrderFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'delivery_method' => fake()->randomElement(DeliveryMethod::cases()),
             'city' => fake()->city(),
-            'address' => 'Відділення №'.fake()->numberBetween(1, 50),
+            'address' => 'Відділення №' . fake()->numberBetween(1, 50),
             'comment' => fake()->optional()->sentence(15),
             'type' => fake()->randomElement(OrderType::cases()),
             'status' => fake()->randomElement(OrderStatus::cases()),
@@ -50,6 +50,7 @@ class OrderFactory extends Factory
                     'name' => $product->name,
                     'qty' => $qty,
                     'price' => $price,
+                    'currency'   => $product->currency,
                 ]);
             }
         });

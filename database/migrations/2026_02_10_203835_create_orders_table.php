@@ -33,6 +33,7 @@ return new class extends Migration
             $table->foreignId('product_id')->nullable()->constrained('products')->onDelete('set null');
 
             $table->string('name');
+            $table->string('currency');
             $table->integer('qty');
             $table->decimal('price', 10, 2)->default(0);
             $table->timestamps();

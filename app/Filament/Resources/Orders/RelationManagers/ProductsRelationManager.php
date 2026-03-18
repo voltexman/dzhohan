@@ -50,8 +50,23 @@ class ProductsRelationManager extends RelationManager
             ->description('Перелік товарів в замовленні.')
             ->columns([
                 TextColumn::make('name')->label('Назва товару'),
+
                 TextColumn::make('qty')->label('Кількість'),
-                TextColumn::make('price')->label('Вартість'),
+
+
+                TextColumn::make('price')
+                    ->label('Вартість (за од.)')
+                    ->formatStateUsing(fn($record, $state) => $record->currency->format($state))
+                    ->color('gray')
+                    ->alignEnd(),
+
+                TextColumn::make('subtotal')
+                    ->label('Сума')
+                    ->state(fn($record) => $record->price * $record->qty)
+                    ->formatStateUsing(fn($record, $state) => $record->currency->format($state))
+                    ->weight('bold')
+                    ->color('success')
+                    ->alignEnd(),
             ])
             ->filters([
                 //

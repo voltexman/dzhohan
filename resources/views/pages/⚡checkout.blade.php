@@ -33,6 +33,11 @@ new class extends Component {
         return $this->items->sum(fn($item) => $item->price * $item->qty);
     }
 
+    public function getTotalsByCurrency(): array
+    {
+        return $this->items()->groupBy('currency')->map(fn($group) => $group->sum(fn($item) => $item->price * $item->qty))->toArray();
+    }
+
     public function checkout()
     {
         $validated = $this->validate();
@@ -97,9 +102,13 @@ new class extends Component {
 
                 <div class="flex justify-between items-center pt-5 border-t-2 border-zinc-200">
                     <span class="text-lg text-gray-600">Разом до сплати:</span>
-                    <span class="text-3xl font-black text-black tracking-tighter">
-                        {{ number_format($this->total, 0, '.', ' ') }} <small class="text-sm font-normal">грн</small>
-                    </span>
+                    <div class="flex flex-col items-end gap-1">
+                        @foreach ($this->getTotalsByCurrency() as $code => $sum)
+                            <span class="text-3xl font-black text-black tracking-tighter">
+                                {{ \App\Enums\CurrencyType::tryFrom($code)?->format($sum) }}
+                            </span>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </x-slot:sidebar>

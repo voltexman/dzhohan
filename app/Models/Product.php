@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\BladeFinish;
 use App\Enums\BladeGrind;
 use App\Enums\BladeShape;
+use App\Enums\CurrencyType;
 use App\Enums\HandleMaterial;
 use App\Enums\ProductCategory;
 use App\Enums\SheathType;
@@ -34,6 +35,7 @@ class Product extends Model implements HasMedia
         'quantity',
         'is_active',
         'collection',
+        'currency',
 
         'total_length',    // Загальна довжина
         'blade_length',    // Довжина леза
@@ -50,6 +52,7 @@ class Product extends Model implements HasMedia
     protected $casts = [
         // Базові фільтри
         'collection' => ProductCategory::class,
+        'currency' => CurrencyType::class,
 
         // Характеристики леза
         'steel' => SteelType::class,
@@ -94,7 +97,7 @@ class Product extends Model implements HasMedia
                         ->orWhere('description', 'like', "%{$search}%");
                 });
             })
-            ->when($filters['collections'] ?? null, fn ($q, $cat) => $q->whereIn('collection', $cat))
+            ->when($filters['collections'] ?? null, fn($q, $cat) => $q->whereIn('collection', $cat))
             //    Фільтр наявності (виправив 'stock' на 'in_stock' згідно з вашим UI)
             ->when(isset($filters['status']) && $filters['status'] !== 'all', function ($q) use ($filters) {
                 return $filters['status'] === 'in_stock'
@@ -102,21 +105,21 @@ class Product extends Model implements HasMedia
                     : $q->where('quantity', '=', 0);
             })
 
-            ->when($filters['price_from'] ?? null, fn ($q, $from) => $q->where('price', '>=', $from))
-            ->when($filters['price_to'] ?? null, fn ($q, $to) => $q->where('price', '<=', $to))
+            ->when($filters['price_from'] ?? null, fn($q, $from) => $q->where('price', '>=', $from))
+            ->when($filters['price_to'] ?? null, fn($q, $to) => $q->where('price', '<=', $to))
 
             // Довжина клинка: фільтруємо лише якщо значення змінено користувачем
-            ->when($filters['blade_length_from'] ?? null, fn ($q, $v) => $q->where('blade_length', '>=', $v))
-            ->when($filters['blade_length_to'] ?? null, fn ($q, $v) => $q->where('blade_length', '<=', $v))
+            ->when($filters['blade_length_from'] ?? null, fn($q, $v) => $q->where('blade_length', '>=', $v))
+            ->when($filters['blade_length_to'] ?? null, fn($q, $v) => $q->where('blade_length', '<=', $v))
 
             // Товщина обуху
-            ->when($filters['blade_thickness_from'] ?? null, fn ($q, $v) => $q->where('blade_thickness', '>=', $v))
-            ->when($filters['blade_thickness_to'] ?? null, fn ($q, $v) => $q->where('blade_thickness', '<=', $v))
+            ->when($filters['blade_thickness_from'] ?? null, fn($q, $v) => $q->where('blade_thickness', '>=', $v))
+            ->when($filters['blade_thickness_to'] ?? null, fn($q, $v) => $q->where('blade_thickness', '<=', $v))
 
-            ->when($filters['steels'] ?? null, fn ($q, $v) => $q->whereIn('steel', $v))
-            ->when($filters['blade_shapes'] ?? null, fn ($q, $v) => $q->whereIn('blade_shape', $v))
-            ->when($filters['handle_materials'] ?? null, fn ($q, $v) => $q->whereIn('handle_material', $v))
-            ->when($filters['blade_grinds'] ?? null, fn ($q, $v) => $q->whereIn('blade_grinds', $v));
+            ->when($filters['steels'] ?? null, fn($q, $v) => $q->whereIn('steel', $v))
+            ->when($filters['blade_shapes'] ?? null, fn($q, $v) => $q->whereIn('blade_shape', $v))
+            ->when($filters['handle_materials'] ?? null, fn($q, $v) => $q->whereIn('handle_material', $v))
+            ->when($filters['blade_grinds'] ?? null, fn($q, $v) => $q->whereIn('blade_grinds', $v));
     }
 
     public function reviews(): HasMany

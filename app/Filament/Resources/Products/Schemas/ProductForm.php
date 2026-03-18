@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Products\Schemas;
 use App\Enums\BladeFinish;
 use App\Enums\BladeGrind;
 use App\Enums\BladeShape;
+use App\Enums\CurrencyType;
 use App\Enums\HandleMaterial;
 use App\Enums\ProductCategory;
 use App\Enums\SheathType;
@@ -40,7 +41,7 @@ class ProductForm
                                     ->required()
                                     ->maxLength(255)
                                     ->live(onBlur: true)
-                                    ->afterStateUpdated(fn ($set, $state) => $set('slug', Str::slug($state)))
+                                    ->afterStateUpdated(fn($set, $state) => $set('slug', Str::slug($state)))
                                     ->validationMessages([
                                         'required' => 'Будь ласка, введіть назву ножа',
                                         'unique' => 'Ніж з такою назвою вже існує',
@@ -50,28 +51,27 @@ class ProductForm
                                     ->label('URL адреса (slug)')
                                     ->required()
                                     ->unique(ignoreRecord: true)
-                                    ->disabled(fn ($get) => ! $get('is_slug_editable'))
+                                    ->disabled(fn($get) => ! $get('is_slug_editable'))
                                     ->dehydrated()
                                     ->suffixAction(
                                         Action::make('toggleSlugEditable')
                                             ->icon('heroicon-m-lock-closed')
                                             ->color('gray')
-                                            ->action(fn ($set, $get) => $set('is_slug_editable', ! $get('is_slug_editable')))
+                                            ->action(fn($set, $get) => $set('is_slug_editable', ! $get('is_slug_editable')))
                                     )
                                     ->validationMessages([
                                         'required' => 'Будь ласка, вкажіть url адресу',
                                         'unique' => 'Url адреса має бути унікальною',
                                     ]),
 
-                                Grid::make(3)
+                                Grid::make(4)
                                     ->schema([
                                         TextInput::make('price')
                                             ->label('Ціна')
-                                            // ->numeric()
+                                            ->numeric()
                                             ->minValue(1)
                                             ->maxValue(500000)
                                             ->step(1)
-                                            ->prefix('₴')
                                             ->required()
                                             ->extraInputAttributes(['min' => 1])
                                             ->rule(['required', 'min:1', 'max:500000'])
@@ -80,6 +80,16 @@ class ProductForm
                                                 'min' => 'Не має бути менше 1',
                                                 'max' => 'Не має бути більше 500000',
                                             ]),
+
+                                        Select::make('currency')
+                                            ->label('Валюта')
+                                            ->options(CurrencyType::class) // Filament сам візьме назви з getLabel()
+                                            ->default(CurrencyType::UAH->value) // Гривня за замовчуванням
+                                            ->native(false) // Робимо гарний Filament-стиль замість стандартного браузерного
+                                            ->selectablePlaceholder(false) // Прибираємо порожній варіант
+                                            ->prefixIcon('heroicon-m-banknotes') // Додаємо іконку для краси
+                                            ->live(), // Додаємо реактивність, якщо ціна має реагувати на зміну валюти
+
 
                                         TextInput::make('quantity')
                                             ->label('Кількість')
@@ -97,14 +107,14 @@ class ProductForm
 
                                         TextInput::make('sku')
                                             ->label('Артикул (SKU)')
-                                            ->default(fn () => 'KN-'.strtoupper(Str::random(6)))
+                                            ->default(fn() => 'KN-' . strtoupper(Str::random(6)))
                                             ->unique(ignoreRecord: true)
                                             ->required()
                                             ->readOnly()
                                             ->suffixAction(
                                                 Action::make('generateSku')
                                                     ->icon('heroicon-m-arrow-path')
-                                                    ->action(fn ($set) => $set('sku', 'KN-'.strtoupper(Str::random(6))))
+                                                    ->action(fn($set) => $set('sku', 'KN-' . strtoupper(Str::random(6))))
                                             ),
 
                                     ])->columnSpanFull(),
@@ -142,7 +152,7 @@ class ProductForm
                                         TextInput::make('name')
                                             ->required()
                                             ->live()
-                                            ->afterStateUpdated(fn ($set, $state) => $set('slug', Str::slug($state))),
+                                            ->afterStateUpdated(fn($set, $state) => $set('slug', Str::slug($state))),
                                         TextInput::make('slug')
                                             ->required()
                                             ->unique('tags', 'slug'),

@@ -100,7 +100,7 @@ new #[Layout('layouts::cart')] class extends Component {
     <div class="flex items-center justify-between mt-5 px-5 lg:px-10" x-intersect.threshold.50="show = false"
         x-intersect:leave.threshold.50="show = true">
         <div class="text-2xl font-[Oswald] font-semibold text-orange-500">
-            ${{ number_format($product->price, 2) }}
+            {{ $product->currency->format($product->price) }}
         </div>
 
         <x-button wire:key="cart-btn-{{ $product->id }}" x-data="{ loading: false }" size="md"

@@ -57,6 +57,26 @@ new class extends Component {
         $cart->clear();
         unset($this->cartItems);
     }
+
+    public function getTotalsByCurrency(): array
+    {
+        // Беремо кошик із сесії (якщо порожньо — пустий масив)
+        $cart = session()->get('cart', []);
+        $totals = [];
+
+        foreach ($cart as $item) {
+            $currencyCode = $item['currency'];
+            $subtotal = $item['price'] * $item['qty'];
+
+            if (!isset($totals[$currencyCode])) {
+                $totals[$currencyCode] = 0;
+            }
+
+            $totals[$currencyCode] += $subtotal;
+        }
+
+        return $totals;
+    }
 };
 ?>
 
@@ -200,7 +220,13 @@ new class extends Component {
                             <div class="flex justify-between items-center mb-5">
                                 <span class="text-gray-500 font-semibold">Разом до сплати:</span>
                                 <span class="text-2xl font-bold text-gray-900">
-                                    {{ number_format($this->total, 0, '.', ' ') }} грн
+                                    <div class="flex flex-col gap-0.5 text-right">
+                                        @foreach ($this->getTotalsByCurrency() as $currencyCode => $amount)
+                                            <div class="text-xl font-bold text-gray-900">
+                                                {{ \App\Enums\CurrencyType::tryFrom($currencyCode)?->format($amount) }}
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </span>
                             </div>
 
