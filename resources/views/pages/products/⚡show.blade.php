@@ -1,14 +1,11 @@
 <?php
 
 use Livewire\Attributes\Layout;
-use App\Livewire\Forms\ReviewForm;
 use Livewire\Component;
 use App\Models\Product;
 
 new #[Layout('layouts::cart')] class extends Component {
     public Product $product;
-
-    public ReviewForm $review;
 
     public bool $isLiked = false;
 
@@ -24,17 +21,6 @@ new #[Layout('layouts::cart')] class extends Component {
     public function like()
     {
         $this->product->isLiked() ? $this->product->unlike() : $this->product->like();
-    }
-
-    public function sendReview()
-    {
-        $validated = $this->review->validate();
-
-        $this->product->reviews()->create($validated);
-
-        $this->review->reset();
-
-        session()->flash('review-sent');
     }
 };
 ?>
@@ -120,10 +106,7 @@ new #[Layout('layouts::cart')] class extends Component {
         <x-button wire:key="cart-btn-{{ $product->id }}" x-data="{ loading: false }" size="md"
             @click="loading = true; $dispatch('cart:add', { productId: {{ $product->id }} })"
             @cart-added.window="loading = false" ::disabled="loading" class="relative">
-            {{-- Лоадер (показується тільки при завантаженні) --}}
             <x-lucide-loader-circle x-show="loading" class="size-5 animate-spin mr-1.5" x-cloak />
-
-            {{-- Блок іконок (ховається при завантаженні) --}}
             <span x-show="!loading" class="flex items-center">
                 @if ($product->hasStock())
                     <x-lucide-shopping-cart class="size-5 mr-1.5 stroke-white" />
@@ -131,7 +114,6 @@ new #[Layout('layouts::cart')] class extends Component {
                     <x-lucide-wrench class="size-5 mr-1.5 stroke-white" />
                 @endif
             </span>
-
             <span>{{ $product->hasStock() ? 'В кошик' : 'Замовити' }}</span>
         </x-button>
     </div>
@@ -255,59 +237,7 @@ new #[Layout('layouts::cart')] class extends Component {
     </div>
 
     @if ($product->isSold())
-        <div x-data="{
-            open: false,
-            rating: @entangle('review.rating'),
-            hoverRating: 0
-        }"
-            class="bg-zinc-50 max-w-xl lg:mx-10 p-5 border-t border-b lg:border border-zinc-100 mt-10">
-            <button @click="open = !open"
-                class="flex items-center justify-between w-full group cursor-pointer text-left">
-                <div class="flex items-center gap-3">
-                    <div
-                        class="size-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 shrink-0">
-                        <x-lucide-shopping-bag class="size-5 shrink-0" />
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-zinc-900">Ви покупець цього ножа?</h4>
-                        <p class="text-xs text-zinc-500">Поділіться досвідом користування та оцініть якість</p>
-                    </div>
-                </div>
-                <x-lucide-chevron-down class="size-5 text-zinc-400 transition-transform duration-300"
-                    ::class="open ? 'rotate-180 text-orange-600' : ''" />
-            </button>
-
-            <div x-show="open" x-collapse x-cloak class="mt-5 pt-5 space-y-5 border-t border-zinc-200/60">
-                <div class="space-y-2.5">
-                    <label class="text-sm font-semibold text-zinc-700">Ваша оцінка:</label>
-                    <div class="flex gap-1.5">
-                        @foreach (range(1, 5) as $star)
-                            <button type="button" @click="rating = {{ $star }}"
-                                @mouseenter="hoverRating = {{ $star }}; rating = {{ $star }}"
-                                class="cursor-pointer transition-all duration-200 transform hover:scale-125 focus:outline-none">
-                                <x-lucide-star class="size-8 transition-colors duration-200" ::class="(hoverRating || rating) >= {{ $star }} ?
-                                    'fill-orange-500 stroke-orange-500' :
-                                    'fill-zinc-200 stroke-zinc-300'" />
-                            </button>
-                        @endforeach
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <x-form.input wire:model="review.name" placeholder="Ваше ім’я" />
-                    <x-form.input wire:model="review.contact" placeholder="Email або телефон" />
-                </div>
-
-                <x-form.textarea wire:model="review.text" rows="3"
-                    placeholder="Розкажіть про ніж: як тримає заточку, ергономіку..." />
-
-                <x-button wire:click="sendReview" size="md" wire:loading.attr="disabled"
-                    wire:target="sendReview" class="w-full sm:w-auto">
-                    <x-lucide-award class="size-4 mr-2" />
-                    Надіслати відгук
-                </x-button>
-            </div>
-        </div>
+        <livewire:review :$product />
     @endif
 
     <div class="max-w-lg mt-10 scroll-mt-6 lg:scroll-mt-10 px-5 lg:px-10" id="comments-section">

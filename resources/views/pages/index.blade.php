@@ -59,9 +59,10 @@ name('home');
                 <div class="h-1 w-20 bg-orange-400 relative z-10"></div>
 
                 <p class="max-w-md block text-gray-700 relative z-10">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci, nobis magnam, qui, vero nemo
-                    consequuntur sit autem aut eaque dolor aspernatur labore soluta minus. Voluptas quae ullam atque
-                    assumenda dignissimos.
+                    Моє знайомство з ножами почалося як захоплення, але з часом переросло у справу життя. Я постійно
+                    вдосконалюю свої навички, експериментую з формами, матеріалами та технологіями, щоб створювати
+                    вироби, які поєднують у собі практичність, надійність і естетику. Кожен ніж — це результат уважної
+                    роботи, досвіду та бажання зробити щось справді варте уваги.
                 </p>
 
                 <ul class="space-y-2.5 lg:space-y-5 text-gray-700 relative z-10">
@@ -181,203 +182,26 @@ name('home');
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 items-start mt-10" x-data="{ open: null }">
 
-                <!-- Левая колонка -->
-                <div class="space-y2">
-                    <!-- 1. Терміни -->
+                @foreach ($settings->faqs as $faq)
                     <div class="overflow-hidden transition-all duration-300 border-b border-gray-200">
-                        <button @click="open === 1 ? open = null : open = 1"
+                        <button @click="open === {{ $loop->index }} ? open = null : open = {{ $loop->index }}"
                             class="w-full py-5 text-left flex justify-between items-center group">
                             <span
                                 class="font-semibold text-gray-900 text-lg transition-colors group-hover:text-amber-700">
-                                Скільки часу займає виготовлення ножа?
+                                {{ $faq['question'] }}
                             </span>
-                            <span class="ml-4 flex-shrink-0 transition-transform duration-300"
-                                :class="open === 1 ? 'rotate-45' : ''">
-                                <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4"></path>
-                                </svg>
+                            <span class="ml-4 shrink-0 transition-transform duration-300"
+                                :class="open === {{ $loop->index }} ? 'rotate-45' : ''">
+                                <x-lucide-plus class="size-6 stroke-gray-500" />
                             </span>
                         </button>
-                        <div x-show="open === 1" x-collapse x-cloak class="pb-5 text-gray-600 leading-relaxed text-sm">
-                            Термін виготовлення становить від 10 до 21 робочого дня. Це залежить від складності
-                            геометрії клинка та черги замовлень. Процес включає загартування, стабілізацію
-                            дерева та ручне припасування піхв.
-                        </div>
-                    </div>
-
-                    <!-- 2. Матеріали -->
-                    <div class="overflow-hidden transition-all duration-300 border-b border-gray-200">
-                        <button @click="open === 2 ? open = null : open = 2"
-                            class="w-full py-5 text-left flex justify-between items-center group">
-                            <span
-                                class="font-semibold text-gray-900 text-lg transition-colors group-hover:text-amber-700">
-                                Яку сталь краще обрати?
-                            </span>
-                            <span class="ml-4 flex-shrink-0 transition-transform duration-300"
-                                :class="open === 2 ? 'rotate-45' : ''">
-                                <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4"></path>
-                                </svg>
-                            </span>
-                        </button>
-                        <div x-show="open === 2" x-collapse x-cloak
+                        <div x-show="open === {{ $loop->index }}" x-collapse x-cloak
                             class="pb-5 text-gray-600 leading-relaxed text-sm">
-                            Для агресивного різу раджу порошкові сталі (M390, S35VN). Для вологих умов —
-                            нержавійку N690. Для цінителів традицій — ковану Х12МФ або дамаск.
+                            {{ $faq['answer'] }}
                         </div>
                     </div>
+                @endforeach
 
-                    <!-- 3. Ескіз -->
-                    <div class="overflow-hidden transition-all duration-300 border-b border-gray-200">
-                        <button @click="open === 3 ? open = null : open = 3"
-                            class="w-full py-5 text-left flex justify-between items-center group">
-                            <span
-                                class="font-semibold text-gray-900 text-lg transition-colors group-hover:text-amber-700">
-                                Чи працюєте за моїм ескізом?
-                            </span>
-                            <span class="ml-4 flex-shrink-0 transition-transform duration-300"
-                                :class="open === 3 ? 'rotate-45' : ''">
-                                <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4"></path>
-                                </svg>
-                            </span>
-                        </button>
-                        <div x-show="open === 3" x-collapse x-cloak
-                            class="pb-5 text-gray-600 leading-relaxed text-sm">
-                            Так, я створюю кастомні проєкти. Ви надсилаєте фото чи малюнок, а я адаптую його під
-                            правильну ергономіку, щоб ніж був зручним у роботі.
-                        </div>
-                    </div>
-
-                    <!-- 4. Законність -->
-                    <div class="overflow-hidden transition-all duration-300 border-b border-gray-200">
-                        <button @click="open === 4 ? open = null : open = 4"
-                            class="w-full py-5 text-left flex justify-between items-center group">
-                            <span
-                                class="font-semibold text-gray-900 text-lg transition-colors group-hover:text-amber-700">
-                                Чи це не холодна зброя?
-                            </span>
-                            <span class="ml-4 flex-shrink-0 transition-transform duration-300"
-                                :class="open === 4 ? 'rotate-45' : ''">
-                                <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4"></path>
-                                </svg>
-                            </span>
-                        </button>
-                        <div x-show="open === 4" x-collapse x-cloak
-                            class="pb-5 text-gray-600 leading-relaxed text-sm">
-                            Більшість виробів — це господарсько-побутові ножі. Я дотримуюся норм МВС (товщина
-                            обуха, кути), щоб ніж не підпадав під категорію ХЗ.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Правая колонка -->
-                <div class="space-y2">
-                    <!-- 5. Піхви -->
-                    <div class="overflow-hidden transition-all duration-300 border-b border-gray-200">
-                        <button @click="open === 5 ? open = null : open = 5"
-                            class="w-full py-5 text-left flex justify-between items-center group">
-                            <span
-                                class="font-semibold text-gray-900 text-lg transition-colors group-hover:text-amber-700">
-                                Чи входять піхви у вартість?
-                            </span>
-                            <span class="ml-4 flex-shrink-0 transition-transform duration-300"
-                                :class="open === 5 ? 'rotate-45' : ''">
-                                <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4"></path>
-                                </svg>
-                            </span>
-                        </button>
-                        <div x-show="open === 5" x-collapse x-cloak
-                            class="pb-5 text-gray-600 leading-relaxed text-sm">
-                            Так, кожен ніж має індивідуальні піхви з натуральної шкіри рослинного дублення або
-                            кайдексу для тактичних моделей.
-                        </div>
-                    </div>
-
-                    <!-- 6. Заточка -->
-                    <div class="overflow-hidden transition-all duration-300 border-b border-gray-200">
-                        <button @click="open === 6 ? open = null : open = 6"
-                            class="w-full py-5 text-left flex justify-between items-center group">
-                            <span
-                                class="font-semibold text-gray-900 text-lg transition-colors group-hover:text-amber-700">
-                                Наскільки ніж гострий?
-                            </span>
-                            <span class="ml-4 flex-shrink-0 transition-transform duration-300"
-                                :class="open === 6 ? 'rotate-45' : ''">
-                                <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4"></path>
-                                </svg>
-                            </span>
-                        </button>
-                        <div x-show="open === 6" x-collapse x-cloak
-                            class="pb-5 text-gray-600 leading-relaxed text-sm">
-                            Ножі приходять із бритвеною заточкою. Також я надаю послугу безкоштовної професійної
-                            переточки для своїх виробів у майбутньому.
-                        </div>
-                    </div>
-
-                    <!-- 7. Догляд -->
-                    <div class="overflow-hidden transition-all duration-300 border-b border-gray-200">
-                        <button @click="open === 7 ? open = null : open = 7"
-                            class="w-full py-5 text-left flex justify-between items-center group">
-                            <span
-                                class="font-semibold text-gray-900 text-lg transition-colors group-hover:text-amber-700">
-                                Як доглядати за ножем?
-                            </span>
-                            <span class="ml-4 flex-shrink-0 transition-transform duration-300"
-                                :class="open === 7 ? 'rotate-45' : ''">
-                                <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4"></path>
-                                </svg>
-                            </span>
-                        </button>
-                        <div x-show="open === 7" x-collapse x-cloak
-                            class="pb-5 text-gray-600 leading-relaxed text-sm">
-                            Не мити в посудомийці, протирати насухо після роботи. Для вуглецевих сталей бажано
-                            іноді змащувати клинок мінеральною олією.
-                        </div>
-                    </div>
-
-                    <!-- 8. Оплата -->
-                    <div class="overflow-hidden transition-all duration-300 borderb border-gray-00">
-                        <button @click="open === 8 ? open = null : open = 8"
-                            class="w-full py-5 text-left flex justify-between items-center group">
-                            <span
-                                class="font-semibold text-gray-900 text-lg transition-colors group-hover:text-amber-700">
-                                Які умови замовлення?
-                            </span>
-                            <span class="ml-4 flex-shrink-0 transition-transform duration-300"
-                                :class="open === 8 ? 'rotate-45' : ''">
-                                <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4"></path>
-                                </svg>
-                            </span>
-                        </button>
-                        <div x-show="open === 8" x-collapse x-cloak
-                            class="pb-5 text-gray-600 leading-relaxed text-sm">
-                            Передплата 30-50% на матеріали, залишок після готовності (фотозвіт). Відправка Новою
-                            Поштою по всій Україні.
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>

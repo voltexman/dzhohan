@@ -70,36 +70,53 @@
                     {{ $settings->email }}
                 </div>
                 <div class="mt-5 grid grid-cols-6 gap-1.5">
-                    <a href="https://www.instagram.com/dzhohan_knives" target="_blank">
-                        <img src="{{ Vite::asset('resources/images/icons/socials/instagram.svg') }}"
-                            class="size-7 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
-                            alt="" />
-                    </a>
-                    <a href="https://www.facebook.com/KostyantynDzhohun" target="_blank">
-                        <img src="{{ Vite::asset('resources/images/icons/socials/facebook.svg') }}"
-                            class="size-7 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
-                            alt="" />
-                    </a>
-                    <a href="https://www.facebook.com/KostyantynDzhohun" target="_blank">
-                        <img src="{{ Vite::asset('resources/images/icons/socials/pinterest.svg') }}"
-                            class="size-7 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
-                            alt="" />
-                    </a>
-                    <a href="https://www.facebook.com/KostyantynDzhohun" target="_blank">
-                        <img src="{{ Vite::asset('resources/images/icons/socials/viber.svg') }}"
-                            class="size-7 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
-                            alt="" />
-                    </a>
-                    <a href="https://www.facebook.com/KostyantynDzhohun" target="_blank">
-                        <img src="{{ Vite::asset('resources/images/icons/socials/telegram.svg') }}"
-                            class="size-7 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
-                            alt="" />
-                    </a>
-                    <a href="https://www.facebook.com/KostyantynDzhohun" target="_blank">
-                        <img src="{{ Vite::asset('resources/images/icons/socials/whatsapp.svg') }}"
-                            class="size-7 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
-                            alt="" />
-                    </a>
+                    @isset($settings->socials['instagram'])
+                        <a href="https://www.instagram.com/dzhohan_knives" target="_blank">
+                            <img src="{{ Vite::asset('resources/images/icons/socials/instagram.svg') }}"
+                                class="size-7 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
+                                alt="" />
+                        </a>
+                    @endisset
+
+                    @isset($settings->socials['facebook'])
+                        <a href="https://www.facebook.com/KostyantynDzhohun" target="_blank">
+                            <img src="{{ Vite::asset('resources/images/icons/socials/facebook.svg') }}"
+                                class="size-7 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
+                                alt="" />
+                        </a>
+                    @endisset
+
+                    @isset($settings->socials['pinterest'])
+                        <a href="https://www.facebook.com/KostyantynDzhohun" target="_blank">
+                            <img src="{{ Vite::asset('resources/images/icons/socials/pinterest.svg') }}"
+                                class="size-7 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
+                                alt="" />
+                        </a>
+                    @endisset
+
+                    @isset($settings->socials['viber'])
+                        <a href="https://www.facebook.com/KostyantynDzhohun" target="_blank">
+                            <img src="{{ Vite::asset('resources/images/icons/socials/viber.svg') }}"
+                                class="size-7 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
+                                alt="" />
+                        </a>
+                    @endisset
+
+                    @isset($settings->socials['telegram'])
+                        <a href="https://www.facebook.com/KostyantynDzhohun" target="_blank">
+                            <img src="{{ Vite::asset('resources/images/icons/socials/telegram.svg') }}"
+                                class="size-7 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
+                                alt="" />
+                        </a>
+                    @endisset
+
+                    @isset($settings->socials['whatsapp'])
+                        <a href="https://www.facebook.com/KostyantynDzhohun" target="_blank">
+                            <img src="{{ Vite::asset('resources/images/icons/socials/whatsapp.svg') }}"
+                                class="size-7 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
+                                alt="" />
+                        </a>
+                    @endisset
                 </div>
             </div>
 

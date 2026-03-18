@@ -23,18 +23,17 @@
 
 <x-drawer class="ms-auto lg:hidden">
     <x-slot:trigger>
-        <x-button variant="ghost" color="dark" size="sm" icon>
+        <x-button variant="ghost" color="light" size="sm" icon>
             <div class="relative flex items-center justify-center size-5">
-                {{-- 1. Цей блок показує іконку, але ХОВАЄ її, коли йде завантаження setSort --}}
                 <div wire:loading.remove wire:target="setSort">
                     @if ($sortBy === 'price' && $sortDirection === 'asc')
-                        <x-lucide-trending-up class="size-5 stroke-zinc-700" />
+                        <x-lucide-trending-up class="size-5" />
                     @elseif ($sortBy === 'price' && $sortDirection === 'desc')
-                        <x-lucide-trending-down class="size-5 stroke-zinc-700" />
+                        <x-lucide-trending-down class="size-5" />
                     @elseif ($sortBy === 'created_at')
-                        <x-lucide-sparkles class="size-5 stroke-zinc-700" />
+                        <x-lucide-sparkles class="size-5" />
                     @else
-                        <x-lucide-arrow-up-down class="size-5 stroke-zinc-700" />
+                        <x-lucide-arrow-up-down class="size-5" />
                     @endif
                 </div>
 
@@ -90,7 +89,7 @@
 
 <x-dropdown class="hidden lg:block">
     <x-slot:trigger>
-        <x-button variant="ghost" color="light" size="sm" class="gap-x-1.5 lg:py-3.5!">
+        <x-button variant="soft" color="dark" size="sm" class="gap-x-1.5 lg:py-3.5!">
             @if ($sortBy === 'price' && $sortDirection === 'asc')
                 <x-lucide-trending-up class="size-4" />
                 <span>Дешевші</span>

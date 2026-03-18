@@ -13,6 +13,7 @@ return new class extends Migration
 
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
+            $table->json('faqs')->nullable();
             $table->json('socials')->nullable();
 
             $table->string('contact')->nullable();

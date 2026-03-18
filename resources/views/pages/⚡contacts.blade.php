@@ -80,12 +80,64 @@ new class extends Component {
                 <div>
                     <x-form.label class="mb-1.5">Я в соціальних мережах:</x-form.label>
                     <div class="flex gap-2.5">
-                        <x-button color="dark" size="md" icon>
-                            <x-lucide-facebook class="size-5" />
-                        </x-button>
-                        <x-button color="dark" size="md" icon>
-                            <x-lucide-instagram class="size-5" />
-                        </x-button>
+                        @if ($settings->socials['instagram'])
+                            <a href="{{ $settings->socials['instagram'] }}" target="_blank"
+                                class="size-10 flex justify-center items-center rounded-sm bg-zinc-100 border border-zinc-200">
+                                <img src="{{ Vite::asset('resources/images/icons/socials/instagram.svg') }}"
+                                    class="size-7 opacity-70" alt="" />
+                            </a>
+                        @endif
+
+                        @if ($settings->socials['facebook'])
+                            <a href="{{ $settings->socials['facebook'] }}" target="_blank"
+                                class="size-10 flex justify-center items-center rounded-sm bg-zinc-100 border border-zinc-200">
+                                <img src="{{ Vite::asset('resources/images/icons/socials/facebook.svg') }}"
+                                    class="size-7 opacity-70" alt="" />
+                            </a>
+                        @endif
+
+                        @if ($settings->socials['pinterest'])
+                            <a href="{{ $settings->socials['pinterest'] }}" target="_blank"
+                                class="size-10 flex justify-center items-center rounded-sm bg-zinc-100 border border-zinc-200">
+                                <img src="{{ Vite::asset('resources/images/icons/socials/pinterest.svg') }}"
+                                    class="size-7 opacity-70" alt="" />
+                            </a>
+                        @endif
+
+                        @if ($settings->socials['viber'])
+                            <a href="viber://chat?number={{ preg_replace('/\D/', '', $settings->socials['viber']) }}"
+                                class="size-10 flex justify-center items-center rounded-sm bg-zinc-100 border border-zinc-200">
+                                <img src="{{ Vite::asset('resources/images/icons/socials/viber.svg') }}"
+                                    class="size-7 opacity-70" alt="" />
+                            </a>
+                        @endif
+
+                        @if ($settings->socials['telegram'])
+                            @php
+                                $tgValue = preg_replace('/\D/', '', $settings->socials['telegram']);
+                                // Якщо в полі цифри (номер телефону)
+                                if (is_numeric($tgValue) && strlen($tgValue) > 5) {
+                                    $tgLink = 'tg://msg?to=+' . $tgValue;
+                                } else {
+                                    // Якщо в полі нікнейм
+                                    $tgLink = 'https://t.me/' . ltrim($settings->socials['telegram'], '@');
+                                }
+                            @endphp
+                            <a href="{{ $tgLink }}"
+                                class="size-10 flex justify-center items-center rounded-sm bg-zinc-100 border border-zinc-200">
+                                <img src="{{ Vite::asset('resources/images/icons/socials/telegram.svg') }}"
+                                    class="size-7 opacity-70" alt="" />
+                            </a>
+                        @endif
+
+                        @if ($settings->socials['whatsapp'])
+                            <a href="https://wa.me/{{ preg_replace('/\D/', '', $settings->socials['whatsapp']) }}"
+                                target="_blank"
+                                class="size-10 flex justify-center items-center rounded-sm bg-zinc-100 border border-zinc-200">
+                                <img src="{{ Vite::asset('resources/images/icons/socials/whatsapp.svg') }}"
+                                    class="size-7 opacity-70" alt="" />
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>

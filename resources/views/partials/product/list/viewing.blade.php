@@ -20,7 +20,7 @@
 
 <x-drawer class="lg:hidden">
     <x-slot:trigger>
-        <x-button variant="ghost" color="dark" size="sm" icon>
+        <x-button variant="ghost" color="light" size="sm" icon>
             <div class="relative flex items-center justify-center size-5">
                 <div wire:loading.remove wire:target="setView">
                     @php
@@ -76,7 +76,7 @@
 
 <x-dropdown class="hidden lg:block">
     <x-slot:trigger>
-        <x-button variant="ghost" color="light" size="sm" class="gap-x.1.5 lg:py-3.5!">
+        <x-button variant="soft" color="dark" size="sm" class="gap-x-1.5 lg:py-3.5!">
             @if ($view === 'grid')
                 <x-lucide-layout-grid class="size-4 me-1.5" />
                 <span>Сітка</span>
