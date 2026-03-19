@@ -1,8 +1,10 @@
 <?php
 
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Meta;
 use Livewire\Component;
 
-new class extends Component {
+new #[Title('Контакти майстра ножів — авторські ножі ручної роботи')] #[Meta(name: 'description', content: 'Зв’яжіться з майстром ножів для замовлення унікальних ножів ручної роботи. Індивідуальні замовлення, консультація, доставка по Україні.')] class extends Component {
     //
 };
 ?>
@@ -80,39 +82,39 @@ new class extends Component {
                 <div>
                     <x-form.label class="mb-1.5">Я в соціальних мережах:</x-form.label>
                     <div class="flex gap-2.5">
-                        @if ($settings->socials['instagram'])
+                        @isset($settings->socials['instagram'])
                             <a href="{{ $settings->socials['instagram'] }}" target="_blank"
                                 class="size-10 flex justify-center items-center rounded-sm bg-zinc-100 border border-zinc-200">
                                 <img src="{{ Vite::asset('resources/images/icons/socials/instagram.svg') }}"
                                     class="size-7 opacity-70" alt="" />
                             </a>
-                        @endif
+                        @endisset
 
-                        @if ($settings->socials['facebook'])
+                        @isset($settings->socials['facebook'])
                             <a href="{{ $settings->socials['facebook'] }}" target="_blank"
                                 class="size-10 flex justify-center items-center rounded-sm bg-zinc-100 border border-zinc-200">
                                 <img src="{{ Vite::asset('resources/images/icons/socials/facebook.svg') }}"
                                     class="size-7 opacity-70" alt="" />
                             </a>
-                        @endif
+                        @endisset
 
-                        @if ($settings->socials['pinterest'])
+                        @isset($settings->socials['pinterest'])
                             <a href="{{ $settings->socials['pinterest'] }}" target="_blank"
                                 class="size-10 flex justify-center items-center rounded-sm bg-zinc-100 border border-zinc-200">
                                 <img src="{{ Vite::asset('resources/images/icons/socials/pinterest.svg') }}"
                                     class="size-7 opacity-70" alt="" />
                             </a>
-                        @endif
+                        @endisset
 
-                        @if ($settings->socials['viber'])
+                        @isset($settings->socials['viber'])
                             <a href="viber://chat?number={{ preg_replace('/\D/', '', $settings->socials['viber']) }}"
                                 class="size-10 flex justify-center items-center rounded-sm bg-zinc-100 border border-zinc-200">
                                 <img src="{{ Vite::asset('resources/images/icons/socials/viber.svg') }}"
                                     class="size-7 opacity-70" alt="" />
                             </a>
-                        @endif
+                        @endisset
 
-                        @if ($settings->socials['telegram'])
+                        @isset($settings->socials['telegram'])
                             @php
                                 $tgValue = preg_replace('/\D/', '', $settings->socials['telegram']);
                                 // Якщо в полі цифри (номер телефону)
@@ -128,16 +130,16 @@ new class extends Component {
                                 <img src="{{ Vite::asset('resources/images/icons/socials/telegram.svg') }}"
                                     class="size-7 opacity-70" alt="" />
                             </a>
-                        @endif
+                        @endisset
 
-                        @if ($settings->socials['whatsapp'])
+                        @isset($settings->socials['whatsapp'])
                             <a href="https://wa.me/{{ preg_replace('/\D/', '', $settings->socials['whatsapp']) }}"
                                 target="_blank"
                                 class="size-10 flex justify-center items-center rounded-sm bg-zinc-100 border border-zinc-200">
                                 <img src="{{ Vite::asset('resources/images/icons/socials/whatsapp.svg') }}"
                                     class="size-7 opacity-70" alt="" />
                             </a>
-                        @endif
+                        @endisset
                     </div>
                 </div>
             </div>

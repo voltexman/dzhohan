@@ -82,7 +82,7 @@ new class extends Component {
         </div>
     </div>
 
-    <div class="mt-2.5 text-gray-800">{{ $comment->body }}</div>
+    <div class="mt-2.5 text-zinc-800">{{ $comment->body }}</div>
 
     <div class="flex items-center justify-between gap-x-4 mt-2.5">
         {{-- Кнопка Відповісти --}}
@@ -173,31 +173,31 @@ new class extends Component {
 
     {{-- ПЛОСКИЙ СПИСОК ВСІХ ВІДПОВІДЕЙ --}}
     <div class="mt-5 space-y-2.5">
-        @foreach ($comment->getAllReplies() as $reply)
+        @foreach ($comment->replies as $reply)
             @php
                 $isAdmin = $reply->user?->hasRole('admin');
             @endphp
 
             <div wire:key="reply-{{ $reply->id }}" @class([
-                'ml-6 px-4 py-3 border-s-2 text-sm relative transition-all group mb-2',
+                'ml-6 px-4 py-3 border-s2 text-sm relative transition-all group mb-2',
                 // Колір фону та рамки для Адміна
-                'bg-linear-to-r from-orange-50/80 to-transparent border-orange-500' => $isAdmin,
+                // 'bg-linear-to-r from-orange-50/80 to-transparent border-orange-500' => $isAdmin,
                 // Колір фону та рамки для Гостя
-                'bg-linear-to-r from-zinc-50 to-transparent border-zinc-300' => !$isAdmin,
+                // 'bg-linear-to-r from-zinc-50 to-transparent border-zinc-300' => !$isAdmin,
             ]) x-cloak>
 
                 {{-- Контекст: кому саме відповідають --}}
                 <div @class([
-                    'flex items-center gap-1.5 mb-1.5 text-[10px] font-medium uppercase tracking-tight',
-                    'text-orange-400' => $isAdmin,
-                    'text-zinc-400' => !$isAdmin,
+                    'flex items-center gap-1.5 mb-1.5 text-xs font-medium',
+                    // 'text-orange-400' => $isAdmin,
+                    // 'text-zinc-400' => !$isAdmin,
                 ])>
                     <x-lucide-corner-down-right class="size-3 stroke-current" />
-                    <div class="shrink-0 opacity-70">відповідь для</div>
+                    <div class="shrink-0 opacity-50">відповідь для</div>
                     <div @class([
                         'font-bold italic line-clamp-1',
-                        'text-orange-700' => $isAdmin,
-                        'text-zinc-600' => !$isAdmin,
+                        // 'text-orange-700' => $isAdmin,
+                        // 'text-zinc-600' => !$isAdmin,
                     ])>
                         {{ $reply->parent?->user?->name ?? ($reply->parent?->author_name ?: 'Гість') }}
                     </div>
@@ -209,8 +209,8 @@ new class extends Component {
                 <div class="flex items-center justify-between gap-2">
                     <div @class([
                         'font-bold flex items-center gap-1.5',
-                        'text-orange-900' => $isAdmin,
-                        'text-zinc-800' => !$isAdmin,
+                        // 'text-orange-900' => $isAdmin,
+                        // 'text-zinc-800' => !$isAdmin,
                     ])>
                         @if ($isAdmin)
                             <x-lucide-shield-check class="size-4 shrink-0 stroke-orange-600 fill-orange-100" />
@@ -230,18 +230,18 @@ new class extends Component {
                 </div>
 
                 <div @class([
-                    'mt-2 leading-relaxed text-[13px]',
-                    'text-orange-900/80' => $isAdmin,
-                    'text-zinc-600' => !$isAdmin,
+                    'mt-2 text-zinc-800',
+                    // 'text-orange-900/80' => $isAdmin,
+                    // 'text-zinc-600' => !$isAdmin,
                 ])>
                     {{ $reply->body }}
                 </div>
 
                 {{-- Кнопка відповіді --}}
-                <button wire:click="setReply({{ $reply->id }})" @class([
+                <button @class([
                     'text-[10px] font-bold mt-3 transition-colors cursor-pointer flex items-center gap-1.5 uppercase tracking-wider',
-                    'text-orange-500 hover:text-orange-800' => $isAdmin,
-                    'text-zinc-400 hover:text-zinc-800' => !$isAdmin,
+                    // 'text-orange-500 hover:text-orange-800' => $isAdmin,
+                    // 'text-zinc-400 hover:text-zinc-800' => !$isAdmin,
                 ])>
                     <x-lucide-reply class="size-3" />
                     Відповісти

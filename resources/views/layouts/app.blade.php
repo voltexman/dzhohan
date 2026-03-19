@@ -13,6 +13,35 @@
 
     <title>{{ $title ?? config('app.name') }}</title>
 
+    <meta name="description"
+        content="{{ $description ?? 'Авторські ножі ручної роботи. Індивідуальне виготовлення, висока якість та унікальний дизайн.' }}">
+    <meta name="robots" content="noindex, nofollow">
+
+    {{-- Canonical --}}
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- Open Graph (Facebook, LinkedIn, etc.) --}}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ $title ?? config('app.name') }}">
+    <meta property="og:description" content="{{ $description ?? '' }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ $og_image ?? Vite::asset('resources/images/header.png') }}">
+    <meta property="og:site_name" content="{{ config('app.name') }}">
+
+    {{-- Twitter --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $title ?? config('app.name') }}">
+    <meta name="twitter:description" content="{{ $description ?? '' }}">
+    <meta name="twitter:image" content="{{ $og_image ?? Vite::asset('resources/images/header.png') }}">
+
+    {{-- Favicon --}}
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    {{-- Theme --}}
+    <meta name="theme-color" content="#000000">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @livewireStyles

@@ -38,7 +38,7 @@ new class extends Component {
 
     public $replyTo = null;
 
-    protected $paginationTheme = 'tailwind';
+    // protected $paginationTheme = 'tailwind';
 
     public function mount(Model $model)
     {

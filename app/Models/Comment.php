@@ -40,16 +40,4 @@ class Comment extends Model
     {
         return $this->belongsTo(Comment::class, 'parent_id');
     }
-
-    public function getAllReplies()
-    {
-        $replies = collect();
-
-        foreach ($this->replies as $reply) {
-            $replies->push($reply);
-            $replies = $replies->merge($reply->getAllReplies());
-        }
-
-        return $replies->sortBy('created_at');
-    }
 }
