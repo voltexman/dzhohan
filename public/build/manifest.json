@@ -1,6 +1,6 @@
 {
   "C:/Users/volte/AppData/Local/Yarn/Berry/cache/photoswipe-npm-5.4.4-f7a755162f-10c0.zip/node_modules/photoswipe/dist/photoswipe.esm.js": {
-    "file": "assets/photoswipe.esm-FJXGR02E.js",
+    "file": "assets/photoswipe.esm-LPgz5Zzj.js",
     "name": "photoswipe.esm",
     "src": "C:/Users/volte/AppData/Local/Yarn/Berry/cache/photoswipe-npm-5.4.4-f7a755162f-10c0.zip/node_modules/photoswipe/dist/photoswipe.esm.js",
     "isDynamicEntry": true
@@ -231,8 +231,14 @@
       "assets/app-DfWQA4J0.css"
     ]
   },
+  "resources/js/pages/main.js": {
+    "file": "assets/main-BhAG2AeP.js",
+    "name": "main",
+    "src": "resources/js/pages/main.js",
+    "isEntry": true
+  },
   "resources/js/pages/product.js": {
-    "file": "assets/product-Cgc2ag92.js",
+    "file": "assets/product-DSfJEevv.js",
     "name": "product",
     "src": "resources/js/pages/product.js",
     "isEntry": true,
