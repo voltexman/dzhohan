@@ -6,7 +6,7 @@
     "isDynamicEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-Bn8ZaPbY.css",
+    "file": "assets/app-D6TzBD46.css",
     "name": "app",
     "names": [
       "app.css"
@@ -98,6 +98,62 @@
     "file": "assets/sheepsfoot-rHfqumkx.png",
     "src": "resources/images/icons/sheepsfoot.png"
   },
+  "resources/images/icons/socials/facebook-messenger.svg": {
+    "file": "assets/facebook-messenger-GlAOl8Iw.svg",
+    "src": "resources/images/icons/socials/facebook-messenger.svg"
+  },
+  "resources/images/icons/socials/facebook.svg": {
+    "file": "assets/facebook-CV_FG6H2.svg",
+    "src": "resources/images/icons/socials/facebook.svg"
+  },
+  "resources/images/icons/socials/gmail.svg": {
+    "file": "assets/gmail-s4zl1y7T.svg",
+    "src": "resources/images/icons/socials/gmail.svg"
+  },
+  "resources/images/icons/socials/google.svg": {
+    "file": "assets/google-DQiOYBk1.svg",
+    "src": "resources/images/icons/socials/google.svg"
+  },
+  "resources/images/icons/socials/instagram.svg": {
+    "file": "assets/instagram-gNXmmGKU.svg",
+    "src": "resources/images/icons/socials/instagram.svg"
+  },
+  "resources/images/icons/socials/linkedin.svg": {
+    "file": "assets/linkedin-Ct_F3FmL.svg",
+    "src": "resources/images/icons/socials/linkedin.svg"
+  },
+  "resources/images/icons/socials/pinterest.svg": {
+    "file": "assets/pinterest-Cm2768po.svg",
+    "src": "resources/images/icons/socials/pinterest.svg"
+  },
+  "resources/images/icons/socials/skype.svg": {
+    "file": "assets/skype-DUVxYpL8.svg",
+    "src": "resources/images/icons/socials/skype.svg"
+  },
+  "resources/images/icons/socials/telegram.svg": {
+    "file": "assets/telegram-rvhU4cOo.svg",
+    "src": "resources/images/icons/socials/telegram.svg"
+  },
+  "resources/images/icons/socials/tumblr.svg": {
+    "file": "assets/tumblr-Ct8YCc6T.svg",
+    "src": "resources/images/icons/socials/tumblr.svg"
+  },
+  "resources/images/icons/socials/twitter.svg": {
+    "file": "assets/twitter-lDbSL7XL.svg",
+    "src": "resources/images/icons/socials/twitter.svg"
+  },
+  "resources/images/icons/socials/viber.svg": {
+    "file": "assets/viber-B7KdUe1k.svg",
+    "src": "resources/images/icons/socials/viber.svg"
+  },
+  "resources/images/icons/socials/whatsapp.svg": {
+    "file": "assets/whatsapp-wWfC3Jnt.svg",
+    "src": "resources/images/icons/socials/whatsapp.svg"
+  },
+  "resources/images/icons/socials/youtube.svg": {
+    "file": "assets/youtube-BHfMH965.svg",
+    "src": "resources/images/icons/socials/youtube.svg"
+  },
   "resources/images/icons/spear-point.png": {
     "file": "assets/spear-point-CfLQimIf.png",
     "src": "resources/images/icons/spear-point.png"
@@ -176,7 +232,7 @@
     ]
   },
   "resources/js/pages/product.js": {
-    "file": "assets/product-uunQb-0C.js",
+    "file": "assets/product-Cgc2ag92.js",
     "name": "product",
     "src": "resources/js/pages/product.js",
     "isEntry": true,
