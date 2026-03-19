@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('contact')->nullable();
             $table->unsignedTinyInteger('rating')->default(5);
-            $table->string('text');
+            $table->text('text');
 
             $table->boolean('is_selected')->default(false);
 
