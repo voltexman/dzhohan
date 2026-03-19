@@ -1,12 +1,13 @@
 <?php
 
+use Livewire\Attributes\Title;
 use App\Enums\Blog\PostType;
 use Livewire\Attributes\Session;
 use Livewire\Component;
 use App\Models\Post;
 use App\Models\Tag;
 
-new class extends Component {
+new #[Title('Блог про ножі — поради, огляди, вибір ножів')] class extends Component {
     #[Session]
     public string $search = '';
 
@@ -28,6 +29,11 @@ new class extends Component {
     }
 };
 ?>
+
+<x-slot name="description">
+    Читайте блог про ножі: як обрати ніж, догляд за лезом, огляди матеріалів та поради від майстра. Корисна інформація
+    для новачків і професіоналів.
+</x-slot>
 
 @section('header')
     <x-header :image="Vite::asset('resources/images/blog-header-bg.png')">

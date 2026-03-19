@@ -1,13 +1,17 @@
 <?php
 
 use Livewire\Attributes\Title;
-use Livewire\Attributes\Meta;
 use Livewire\Component;
 
-new #[Title('Контакти майстра ножів — авторські ножі ручної роботи')] #[Meta(name: 'description', content: 'Зв’яжіться з майстром ножів для замовлення унікальних ножів ручної роботи. Індивідуальні замовлення, консультація, доставка по Україні.')] class extends Component {
+new #[Title('Контакти майстра ножів — авторські ножі ручної роботи')] class extends Component {
     //
 };
 ?>
+
+<x-slot name="description">
+    Зв’яжіться з майстром ножів для замовлення індивідуального виробу. Консультація, підбір матеріалів та доставка по
+    Україні.
+</x-slot>
 
 @section('header')
     <x-header :image="Vite::asset('resources/images/contact-header-bg.png')">

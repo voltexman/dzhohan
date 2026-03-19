@@ -1,5 +1,6 @@
 <?php
 
+use Livewire\Attributes\Title;
 use App\Enums\ProductCategory;
 use Illuminate\Support\Facades\Cookie;
 use Livewire\Component;
@@ -10,7 +11,7 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Computed;
 use App\Models\Product;
 
-new class extends Component {
+new #[Title('Каталог ножів ручної роботи — купити авторський ніж')] class extends Component {
     use WithPagination;
 
     public ?string $collection = null;
@@ -238,6 +239,11 @@ new class extends Component {
     }
 };
 ?>
+
+<x-slot name="description">
+    Каталог ножів ручної роботи: мисливські, кухонні та універсальні ножі. Висока якість матеріалів, ручне виготовлення
+    та доставка по Україні.
+</x-slot>
 
 @section('header')
     <x-header :image="Vite::asset(

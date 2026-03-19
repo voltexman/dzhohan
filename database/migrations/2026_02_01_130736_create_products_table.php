@@ -27,7 +27,7 @@ return new class extends Migration
             $table->unsignedInteger('quantity')->default(1);
             $table->boolean('is_active')->default(true);
             $table->enum('collection', ProductCategory::values())->index();
-            $table->enum('currency', CurrencyType::cases())->default();
+            $table->enum('currency', CurrencyType::cases())->default(CurrencyType::EUR);
 
             $table->decimal('total_length', 6, 1)->nullable()->comment('Загальна довжина, мм');
             $table->decimal('blade_length', 6, 1)->nullable()->comment('Довжина леза, мм');

@@ -3,7 +3,7 @@
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
-new class extends Component {
+new #[Title('Галерея ножів ручної роботи — приклади робіт майстра')] class extends Component {
     #[Computed]
     public function gallery()
     {
@@ -11,6 +11,11 @@ new class extends Component {
     }
 };
 ?>
+
+<x-slot name="description">
+    Перегляньте галерею авторських ножів ручної роботи. Унікальні дизайни, різні стилі та матеріали. Надихайтесь та
+    обирайте свій варіант.
+</x-slot>
 
 @section('header')
     <x-header :image="Vite::asset('resources/images/header.png')">
