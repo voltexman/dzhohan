@@ -27,7 +27,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Oswald:wght@200..700&family=Russo+One&family=SN+Pro:ital,wght@0,200..900;1,200..900&display=swap"
         rel="stylesheet">
 
-    <title>{{ config('app.name') . ' - ' . $title ?? config('app.name') }}</title>
+    <title>{{ config('app.name') . ' - ' . ($title ?? config('app.name')) }}</title>
 
     <meta name="description"
         content="{{ $description ?? 'Авторські ножі ручної роботи. Індивідуальне виготовлення, висока якість та унікальний дизайн.' }}">

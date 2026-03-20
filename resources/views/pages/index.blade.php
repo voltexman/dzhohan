@@ -5,9 +5,6 @@ use function Laravel\Folio\name;
 name('home');
 ?>
 
-<x-slot name="title">
-    Авторські ножі ручної роботи — майстер ножів | Купити ніж в Україні
-</x-slot>
 <x-slot name="description">
     Виготовлення авторських ножів ручної роботи на замовлення. Унікальний дизайн, якісна сталь, доставка по Україні.
     Оберіть свій ідеальний ніж.
@@ -50,7 +47,7 @@ name('home');
     </header>
 @endsection
 
-<x-layouts::app>
+<x-layouts::app title="Авторські ножі ручної роботи">
     <section class="bg-zinc-50 py-20 px-5 lg:px-0 scroll-mt-15" id="about-me">
         <div class="max-w-5xl mx-auto grid lg:grid-cols-2 gap-5 lg:gap-10">
             <div class="overflow-hidden">
