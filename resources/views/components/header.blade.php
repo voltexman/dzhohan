@@ -20,6 +20,8 @@
                     {{ $description }}
                 </div>
             @endisset
+
+            {{ $slot }}
         </div>
     </div>
 </header>

@@ -49,8 +49,8 @@
     <!-- Контент -->
     <div @class([
         'flex-1 flex flex-col',
+        'p-2.5 lg:px-5' => $view === 'grid',
         '' => $view === 'list',
-        'p-5' => $view === 'grid',
         'absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/90 via-black/40 to-transparent' =>
             $view === 'cards',
     ])>
@@ -67,7 +67,7 @@
             <div @class([
                 'font-[Oswald] tracking-wide w-full',
                 'text-gray-600' => $view !== 'cards',
-                'text-gray-400' => $view === 'cards',
+                'text-gray-200' => $view === 'cards',
             ])>
                 {{ $product->collection->getLabel() }}
             </div>
@@ -81,7 +81,11 @@
         ])>
             @foreach ($product->tags->take(2) as $tag)
                 <span class="flex items-center gap-1 whitespace-nowrap">
-                    <x-lucide-tag class="size-3.5 shrink-0 fill-zinc-100 stroke-zinc-500" />
+                    <x-lucide-tag @class([
+                        'size-3.5 shrink-0',
+                        'fill-zinc-100 stroke-zinc-500' => in_array($view, ['grid', 'list']),
+                        'fill-zinc-100/25 stroke-zinc-300' => $view === 'cards',
+                    ]) />
                     {{ $tag->name }}
                 </span>
             @endforeach

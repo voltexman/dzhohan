@@ -1,27 +1,32 @@
-<div class="relative flex flex-col overflow-hidden bg-white border border-zinc-200/50 animate-pulse">
+<div class="relative transition group overflow-hidden rounded-sm bg-white border border-zinc-200/50 animate-pulse">
     <!-- Зображення -->
-    <div class="w-full h-40 lg:h-72 bg-zinc-200"></div>
+    <div class="relative overflow-hidden rounded-t-sm w-full h-40 lg:h-72 bg-zinc-200"></div>
 
     <!-- Контент -->
-    <div class="p-4 flex flex-col flex-1">
-        <!-- Заголовок -->
-        <div class="h-6 bg-zinc-200 rounded-md w-3/4 mb-2"></div>
+    <div class="p-2.5 lg:px-5 flex flex-col flex-1">
 
-        <!-- Категорія -->
-        <div class="h-4 bg-zinc-100 rounded-md w-1/4 mb-3"></div>
+        <!-- Назва -->
+        <div class="h-[22px] bg-zinc-200 rounded w-3/4 mt-2.5"></div>
+
+        <!-- Колекція -->
+        <div class="h-[16px] bg-zinc-100 rounded w-1/3 mt-1.5"></div>
 
         <!-- Теги -->
-        <div class="flex gap-1.5 mt-0.5">
-            <div class="h-3 w-12 bg-zinc-100 rounded-full"></div>
-            <div class="h-3 w-10 bg-zinc-100 rounded-full"></div>
+        <div class="flex items-center gap-1.5 mt-1.5">
+            <div class="h-3 w-14 bg-zinc-100 rounded"></div>
+            <div class="h-3 w-10 bg-zinc-100 rounded"></div>
         </div>
 
-        <!-- Ціна та Метрики -->
-        <div class="flex items-center justify-between mt-4">
-            <div class="h-7 w-20 bg-orange-200 rounded-md"></div>
-            <div class="flex gap-1.5">
-                <div class="size-5 bg-zinc-100 rounded-full"></div>
-                <div class="size-5 bg-zinc-100 rounded-full"></div>
+        <!-- Ціна + метрики -->
+        <div class="flex items-center justify-between mt-1.5">
+
+            <!-- Ціна -->
+            <div class="h-[22px] w-20 bg-orange-200 rounded"></div>
+
+            <!-- Метрики -->
+            <div class="flex items-center gap-1.5">
+                <div class="h-3 w-4 bg-zinc-200 rounded"></div>
+                <div class="h-3 w-4 bg-zinc-200 rounded"></div>
             </div>
         </div>
     </div>
