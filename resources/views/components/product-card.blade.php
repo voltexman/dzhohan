@@ -58,7 +58,7 @@
             'font-semibold font-[SN_Pro] transition line-clamp-1 drop-shadow-xl',
             'text-xl text-gray-800 group-hover:text-orange-600' => $view !== 'grid',
             'text-xl text-gray-800 group-hover:text-orange-600' => $view !== 'list',
-            'text-white text-xl md:text-2xl' => $view === 'cards',
+            'text-white text-xl' => $view === 'cards',
         ])>
             {{ $product->name }}
         </h3>
