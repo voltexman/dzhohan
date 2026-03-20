@@ -187,11 +187,11 @@ name('home');
 
             <div class="md:columns-2 gap-x-10 items-start mt-10" x-data="{ open: null }">
                 @foreach ($settings->faqs as $faq)
-                    <div class="overflow-hidden transition-all duration-300 border-b border-gray-200">
+                    <div class="overflow-hidden transition-all duration-300 border-b border-gray-100 last:border-b-0">
                         <button @click="open === {{ $loop->index }} ? open = null : open = {{ $loop->index }}"
-                            class="w-full py-5 text-left flex justify-between items-center outline-none cursor-pointer group">
+                            class="w-full py-2.5 lg:py-5 text-left flex justify-between items-center outline-none cursor-pointer group">
                             <span
-                                class="font-semibold text-gray-900 text-lg transition-colors group-hover:text-amber-700">
+                                class="font-medium lg:font-semibold text-gray-900 lg:text-lg transition-colors group-hover:text-amber-700">
                                 {{ $faq['question'] }}
                             </span>
                             <span class="ml-4 shrink-0 transition-transform duration-300"
