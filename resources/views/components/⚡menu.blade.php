@@ -112,10 +112,58 @@ new class extends Component {
                             <x-nav.item label="Контакти" url="contacts" icon="notebook-text" />
                         </x-nav>
 
-                        <div class="flex gap-2.5 mt-auto mx-auto py-5">
-                            <x-lucide-instagram class="size-5.5" />
-                            <x-lucide-facebook class="size-5.5" />
-                            <x-lucide-youtube class="size-5.5" />
+                        <div class="mt-auto font-[Oswald] text-xl text-zinc-700 mx-auto">
+                            {{ $settings->phone }}
+                        </div>
+
+                        <div class="flex gap-2.5 mx-auto py-5">
+                            @isset($settings->socials['instagram'])
+                                <a href="https://www.instagram.com/dzhohan_knives" target="_blank">
+                                    <img src="{{ Vite::asset('resources/images/icons/socials/instagram.svg') }}"
+                                        class="size-6 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
+                                        alt="" />
+                                </a>
+                            @endisset
+
+                            @isset($settings->socials['facebook'])
+                                <a href="https://www.facebook.com/KostyantynDzhohun" target="_blank">
+                                    <img src="{{ Vite::asset('resources/images/icons/socials/facebook.svg') }}"
+                                        class="size-6 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
+                                        alt="" />
+                                </a>
+                            @endisset
+
+                            @isset($settings->socials['pinterest'])
+                                <a href="https://www.facebook.com/KostyantynDzhohun" target="_blank">
+                                    <img src="{{ Vite::asset('resources/images/icons/socials/pinterest.svg') }}"
+                                        class="size-6 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
+                                        alt="" />
+                                </a>
+                            @endisset
+
+                            @isset($settings->socials['viber'])
+                                <a href="https://www.facebook.com/KostyantynDzhohun" target="_blank">
+                                    <img src="{{ Vite::asset('resources/images/icons/socials/viber.svg') }}"
+                                        class="size-6 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
+                                        alt="" />
+                                </a>
+                            @endisset
+
+                            @isset($settings->socials['telegram'])
+                                <a href="https://www.facebook.com/KostyantynDzhohun" target="_blank">
+                                    <img src="{{ Vite::asset('resources/images/icons/socials/telegram.svg') }}"
+                                        class="size-6 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
+                                        alt="" />
+                                </a>
+                            @endisset
+
+                            @isset($settings->socials['whatsapp'])
+                                <a href="https://www.facebook.com/KostyantynDzhohun" target="_blank">
+                                    <img src="{{ Vite::asset('resources/images/icons/socials/whatsapp.svg') }}"
+                                        class="size-6 opacity-70 hover:opacity-100 transition-opacity duration-250 drop-shadow-xl"
+                                        alt="" />
+                                </a>
+                            @endisset
                         </div>
                     </div>
                 </div>
