@@ -161,14 +161,15 @@ name('home');
             <!-- Контакти -->
             <div class="flex flex-col items-center lg:items-start space-y-2.5 lg:space-y-5">
                 <div class="font-[Russo_One] text-2xl text-white leading-none">
-                    +380 (63) 951 88 42
+                    {{ $settings->phone }}
                 </div>
                 <div class="font-[Russo_One] text-xl text-white leading-none">
-                    dzhogun@gmail.com
+                    {{ $settings->email }}
                 </div>
 
-                <a href="#"
-                    class="mt-5 font-[Oswald] text-lg font-semibold flex justify-center px-5 py-3.5 bg-white text-gray-900">
+                <a href="{{ route('order') }}"
+                    class="mt-5 font-[Oswald] text-lg font-semibold flex justify-center px-5 py-3.5 bg-white text-gray-900"
+                    wire:navigate>
                     Замовити виготовлення
                 </a>
             </div>
