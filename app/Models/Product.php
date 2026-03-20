@@ -102,7 +102,7 @@ class Product extends Model implements HasMedia
             //     $q->whereIn('currency', (array)$v);
             // })
 
-            ->when($filters['collections'] ?? null, fn($q, $cat) => $q->whereIn('collection', $cat))
+            ->when($filters['collections'] ?? null, fn ($q, $cat) => $q->whereIn('collection', $cat))
 
             ->when(isset($filters['status']) && $filters['status'] !== 'all', function ($q) use ($filters) {
                 return $filters['status'] === 'in_stock'
@@ -110,21 +110,21 @@ class Product extends Model implements HasMedia
                     : $q->where('quantity', '=', 0);
             })
 
-            ->when($filters['price_from'] ?? null, fn($q, $from) => $q->where('price', '>=', $from))
-            ->when($filters['price_to'] ?? null, fn($q, $to) => $q->where('price', '<=', $to))
+            ->when($filters['price_from'] ?? null, fn ($q, $from) => $q->where('price', '>=', $from))
+            ->when($filters['price_to'] ?? null, fn ($q, $to) => $q->where('price', '<=', $to))
 
-            ->when($filters['blade_length_from'] ?? null, fn($q, $v) => $q->where('blade_length', '>=', $v))
-            ->when($filters['blade_length_to'] ?? null, fn($q, $v) => $q->where('blade_length', '<=', $v))
+            ->when($filters['blade_length_from'] ?? null, fn ($q, $v) => $q->where('blade_length', '>=', $v))
+            ->when($filters['blade_length_to'] ?? null, fn ($q, $v) => $q->where('blade_length', '<=', $v))
 
-            ->when($filters['blade_thickness_from'] ?? null, fn($q, $v) => $q->where('blade_thickness', '>=', $v))
-            ->when($filters['blade_thickness_to'] ?? null, fn($q, $v) => $q->where('blade_thickness', '<=', $v))
+            ->when($filters['blade_thickness_from'] ?? null, fn ($q, $v) => $q->where('blade_thickness', '>=', $v))
+            ->when($filters['blade_thickness_to'] ?? null, fn ($q, $v) => $q->where('blade_thickness', '<=', $v))
 
-            ->when($filters['steels'] ?? null, fn($q, $v) => $q->whereIn('steel', $v))
-            ->when($filters['blade_shapes'] ?? null, fn($q, $v) => $q->whereIn('blade_shape', $v))
-            ->when($filters['handle_materials'] ?? null, fn($q, $v) => $q->whereIn('handle_material', $v))
+            ->when($filters['steels'] ?? null, fn ($q, $v) => $q->whereIn('steel', $v))
+            ->when($filters['blade_shapes'] ?? null, fn ($q, $v) => $q->whereIn('blade_shape', $v))
+            ->when($filters['handle_materials'] ?? null, fn ($q, $v) => $q->whereIn('handle_material', $v))
 
             ->when($filters['blade_grinds'] ?? null, function ($q, $v) {
-                $q->whereIn('blade_grind', (array)$v);
+                $q->whereIn('blade_grind', (array) $v);
             });
     }
 

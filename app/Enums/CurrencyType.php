@@ -33,9 +33,9 @@ enum CurrencyType: string implements HasLabel
         $formatted = number_format($amount, 0, '.', ' ');
 
         return match ($this) {
-            self::USD => '$' . $formatted,
-            self::EUR => '€' . $formatted,
-            self::UAH => $formatted . ' ₴',
+            self::USD => '$'.$formatted,
+            self::EUR => '€'.$formatted,
+            self::UAH => $formatted.' ₴',
         };
     }
 

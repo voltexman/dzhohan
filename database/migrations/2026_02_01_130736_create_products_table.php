@@ -3,11 +3,11 @@
 use App\Enums\BladeFinish;
 use App\Enums\BladeGrind;
 use App\Enums\BladeShape;
+use App\Enums\CurrencyType;
 use App\Enums\HandleMaterial;
 use App\Enums\ProductCategory;
 use App\Enums\SheathType;
 use App\Enums\SteelType;
-use App\Enums\CurrencyType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

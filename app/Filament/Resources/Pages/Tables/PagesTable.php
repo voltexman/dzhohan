@@ -36,7 +36,7 @@ class PagesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                // 
+                //
             ])
             ->recordActions([
                 EditAction::make(),

@@ -14,7 +14,6 @@
         <div class="text-2xl font-light tracking-tighter text-stone-950">
             <span x-text="Number(from).toLocaleString()"></span> —
             <span x-text="Number(to).toLocaleString()"></span>
-            <span class="text-xs align-top ml-1 font-bold text-zinc-400 uppercase">грн</span>
         </div>
 
         @if ($this->{$fromModel} !== (int) $min || $this->{$toModel} !== (int) $max)

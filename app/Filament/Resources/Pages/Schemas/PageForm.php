@@ -8,7 +8,6 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
@@ -26,9 +25,9 @@ class PageForm
                             ->live(onBlur: true)
                             ->live(onBlur: true)
                             ->afterStateUpdated(
-                                fn($set, $state, $get) =>
+                                fn ($set, $state, $get) =>
                                 // Оновлюємо slug тільки якщо він заблокований (автоматичний режим)
-                                !$get('is_slug_editable') ? $set('slug', Str::slug($state)) : null
+                                ! $get('is_slug_editable') ? $set('slug', Str::slug($state)) : null
                             ),
 
                         TextInput::make('slug')
@@ -36,14 +35,14 @@ class PageForm
                             ->required()
                             ->unique(ignoreRecord: true)
                             // Поле вимкнене, якщо is_slug_editable = false
-                            ->disabled(fn($get) => ! $get('is_slug_editable'))
+                            ->disabled(fn ($get) => ! $get('is_slug_editable'))
                             ->dehydrated() // Обов'язково, щоб значення відправлялося в базу
                             ->suffixAction(
                                 Action::make('toggleSlugEditable')
                                     ->icon('heroicon-m-lock-closed')
                                     ->color('gray')
                                     // Перемикаємо стан редагування
-                                    ->action(fn($set, $get) => $set('is_slug_editable', ! $get('is_slug_editable')))
+                                    ->action(fn ($set, $get) => $set('is_slug_editable', ! $get('is_slug_editable')))
                             )
                             ->validationMessages([
                                 'required' => 'Будь ласка, вкажіть url адресу',

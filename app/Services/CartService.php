@@ -14,17 +14,17 @@ class CartService
      */
     public function cart(): Collection
     {
-        return collect(session($this->key, []))->map(fn($item) => (object) $item);
+        return collect(session($this->key, []))->map(fn ($item) => (object) $item);
     }
 
     public function itemsForOrder(): array
     {
-        return collect($this->getRawCart())->map(fn($item) => [
+        return collect($this->getRawCart())->map(fn ($item) => [
             'product_id' => $item['product_id'],
-            'name'       => $item['name'],
-            'price'      => $item['price'],
-            'qty'        => $item['qty'],
-            'currency'   => $item['currency'],
+            'name' => $item['name'],
+            'price' => $item['price'],
+            'qty' => $item['qty'],
+            'currency' => $item['currency'],
         ])->values()->toArray();
     }
 
@@ -57,7 +57,7 @@ class CartService
                 'name' => $product->name,
                 'price' => $product->price,
                 // 'currency' => $product->currency->value,
-                'currency'   => $product->currency instanceof \BackedEnum ? $product->currency->value : $product->currency,
+                'currency' => $product->currency instanceof \BackedEnum ? $product->currency->value : $product->currency,
                 'image' => $product->getFirstMediaUrl('products', 'thumb'),
                 'qty' => 0,
                 'stock' => $product->quantity,
@@ -105,7 +105,7 @@ class CartService
     public function totalPrice(): float
     {
         // Використовуємо вже існуючу колекцію для підрахунку
-        return $this->cart()->sum(fn($item) => $item->price * $item->qty);
+        return $this->cart()->sum(fn ($item) => $item->price * $item->qty);
     }
 
     public function totalQuantity(): int

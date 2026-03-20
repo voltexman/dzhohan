@@ -28,16 +28,15 @@ name('home');
             </h1>
 
             <div
-                class="flex gap-1.5 mt-5 text-white/70 flex-wrap mx-auto justify-center items-center max-w-3xs w-full leading-4">
-                <span class="text-xs">Тактичні</span>
+                class="flex gap-1.5 mt-5 text-white/70 flex-wrap mx-auto justify-center items-center max-w-3xs px-5 w-full leading-4">
+                <div class="text-xs font-[Oswald] tracking-wider">Тактичні</div>
                 <div class="size-1.5 rounded-full bg-white flex-none"></div>
-                <span class="text-xs">Кухонні</span>
+                <div class="text-xs font-[Oswald] tracking-wider">Кухонні</div>
                 <div class="size-1.5 rounded-full bg-white flex-none"></div>
-                <span class="text-xs">Мисливські</span><br>
-                {{-- <div class="size-1.5 rounded-full bg-white flex-none"></div> --}}
-                <span class="text-xs">Щоденні</span>
+                <div class="text-xs font-[Oswald] tracking-wider">Мисливські</div><br>
+                <div class="text-xs font-[Oswald] tracking-wider">Щоденні</div>
                 <div class="size-1.5 rounded-full bg-white flex-none"></div>
-                <span class="text-xs">Туристичні</span>
+                <div class="text-xs font-[Oswald] tracking-wider">Туристичні</div>
             </div>
         </div>
 

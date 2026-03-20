@@ -312,7 +312,7 @@ new #[Title('Замовлення ножів ручної роботи')] class 
         </div>
 
         <x-slot:sidebar>
-            <div class="sticky top-24 lg:h-screen">
+            <div class="lg:sticky lg:top-24 lg:h-screen">
                 {{-- <div wire:dirty>
                     <h2 class="font-[Oswald] text-lg font-medium tracking-wide mb-5">Ваше замовлення</h2>
 
@@ -356,8 +356,7 @@ new #[Title('Замовлення ножів ручної роботи')] class 
 
                 <div wire:dirty.remove>
                     <div
-                        class="flex flex-col
-                    items-center justify-center p-5 bg-orange-50 border border-orange-100 rounded-lg text-center">
+                        class="flex flex-col items-center justify-center p-5 bg-orange-50 border border-orange-100 rounded-lg text-center">
                         <div class="bg-white p-2.5 rounded-full mb-5">
                             <x-lucide-info class="size-8 text-orange-500" stroke-width="1.5" />
                         </div>

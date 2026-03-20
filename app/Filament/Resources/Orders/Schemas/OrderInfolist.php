@@ -39,7 +39,9 @@ class OrderInfolist
                         TextEntry::make('total_price')
                             ->label('Сума до сплати')
                             ->state(function ($record) {
-                                if ($record->type !== OrderType::Purchase) return null;
+                                if ($record->type !== OrderType::Purchase) {
+                                    return null;
+                                }
 
                                 // Групуємо товари за валютою
                                 $totals = $record->products->groupBy('currency');
@@ -48,7 +50,7 @@ class OrderInfolist
                                 if ($totals->count() === 1) {
                                     $group = $totals->first();
                                     $currency = $group->first()->currency;
-                                    $sum = $group->sum(fn($i) => $i->qty * $i->price);
+                                    $sum = $group->sum(fn ($i) => $i->qty * $i->price);
 
                                     return $currency->format($sum);
                                 }
@@ -57,7 +59,7 @@ class OrderInfolist
                                 return 'Мультивалютна';
                             })
                             ->placeholder('Договірна')
-                            ->color(fn($state) => $state === 'Мультивалютна' ? 'warning' : 'success')
+                            ->color(fn ($state) => $state === 'Мультивалютна' ? 'warning' : 'success')
                             ->weight(FontWeight::Bold)
                             ->size(TextSize::Large),
 
@@ -72,7 +74,7 @@ class OrderInfolist
                 Section::make('Параметри виготовлення')
                     ->icon('heroicon-o-wrench-screwdriver')
                     ->description('Деталі індивідуального замовлення')
-                    ->visible(fn($record) => $record->type->value === 'manufacturing')
+                    ->visible(fn ($record) => $record->type->value === 'manufacturing')
                     ->schema([
                         Grid::make(3)
                             ->schema([
@@ -103,7 +105,7 @@ class OrderInfolist
                             TextEntry::make('first_name')
                                 ->label('Замовник')
                                 ->icon('heroicon-o-user')
-                                ->formatStateUsing(fn($record) => "{$record->first_name} {$record?->last_name}"),
+                                ->formatStateUsing(fn ($record) => "{$record->first_name} {$record?->last_name}"),
 
                             TextEntry::make('phone')
                                 ->label('Телефон')
@@ -113,7 +115,7 @@ class OrderInfolist
                             TextEntry::make('email')
                                 ->label('Email')
                                 ->icon('heroicon-o-envelope')
-                                ->hidden(fn($state) => blank($state))
+                                ->hidden(fn ($state) => blank($state))
                                 ->copyable()
                                 ->columnSpanFull(),
                         ])->columns(2),
@@ -127,11 +129,11 @@ class OrderInfolist
                             TextEntry::make('city')
                                 ->label('Місто')
                                 ->icon('heroicon-o-map-pin')
-                                ->hidden(fn($state) => blank($state)),
+                                ->hidden(fn ($state) => blank($state)),
 
                             TextEntry::make('address')
                                 ->label('Адреса / Відділення')
-                                ->hidden(fn($state) => blank($state))
+                                ->hidden(fn ($state) => blank($state))
                                 ->columnSpanFull(),
                         ])->columns(2),
                 ])->columns(2)->columnSpanFull(),

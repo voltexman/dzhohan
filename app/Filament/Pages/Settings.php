@@ -122,7 +122,7 @@ class Settings extends Page implements HasForms
                                         TextInput::make('socials.whatsapp')
                                             ->label('WhatsApp')
                                             ->placeholder('380991234567')
-                                            ->prefixIcon(Heroicon::OutlinedPhone)
+                                            ->prefixIcon(Heroicon::OutlinedPhone),
                                     ]),
 
                                 Section::make('Статус доступності сайту')
@@ -148,7 +148,7 @@ class Settings extends Page implements HasForms
                                                     ->prefixIcon('heroicon-o-calendar-days')
                                                     ->native(false)
                                                     ->displayFormat('d.m.Y')
-                                                    ->disabled(fn($get) => $get('online')),
+                                                    ->disabled(fn ($get) => $get('online')),
                                             ]),
                                     ]),
                             ]),
@@ -165,7 +165,7 @@ class Settings extends Page implements HasForms
                                             ->reorderableWithButtons()
                                             ->collapsible()
                                             ->cloneable()
-                                            ->itemLabel(fn(array $state): ?string => $state['question'] ?? 'Нове запитання')
+                                            ->itemLabel(fn (array $state): ?string => $state['question'] ?? 'Нове запитання')
                                             ->schema([
                                                 TextInput::make('question')
                                                     ->label('Запитання')
@@ -195,7 +195,7 @@ class Settings extends Page implements HasForms
         return [
             Action::make('save')
                 ->label('Зберегти налаштування')
-                ->action(fn() => $this->save()),
+                ->action(fn () => $this->save()),
         ];
     }
 

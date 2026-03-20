@@ -93,7 +93,7 @@ new class extends Component {
         </x-button>
 
         <x-slot:sidebar>
-            <div class="sticky top-24 h-screen">
+            <div class="lg:sticky lg:top-24 lg:h-screen">
                 <h2 class="text-xl font-[Oswald] font-semibold mb-5">Ваше замовлення</h2>
 
                 <div class="divide-y divide-zinc-200 mb-5">

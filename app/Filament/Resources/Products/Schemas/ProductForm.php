@@ -41,7 +41,7 @@ class ProductForm
                                     ->required()
                                     ->maxLength(255)
                                     ->live(onBlur: true)
-                                    ->afterStateUpdated(fn($set, $state) => $set('slug', Str::slug($state)))
+                                    ->afterStateUpdated(fn ($set, $state) => $set('slug', Str::slug($state)))
                                     ->validationMessages([
                                         'required' => 'Будь ласка, введіть назву ножа',
                                         'unique' => 'Ніж з такою назвою вже існує',
@@ -51,13 +51,13 @@ class ProductForm
                                     ->label('URL адреса (slug)')
                                     ->required()
                                     ->unique(ignoreRecord: true)
-                                    ->disabled(fn($get) => ! $get('is_slug_editable'))
+                                    ->disabled(fn ($get) => ! $get('is_slug_editable'))
                                     ->dehydrated()
                                     ->suffixAction(
                                         Action::make('toggleSlugEditable')
                                             ->icon('heroicon-m-lock-closed')
                                             ->color('gray')
-                                            ->action(fn($set, $get) => $set('is_slug_editable', ! $get('is_slug_editable')))
+                                            ->action(fn ($set, $get) => $set('is_slug_editable', ! $get('is_slug_editable')))
                                     )
                                     ->validationMessages([
                                         'required' => 'Будь ласка, вкажіть url адресу',
@@ -89,7 +89,6 @@ class ProductForm
                                             ->selectablePlaceholder(false) // Прибираємо порожній варіант
                                             ->prefixIcon('heroicon-m-banknotes'), // Додаємо іконку для краси
 
-
                                         TextInput::make('quantity')
                                             ->label('Кількість')
                                             ->numeric()
@@ -106,14 +105,14 @@ class ProductForm
 
                                         TextInput::make('sku')
                                             ->label('Артикул (SKU)')
-                                            ->default(fn() => 'KN-' . strtoupper(Str::random(6)))
+                                            ->default(fn () => 'KN-'.strtoupper(Str::random(6)))
                                             ->unique(ignoreRecord: true)
                                             ->required()
                                             ->readOnly()
                                             ->suffixAction(
                                                 Action::make('generateSku')
                                                     ->icon('heroicon-m-arrow-path')
-                                                    ->action(fn($set) => $set('sku', 'KN-' . strtoupper(Str::random(6))))
+                                                    ->action(fn ($set) => $set('sku', 'KN-'.strtoupper(Str::random(6))))
                                             ),
 
                                     ])->columnSpanFull(),
@@ -151,7 +150,7 @@ class ProductForm
                                         TextInput::make('name')
                                             ->required()
                                             ->live()
-                                            ->afterStateUpdated(fn($set, $state) => $set('slug', Str::slug($state))),
+                                            ->afterStateUpdated(fn ($set, $state) => $set('slug', Str::slug($state))),
                                         TextInput::make('slug')
                                             ->required()
                                             ->unique('tags', 'slug'),
@@ -225,8 +224,8 @@ class ProductForm
                                             ->suffix('мм')
                                             ->validationMessages([
                                                 'required' => 'Будь ласка, вкажіть довжину леза.',
-                                                'numeric'  => 'Тут має бути число.',
-                                                'min'      => 'Довжина не може бути меншою за 0.',
+                                                'numeric' => 'Тут має бути число.',
+                                                'min' => 'Довжина не може бути меншою за 0.',
                                             ])
                                             ->default(0),
 
@@ -241,8 +240,8 @@ class ProductForm
                                             ->default(0)     // Гарантує, що в базу не піде NULL
                                             ->validationMessages([
                                                 'required' => 'Вкажіть товщину обуху.',
-                                                'numeric'  => 'Тут має бути число.',
-                                                'min'      => 'Товщина не може бути від’ємною.',
+                                                'numeric' => 'Тут має бути число.',
+                                                'min' => 'Товщина не може бути від’ємною.',
                                             ]),
 
                                         Select::make('blade_finish')
@@ -264,8 +263,8 @@ class ProductForm
                                             ->placeholder('напр. 250')
                                             ->validationMessages([
                                                 'required' => 'Загальна довжина ножа є обов’язковою.',
-                                                'numeric'  => 'Будь ласка, введіть число (наприклад: 255.5).',
-                                                'min'      => 'Довжина не може бути меншою за 0.',
+                                                'numeric' => 'Будь ласка, введіть число (наприклад: 255.5).',
+                                                'min' => 'Довжина не може бути меншою за 0.',
                                             ]),
 
                                         Select::make('handle_material')
