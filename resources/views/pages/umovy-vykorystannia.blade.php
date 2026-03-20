@@ -6,9 +6,7 @@ name('umovy-vykorystannia');
 
 @section('header')
     <x-header :image="Vite::asset('resources/images/header.png')">
-        <x-slot:title>
-            Умови використання
-        </x-slot:title>
+        <x-slot:title>Умови<br>використання</x-slot:title>
     </x-header>
 @endsection
 
@@ -75,9 +73,9 @@ name('umovy-vykorystannia');
         </p>
 
         <x-slot:sidebar>
-            <x-nav.sidebar class="lg:sticky lg:top-25 h-screen">
+            <x-nav.sidebar class="lg:sticky lg:top-25 lg:h-screen">
                 <x-nav.sidebar.item route="polityka-vidshkoduvannia">
-                    <x-lucide-rotate-ccw class="size-4" />
+                    <x-lucide-wallet class="size-4" />
                     Політика відшкодування
                 </x-nav.sidebar.item>
 

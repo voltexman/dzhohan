@@ -47,9 +47,9 @@ new #[Layout('layouts::cart')] class extends Component {
 
             <div class="embla-thumbs absolute bottom-8 left-1/2 -translate-x-1/2 w-full max-w-lg px-4">
                 <div class="embla-thumbs__viewport overflow-hidden">
-                    <div class="embla-thumbs__container flex gap-2.5 justify-center p-5">
+                    <div class="embla-thumbs__container flex gap-1.5 lg:gap-2.5 justify-center p-5">
                         @foreach ($product->getMedia('products') as $media)
-                            <div class="embla-thumbs__slide shrink-0 size-20 lg:size-24 cursor-pointer overflow-hidden rounded-lg border-2 border-zinc-100/15 transition-all duration-300 shadow-lg shadow-zinc-50/5 hover:shadow-zinc-50/10"
+                            <div class="embla-thumbs__slide shrink-0 size-16 lg:size-24 cursor-pointer overflow-hidden rounded-lg border-2 border-zinc-100/15 transition-all duration-300 shadow-lg shadow-zinc-50/5 hover:shadow-zinc-50/10"
                                 wire:key="thumb-{{ $media->id }}">
                                 <img src="{{ $media->getFullUrl() }}" alt=""
                                     class="size-full object-cover opacity-70 hover:opacity-100 transition-opacity">
@@ -71,10 +71,10 @@ new #[Layout('layouts::cart')] class extends Component {
         </a>
 
         <div class="flex gap-4">
-            <button type="button">
+            {{-- <button type="button">
                 <x-lucide-share-2 class="size-6.5 fill-gray-100 stroke-gray-800" />
-            </button>
-            <a href="#" class="flex gap-0.5 items-center">
+            </button> --}}
+            <a href="#comments-section" class="flex gap-0.5 items-center">
                 <x-lucide-message-circle class="size-6.5 fill-gray-100 stroke-gray-800" />
             </a>
             <button type="button" x-data="{
@@ -92,7 +92,7 @@ new #[Layout('layouts::cart')] class extends Component {
 
     <div class="flex flex-col mt-2.5 px-5 lg:px-10">
         <div class="text-black font-[SN_Pro] text-xl font-semibold">{{ $product->name }}</div>
-        <div class="text-gray-600 text-sm font-[Oswald] font-medium tracking-wide leading-none">
+        <div class="text-zinc-600 text-sm font-[Oswald] font-medium tracking-wider leading-none">
             {{ $product->collection->getLabel() }}
         </div>
     </div>
@@ -227,7 +227,7 @@ new #[Layout('layouts::cart')] class extends Component {
         </div>
     @endif
 
-    <div class="max-w-2xl mt-10 space-y-2.5 px-5 lg:px-10">
+    <div class="max-w-3xl mt-10 space-y-2.5 px-5 lg:px-10">
         <h3 class="text-lg font-semibold font-[SN_Pro]">Огляд та особливості</h3>
         <p class="text-gray-700 font-[Inter]">{{ $product->description }}</p>
     </div>
@@ -240,7 +240,7 @@ new #[Layout('layouts::cart')] class extends Component {
         <livewire:review :$product />
     @endif
 
-    <div class="max-w-lg mt-10 scroll-mt-6 lg:scroll-mt-10 px-5 lg:px-10" id="comments-section">
+    <div class="max-w-xl mt-10 scroll-mt-6 lg:scroll-mt-10 px-5 lg:px-10" id="comments-section">
         <livewire:comments :model="$product" />
     </div>
 

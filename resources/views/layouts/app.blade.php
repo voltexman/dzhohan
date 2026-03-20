@@ -85,6 +85,10 @@
         </x-nav>
 
         <div class="flex gap-1 ms-auto">
+            <div class="hidden xl:flex items-center font-[Oswald] text-lg text-zinc-50 me-1.5">
+                {{ $settings->phone }}
+            </div>
+
             <livewire:search position="end" />
 
             @if (!request()->routeIs('checkout'))
@@ -168,7 +172,7 @@
             {{-- МЕНЮ --}}
             <x-nav.footer class="order-2 items-center lg:items-start">
                 <x-nav.footer.item route="polityka-vidshkoduvannia">
-                    <x-lucide-rotate-ccw class="size-4" />
+                    <x-lucide-wallet class="size-4" />
                     Політика відшкодування
                 </x-nav.footer.item>
 

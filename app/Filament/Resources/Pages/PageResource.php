@@ -13,10 +13,13 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class PageResource extends Resource
 {
     protected static ?string $model = Page::class;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Параметри';
 
     protected static ?string $navigationLabel = 'Сторінки';
 
@@ -25,6 +28,8 @@ class PageResource extends Resource
     protected static ?string $pluralModelLabel = 'Сторінки';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
+
+    protected static ?int $navigationSort = 5;
 
     public static function form(Schema $schema): Schema
     {

@@ -29,7 +29,6 @@ class ProductForm
     {
         return $schema
             ->components([
-
                 Tabs::make('Product Details')
                     ->columnSpanFull()
                     ->tabs([
@@ -83,11 +82,11 @@ class ProductForm
 
                                         Select::make('currency')
                                             ->label('Валюта')
-                                            ->options(CurrencyType::class) // Filament сам візьме назви з getLabel()
-                                            ->default(CurrencyType::UAH->value) // Гривня за замовчуванням
-                                            ->native(false) // Робимо гарний Filament-стиль замість стандартного браузерного
-                                            ->selectablePlaceholder(false) // Прибираємо порожній варіант
-                                            ->prefixIcon('heroicon-m-banknotes'), // Додаємо іконку для краси
+                                            ->options(CurrencyType::class)
+                                            ->default(CurrencyType::UAH->value)
+                                            ->native(false)
+                                            ->selectablePlaceholder(false)
+                                            ->prefixIcon('heroicon-m-banknotes'),
 
                                         TextInput::make('quantity')
                                             ->label('Кількість')
@@ -140,20 +139,16 @@ class ProductForm
                                     ->searchable()
                                     ->preload()
                                     ->rule(['min:1', 'max:6'])
-                                    ->validationMessages([
-                                        'required' => 'Вкажіть теги',
-                                        'min' => 'Необхідно мінімум 1 теги',
-                                        'max' => 'Не більше 6 тегів',
-                                    ])
                                     ->label('Теги')
                                     ->createOptionForm([
                                         TextInput::make('name')
                                             ->required()
-                                            ->live()
-                                            ->afterStateUpdated(fn ($set, $state) => $set('slug', Str::slug($state))),
-                                        TextInput::make('slug')
-                                            ->required()
-                                            ->unique('tags', 'slug'),
+                                            ->maxLength(255),
+                                    ])
+                                    ->validationMessages([
+                                        'required' => 'Вкажіть теги',
+                                        'min' => 'Необхідно мінімум 1 теги',
+                                        'max' => 'Не більше 6 тегів',
                                     ]),
 
                                 Toggle::make('is_active')
@@ -178,14 +173,14 @@ class ProductForm
                                     ->hiddenLabel()
                                     ->required()
                                     ->image()
-                                    ->minFiles(2)
+                                    ->minFiles(1)
                                     ->maxFiles(20)
                                     ->acceptedFileTypes([
                                         'image/*',
                                     ])
                                     ->validationMessages([
-                                        'required' => 'Додайте зображення',
-                                        'min' => 'Не має бути менше 1',
+                                        'required' => 'Зображення обов`язкові',
+                                        'min' => 'Не має бути менше 1 зображення',
                                         'max' => 'Може бути не більше 20 зображень',
                                         'image' => 'Може бути тільки зображення',
                                     ])
@@ -231,13 +226,13 @@ class ProductForm
 
                                         TextInput::make('blade_thickness')
                                             ->label('Товщина леза')
-                                            ->numeric()      // Додає валідацію на число
-                                            ->required()     // Додає зірочку (*) та перевірку на заповненість
-                                            ->minValue(0)    // Додає перевірку min:0
-                                            ->step(0.1)      // Дозволяє дробові числа (напр. 4.2)
+                                            ->numeric()
+                                            ->required()
+                                            ->minValue(0)
+                                            ->step(0.1)
                                             ->placeholder('напр. 4.2')
                                             ->suffix('мм')
-                                            ->default(0)     // Гарантує, що в базу не піде NULL
+                                            ->default(0)
                                             ->validationMessages([
                                                 'required' => 'Вкажіть товщину обуху.',
                                                 'numeric' => 'Тут має бути число.',

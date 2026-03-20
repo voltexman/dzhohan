@@ -106,7 +106,7 @@ new class extends Component {
             {{-- Блок відповідей --}}
             @if ($comment->replies->isNotEmpty())
                 <div class="flex items-center gap-0.5">
-                    <x-lucide-message-circle class="size-3.5 shrink-0 fill-zinc-100 stroke-zinc-500 mb-0.5" />
+                    <x-lucide-messages-square class="size-3.5 shrink-0 fill-zinc-100 stroke-zinc-500 mb-0.5" />
                     <span class="text-xs font-medium text-zinc-400">{{ $comment->replies->count() }}</span>
                 </div>
             @endif
