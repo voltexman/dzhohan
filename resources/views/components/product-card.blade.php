@@ -8,7 +8,7 @@
         'rounded-sm h-[400px] md:h-[400px]' => $view === 'cards',
         'opacity-80 grayscale-30' => !$product->hasStock(),
     ]) wire:loading.class="opacity-75 blur-[1px] pointer-events-none animate-pulse"
-    wire:target="status, collections, steels, price_from, price_to, setSort, setView, search, blade_length_from, blade_length_to, blade_thickness_from, blade_thickness_to, resetFilters"
+    wire:target="status, collections, steels, blade_shapes, handle_materials, blade_grinds, price_from, price_to, setSort, setView, search, blade_length_from, blade_length_to, blade_thickness_from, blade_thickness_to, resetFilters"
     wire:navigate>
 
     <!-- Зображення -->

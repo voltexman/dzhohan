@@ -5,13 +5,29 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="icon" href="/favicons/favicon.ico">
+
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicons/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicons/android-chrome-512x512.png">
+
+    <link rel="manifest" href="/favicons/site.webmanifest">
+
+    <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#000000">
+
+    <meta name="theme-color" content="#ffffff">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Oswald:wght@200..700&family=Russo+One&family=SN+Pro:ital,wght@0,200..900;1,200..900&display=swap"
         rel="stylesheet">
 
-    <title>{{ $title ?? config('app.name') }}</title>
+    <title>{{ config('app.name') . ' - ' . $title ?? config('app.name') }}</title>
 
     <meta name="description"
         content="{{ $description ?? 'Авторські ножі ручної роботи. Індивідуальне виготовлення, висока якість та унікальний дизайн.' }}">
@@ -98,7 +114,7 @@
                 <div class="text-xl tracking-wide font-[Oswald] text-gray-800 drop-shadow-xl">
                     {{ $settings->email }}
                 </div>
-                <div class="mt-5 grid grid-cols-6 gap-1.5">
+                <div class="flex justify-center items-center mt-5 gap-1.5">
                     @isset($settings->socials['instagram'])
                         <a href="https://www.instagram.com/dzhohan_knives" target="_blank">
                             <img src="{{ Vite::asset('resources/images/icons/socials/instagram.svg') }}"

@@ -29,9 +29,9 @@ return new class extends Migration
             $table->enum('collection', ProductCategory::values())->index();
             $table->enum('currency', CurrencyType::cases())->default(CurrencyType::EUR);
 
-            $table->decimal('total_length', 6, 1)->nullable()->comment('Загальна довжина, мм');
-            $table->decimal('blade_length', 6, 1)->nullable()->comment('Довжина леза, мм');
-            $table->decimal('blade_thickness', 4, 1)->nullable()->comment('Товщина леза, мм');
+            $table->decimal('total_length', 6, 1)->default(0)->comment('Загальна довжина, мм');
+            $table->decimal('blade_length', 6, 1)->default(0)->comment('Довжина леза, мм');
+            $table->decimal('blade_thickness', 4, 1)->default(0)->comment('Товщина леза, мм');
 
             $table->enum('steel', SteelType::values())->nullable()->index()->comment('Марка сталі');
             $table->enum('blade_shape', BladeShape::values())->nullable()->index()->comment('Профіль клинка');

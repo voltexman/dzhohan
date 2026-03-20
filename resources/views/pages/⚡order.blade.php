@@ -1,5 +1,6 @@
 <?php
 
+use Livewire\Attributes\Title;
 use App\Livewire\Forms;
 use App\Enums\SteelType;
 use App\Enums\Order\OrderType;
@@ -15,7 +16,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Transition;
 use Livewire\Component;
 
-new class extends Component {
+new #[Title('Замовлення ножів ручної роботи')] class extends Component {
     public OrderForm $form;
 
     public $step = 1;
@@ -75,6 +76,10 @@ new class extends Component {
     }
 };
 ?>
+
+<x-slot name="description">
+    Замовте ніж ручної роботи від майстра: індивідуальне виготовлення ножів, якісні матеріали, унікальний дизайн.
+</x-slot>
 
 @section('header')
     <x-header :image="Vite::asset('resources/images/header.png')">
@@ -174,8 +179,8 @@ new class extends Component {
                                     'border-gray-200'"
                                 class="relative border-2 rounded-md p-0 text-center transition hover:border-orange-400 h-40 lg:h-30 w-full overflow-hidden flex items-end justify-center cursor-pointer">
 
-                                <img src="{{ Vite::asset("resources/images/icons/{$item->icon()}") }}"
-                                    class="absolute inset-0 size-full object-contain">
+                                {{-- <img src="{{ Vite::asset("resources/images/icons/{$item->icon()}") }}"
+                                    class="absolute inset-0 size-full object-contain"> --}}
 
                                 <div class="relative z-10 text-zinc-800 text-sm font-medium py-1.5">
                                     {{ $item->getLabel() }}

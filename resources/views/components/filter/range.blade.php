@@ -7,7 +7,7 @@
     to: @entangle($toModel),
     get left() { return ((this.from - this.minL) / (this.maxL - this.minL)) * 100 },
     get right() { return 100 - ((this.to - this.minL) / (this.maxL - this.minL)) * 100 }
-}" class="space-y-5">
+}" class="space-y-2.5">
 
     <!-- Ряд з ціною та кнопкою скидання -->
     <div class="flex justify-between items-end">

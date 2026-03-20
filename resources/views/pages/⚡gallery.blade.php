@@ -2,6 +2,7 @@
 
 use Livewire\Attributes\Computed;
 use Livewire\Component;
+use Livewire\Attributes\Title;
 
 new #[Title('Галерея ножів ручної роботи — приклади робіт майстра')] class extends Component {
     #[Computed]

@@ -87,8 +87,7 @@ class ProductForm
                                             ->default(CurrencyType::UAH->value) // Гривня за замовчуванням
                                             ->native(false) // Робимо гарний Filament-стиль замість стандартного браузерного
                                             ->selectablePlaceholder(false) // Прибираємо порожній варіант
-                                            ->prefixIcon('heroicon-m-banknotes') // Додаємо іконку для краси
-                                            ->live(), // Додаємо реактивність, якщо ціна має реагувати на зміну валюти
+                                            ->prefixIcon('heroicon-m-banknotes'), // Додаємо іконку для краси
 
 
                                         TextInput::make('quantity')
@@ -219,18 +218,32 @@ class ProductForm
 
                                         TextInput::make('blade_length')
                                             ->label('Довжина леза')
+                                            ->required()
                                             ->numeric()
                                             ->minValue(0)
                                             ->step(0.1)
-                                            ->suffix('мм'),
+                                            ->suffix('мм')
+                                            ->validationMessages([
+                                                'required' => 'Будь ласка, вкажіть довжину леза.',
+                                                'numeric'  => 'Тут має бути число.',
+                                                'min'      => 'Довжина не може бути меншою за 0.',
+                                            ])
+                                            ->default(0),
 
                                         TextInput::make('blade_thickness')
                                             ->label('Товщина леза')
-                                            ->numeric()
-                                            ->minValue(0)
-                                            ->step(0.1)
+                                            ->numeric()      // Додає валідацію на число
+                                            ->required()     // Додає зірочку (*) та перевірку на заповненість
+                                            ->minValue(0)    // Додає перевірку min:0
+                                            ->step(0.1)      // Дозволяє дробові числа (напр. 4.2)
                                             ->placeholder('напр. 4.2')
-                                            ->suffix('мм'),
+                                            ->suffix('мм')
+                                            ->default(0)     // Гарантує, що в базу не піде NULL
+                                            ->validationMessages([
+                                                'required' => 'Вкажіть товщину обуху.',
+                                                'numeric'  => 'Тут має бути число.',
+                                                'min'      => 'Товщина не може бути від’ємною.',
+                                            ]),
 
                                         Select::make('blade_finish')
                                             ->label('Покриття')
@@ -243,10 +256,17 @@ class ProductForm
                                         TextInput::make('total_length')
                                             ->label('Загальна довжина')
                                             ->numeric()
+                                            ->required()
                                             ->minValue(0)
-                                            ->maxValue(1000)
                                             ->step(0.1)
-                                            ->suffix('мм'),
+                                            ->suffix('мм')
+                                            ->default(0)
+                                            ->placeholder('напр. 250')
+                                            ->validationMessages([
+                                                'required' => 'Загальна довжина ножа є обов’язковою.',
+                                                'numeric'  => 'Будь ласка, введіть число (наприклад: 255.5).',
+                                                'min'      => 'Довжина не може бути меншою за 0.',
+                                            ]),
 
                                         Select::make('handle_material')
                                             ->label('Матеріал руків’я')

@@ -164,7 +164,7 @@ new class extends Component {
                                                     {{ $product->name }}
                                                 </span>
                                                 <span class="text-sm text-gray-500">
-                                                    {{ number_format($product->price, 0, '.', ' ') }} грн
+                                                    {{ $product->currency->format($product->price) }}
                                                 </span>
                                             </div>
                                             <x-lucide-chevron-right class="size-4 ms-auto stroke-gray-400" />

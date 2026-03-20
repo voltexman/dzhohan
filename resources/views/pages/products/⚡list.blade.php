@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\CurrencyType;
 use Livewire\Attributes\Title;
 use App\Enums\ProductCategory;
 use Illuminate\Support\Facades\Cookie;
@@ -14,10 +15,15 @@ use App\Models\Product;
 new #[Title('Каталог ножів ручної роботи — купити авторський ніж')] class extends Component {
     use WithPagination;
 
+    protected $paginationTheme = 'tailwind';
+
     public ?string $collection = null;
 
-    #[Url, Session]
+    #[Url]
     public string $search = '';
+
+    #[Url]
+    public array $currency = [];
 
     #[Url(history: true)]
     public $blade_length_from = null;
@@ -88,6 +94,10 @@ new #[Title('Каталог ножів ручної роботи — купит�
         $this->blade_thickness_from ??= $this->minThickness;
         $this->blade_thickness_to ??= $this->maxThickness;
 
+        if (empty($this->currency)) {
+            $this->currency = \App\Enums\CurrencyType::values(); // Отримаємо ['uah', 'usd', 'eur']
+        }
+
         $this->view = Cookie::get('product_view', 'grid');
     }
 
@@ -102,6 +112,7 @@ new #[Title('Каталог ножів ручної роботи — купит�
         $this->search = '';
 
         $this->status = 'all';
+        $this->currency = CurrencyType::values();
         $this->collections = [];
         $this->steels = [];
         $this->handle_materials = [];
@@ -212,9 +223,16 @@ new #[Title('Каталог ножів ручної роботи — купит�
     public function products()
     {
         return Product::query()
+            // 1. Завантажуємо медіа відразу, щоб не "покласти" базу
+            ->with(['media'])
+            ->withCount(['likes', 'comments'])
+
+            // 3. Якщо є конкретна категорія (наприклад, відкрита сторінка "Складні ножі")
             ->when($this->collection, fn($q) => $q->where('collection', $this->collection))
+
             ->filter([
                 'search' => $this->search,
+                'currency' => $this->currency,
                 'blade_length_from' => $this->blade_length_from,
                 'blade_length_to' => $this->blade_length_to,
                 'blade_thickness_from' => $this->blade_thickness_from,
@@ -223,11 +241,11 @@ new #[Title('Каталог ножів ручної роботи — купит�
                 'steels' => $this->steels,
                 'blade_shapes' => $this->blade_shapes,
                 'handle_materials' => $this->handle_materials,
+                'blade_grinds' => $this->blade_grinds,
                 'status' => $this->status,
                 'price_from' => $this->price_from,
                 'price_to' => $this->price_to,
             ])
-            ->withCount(['likes', 'comments'])
             ->orderBy($this->sortBy, $this->sortDirection)
             ->paginate($this->perPage);
     }
@@ -250,7 +268,7 @@ new #[Title('Каталог ножів ручної роботи — купит�
         'resources/images/' . (ProductCategory::tryFrom((string) $this->collection)?->images() ?? 'header.png'),
     )">
         <x-slot:title>
-            {{ ProductCategory::tryFrom((string) $this->collection)?->getLabel() ?? 'Каталог товарів' }}
+            {{ ProductCategory::tryFrom((string) $this->collection)?->getLabel() ?? 'Каталог ножів' }}
         </x-slot:title>
 
         <x-slot:description>
@@ -274,31 +292,52 @@ new #[Title('Каталог ножів ручної роботи — купит�
             <!-- Кнопка відкриття фільтрів на мобілці -->
             <div
                 class="sticky top-16 z-40 px-5 py-2.5 lg:px-0 bg-zinc-100 lg:bg-zinc-50 border-b lg:border-0 border-zinc-200 flex flex-col gap-0.5">
-                <div class="flex justify-between lg:gap-x-1.5">
+                <div class="flex justify-between gap-x-0.5 lg:gap-x-2.5">
+                    @php
+                        // Створюємо відфільтровану колекцію один раз для всього блоку
+                        $displayFilters = collect($this->activeFilters)->filter(
+                            fn($f) => $f !== $this->currentCollectionLabel(),
+                        );
+                    @endphp
+
                     <x-form.input size="sm" wire:model.trim.live.debounce.300ms="search" placeholder="Пошук ножів"
                         class="lg:py-3.5!" />
 
                     @include('partials.product.list.sorting')
                     @include('partials.product.list.viewing')
 
-                    <x-drawer class="">
+                    <x-drawer>
                         <x-slot:trigger>
                             <x-button variant="ghost" color="dark" size="sm" icon>
                                 <x-lucide-filter class="size-5 stroke-zinc-800" />
                             </x-button>
                         </x-slot:trigger>
-                        <x-slot:header>Фільтри</x-slot:header>
+                        <x-slot:header class="flex justify-between">
+                            <div class="flex flex-col me-auto">
+                                <div>Фільтри</div>
+                                @if ($displayFilters->isNotEmpty())
+                                    <div class="text-xs font-normal">
+                                        Знайдено: <span class="text-orange-500">{{ $this->products->count() }}</span>
+                                        {{ trans_choice('товар|товари|товарів', $this->products->count(), [], 'uk') }}
+                                    </div>
+                                @endif
+                            </div>
+                            <x-button @click="open = false" color="dark" size="xs" class="ms-auto">
+                                Показати
+                            </x-button>
+                        </x-slot:header>
 
                         @include('partials.product.filters')
+
+                        <x-slot:footer>
+                            <button wire:click="resetFilters"
+                                class="group w-fit mx-auto h-full flex items-center justify-center gap-1.5 text-xs text-red-500 hover:text-red-500 uppercase font-semibold cursor-pointer">
+                                <x-lucide-rotate-ccw class="size-3.5 transition duration-300 group-hover:-rotate-45" />
+                                Очистити все
+                            </button>
+                        </x-slot:footer>
                     </x-drawer>
                 </div>
-
-                @php
-                    // Створюємо відфільтровану колекцію один раз для всього блоку
-                    $displayFilters = collect($this->activeFilters)->filter(
-                        fn($f) => $f !== $this->currentCollectionLabel(),
-                    );
-                @endphp
 
                 @if ($displayFilters->isNotEmpty())
                     <div class="w-full flex flex-wrap items-center gap-1.5 mt-1.5">

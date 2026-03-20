@@ -1,17 +1,24 @@
-@props(['trigger', 'header'])
+@props(['trigger', 'header', 'footer'])
 
 <!-- Offcanvas: Bottom Position -->
 <!-- An Alpine.js and Tailwind CSS component by https://pinemix.com -->
 <div x-data="{
     open: false,
     init() {
-        {{-- this.$watch('open', value => {
+        this.$watch('open', value => {
             if (value) {
                 document.body.style.overflow = 'hidden';
             } else {
                 document.body.style.overflow = 'auto';
             }
-        }) --}}
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                document.body.style.overflow = 'auto';
+                this.open = false;
+            }
+        });
     },
     mobileFullWidth: false,
 
@@ -95,6 +102,12 @@
                 <div class="flex grow flex-col overflow-y-auto px-5">
                     {{ $slot }}
                 </div>
+
+                @isset($footer)
+                    <div class="shrink-0 py-2.5">
+                        {{ $footer }}
+                    </div>
+                @endisset
                 <!-- END Content -->
             </div>
             <!-- END Offcanvas Sidebar -->

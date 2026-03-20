@@ -21,7 +21,7 @@
     ];
 @endphp
 
-<x-drawer class="ms-auto lg:hidden">
+<x-drawer class="lg:hidden ms-1.5">
     <x-slot:trigger>
         <x-button variant="ghost" color="light" size="sm" icon>
             <div class="relative flex items-center justify-center size-5">

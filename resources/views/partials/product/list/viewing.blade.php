@@ -45,9 +45,16 @@
 
     <div class="space-y-1.5 my-5">
         @foreach ($viewOptions as $opt)
-            <button type="button" wire:click="setView('{{ $opt['value'] }}')" x-on:click="open = false"
-                @disabled($view === $opt['value'])
-                class="w-full flex items-center justify-between ... {{ $view === $opt['value'] ? 'bg-neutral-100' : '' }}">
+            @php
+                $isActive = $view === $opt['value'];
+                // Формуємо target точно так само, як у click, щоб Livewire розпізнав конкретну дію
+                $target = "setView('{$opt['value']}')";
+            @endphp
+
+            <button type="button" wire:click="{{ $target }}" x-on:click="open = false"
+                @disabled($isActive)
+                class="w-full flex items-center justify-between text-nowrap px-5 py-2.5 rounded-md text-sm font-medium tracking-tight transition group cursor-pointer 
+            {{ $isActive ? 'bg-neutral-100 text-black' : 'text-neutral-500 hover:bg-neutral-50' }}">
 
                 <div class="flex items-center gap-2.5">
                     <x-dynamic-component :component="$opt['icon']" class="size-4" />
@@ -55,16 +62,19 @@
                 </div>
 
                 <div class="relative size-5 flex items-center justify-center ms-1.5">
-                    {{-- Спінер спрацює на БУДЬ-ЯКИЙ виклик setView --}}
-                    <div wire:loading wire:target="setView">
+                    {{-- Спінер показується тільки для цієї конкретної кнопки --}}
+                    <div wire:loading wire:target="{{ $target }}">
                         <x-lucide-loader-circle class="size-4 animate-spin text-zinc-500" />
                     </div>
 
-                    {{-- Крапка зникає, поки йде БУДЬ-ЯКЕ завантаження setView --}}
-                    <div wire:loading.remove wire:target="setView">
-                        <div class="size-4 rounded-full border-2 ...">
+                    {{-- Індикатор (крапка) показується, коли завантаження НЕ йде --}}
+                    <div wire:loading.remove wire:target="{{ $target }}">
+                        <div
+                            class="size-4 rounded-full border-2 flex items-center justify-center transition-all 
+                        {{ $isActive ? 'border-stone-900 bg-stone-900' : 'border-zinc-300' }}">
                             <div
-                                class="size-1.5 rounded-full ... {{ $view === $opt['value'] ? 'scale-100' : 'scale-0' }}">
+                                class="size-1.5 rounded-full bg-white transition-transform 
+                            {{ $isActive ? 'scale-100' : 'scale-0' }}">
                             </div>
                         </div>
                     </div>
