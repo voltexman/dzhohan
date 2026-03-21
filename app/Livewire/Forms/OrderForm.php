@@ -43,7 +43,7 @@ class OrderForm extends Form
     ])]
     public string $city = '';
 
-    #[Validate('required_unless:delivery_method,pickup|nullable|string|min:5|max:255', message: [
+    #[Validate('required_unless:delivery_method,pickup|nullable|string|max:255', message: [
         'address.required_unless' => 'Вкажіть адресу або номер відділення.',
     ])]
     public string $address = '';
