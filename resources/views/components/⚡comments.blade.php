@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\Attributes\Validate;
 use Livewire\Attributes\Computed;
 use Livewire\WithPagination;
+// use Livewire\Attributes\On;
 use App\Models\Comment;
 
 new class extends Component {
@@ -58,6 +59,10 @@ new class extends Component {
 
         $this->reset(['author_name', 'replyTo', 'body']);
         $this->gotoPage(1, 'commentsPage');
+        // $this->dispatch('$refresh');
+        // unset($this->comments);
+        // $this->dispatch('comment-added');
+        // $this->comments;
     }
 
     public function setReply($id)
@@ -73,15 +78,10 @@ new class extends Component {
             ->whereNull('parent_id')
             ->where('is_active', true)
             ->with([
-                'replies' => function ($query) {
-                    $query->where('is_active', true);
-                },
-                'replies.user',
-                'replies.parent.user',
+                'replies' => fn($q) => $q->where('is_active', true)->with(['user', 'parent.user', 'likes']),
                 'likes',
-                'replies.likes',
             ])
-            ->withCount('likes')
+            ->withCount(['likes', 'replies'])
             ->latest()
             ->paginate(10, ['*'], 'commentsPage');
     }
@@ -102,7 +102,7 @@ new class extends Component {
                 @endif
             </h3>
 
-            <button type="button" x-on:click="$wire.$island('comment-list').$refresh()">
+            <button type="button" wire:click="$refresh" wire:island="comment-list" class="cursor-pointer">
                 <x-lucide-refresh-cw wire:loading.class="animate-spin" wire:target="$refresh"
                     class="size-5 stroke-gray-800" />
             </button>
@@ -127,14 +127,14 @@ new class extends Component {
         </x-button>
     </form>
 
-    @island('comment-list', lazy: true, always: true)
+    @island(name: 'comment-list', lazy: true)
         @placeholder
             @include('partials.placeholders.comments')
         @endplaceholder
 
-        <div class="space-y-5" wire:poll.15s.visible>
+        <div class="space-y-5" wire:on.comment-added="$refresh" wire:poll.15s.visible>
             @forelse ($this->comments as $comment)
-                <livewire:comment :$comment wire:key="comment-{{ $comment->id }}" />
+                <livewire:comment :comment="$comment" wire:key="comment-{{ $comment->id }}" />
             @empty
                 <div class="text-center py-10 text-zinc-500">
                     Немає коментарів
