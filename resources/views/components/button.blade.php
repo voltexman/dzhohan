@@ -70,7 +70,7 @@
     }
 @endphp
 
-<button {{ $attributes->merge(['class' => "$base $shape $variantClass"]) }}
+<button {{ $attributes->merge(['class' => "$base $shape $variantClass", 'type' => 'button']) }}
     @if ($disabled) disabled @endif>
     {{ $slot }}
 </button>

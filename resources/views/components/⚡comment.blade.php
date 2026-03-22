@@ -2,18 +2,17 @@
 
 use Livewire\Component;
 use App\Models\Comment;
-use Livewire\Attributes\Validate;
+use App\Livewire\Forms\CommentForm;
 
 new class extends Component {
     public Comment $comment;
+
+    public CommentForm $form;
 
     public bool $showReplyForm = false;
     public bool $expanded = false;
 
     public int $level = 0;
-
-    #[Validate('required|min:3|max:2000')]
-    public string $replyBody = '';
 
     public function mount(Comment $comment, int $level = 0)
     {
@@ -44,7 +43,7 @@ new class extends Component {
         $this->comment->loadCount(['likes', 'replies', 'descendants as descendants_count']);
 
         if (!$this->showReplyForm) {
-            $this->reset('replyBody');
+            $this->form->reset('replyBody');
         }
     }
 
@@ -55,19 +54,19 @@ new class extends Component {
 
     public function sendReply()
     {
-        $this->validateOnly('replyBody');
+        $this->form->validateOnly('replyBody');
 
         $this->comment->replies()->create([
             'commentable_id' => $this->comment->commentable_id,
             'commentable_type' => $this->comment->commentable_type,
             'parent_id' => $this->comment->id,
-            'body' => $this->replyBody,
-            'author_name' => Auth::user()?->name ?? 'Гість',
+            'body' => $this->form->replyBody,
+            'author_name' => Auth::user()?->name ?? (filled($this->form->author_name) ? $this->form->author_name : 'Гість'),
             'user_id' => Auth::id(),
             'ip_address' => request()->ip(),
         ]);
 
-        $this->reset('replyBody', 'showReplyForm');
+        $this->reset('form.replyBody', 'showReplyForm');
 
         $this->comment->load([
             'replies' => fn($q) => $q
@@ -82,7 +81,7 @@ new class extends Component {
 };
 ?>
 
-<div wire:key="comment-{{ $comment->id }}" @class([
+<div @class([
     'relative',
     'border-b border-zinc-100 last:border-b-0 pb-5' => $level === 0,
     'mt-5' => $level === 0,
@@ -90,23 +89,54 @@ new class extends Component {
 
     <!-- Автор + дата -->
     @if ($comment->parent_id && $level > 0)
-        <div class="text-xs select-none line-clamp-1 mb-0.5">
+        <div class="text-xs select-none line-clamp-1 mb-0.5 italic">
             <span class="text-zinc-400">Відповідь для: </span>
             <span class="text-zinc-600 font-semibold">{{ $comment->parent?->author_name ?: 'Гість' }}</span>
         </div>
     @endif
     <div class="flex justify-between items-start gap-2.5">
-        <div class="flex justify-center items-center gap-1">
-            <x-lucide-user-round class="size-4 shrink-0" />
-            <div class="text-sm font-semibold text-zinc-900 line-clamp-1">
+        <div class="flex justify-center items-center gap-1.5">
+            {{-- Аватар / іконка --}}
+            @if ($comment->user?->hasRole('admin'))
+                @if ($comment->user->avatar_url)
+                    <div class="size-7 shrink-0 rounded-full overflow-hidden border border-zinc-600">
+                        <img src="{{ asset($comment->user->avatar_url) }}" alt="Admin"
+                            class="w-full h-full object-cover" />
+                    </div>
+                @endif
+            @elseif (!$comment->author_name)
+                {{-- Гість без імені --}}
+                <div
+                    class="size-7 shrink-0 flex justify-center items-center rounded-full bg-zinc-100 border border-zinc-200">
+                    <x-lucide-user-round class="size-3.5 shrink-0 stroke-zinc-800" />
+                </div>
+            @else
+                {{-- Є ім’я (гість або користувач) → генерація аватарки --}}
+                <div class="size-7 rounded-full overflow-hidden border border-zinc-100">
+                    <img src="{{ Avatar::create($comment->author_name)->setFont(public_path('fonts/Roboto-Bold.ttf'))->toBase64() }}"
+                        alt="{{ $comment->author_name }}" class="w-full h-full object-cover" />
+                </div>
+            @endif
+
+            {{-- Ім’я користувача / бейдж admin --}}
+            <div @class([
+                'line-clamp-1 px-1.5 py-0.5 rounded-sm',
+                'bg-black text-xs font-medium text-white' => $comment->user?->hasRole(
+                    'admin'),
+                'text-sm font-semibold text-zinc-800' => !$comment->user?->hasRole('admin'),
+            ])>
                 {{ $comment->author_name ?: 'Гість' }}
             </div>
             @if ($comment->user?->hasRole('admin'))
-                <span class="text-xs font-medium bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded-sm">Майстер</span>
+                <span
+                    class="inline-flex items-center gap-0.5 text-xs font-medium bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded-sm">
+                    <x-lucide-shield-check class="size-3.5 shrink-0" />
+                    Майстер
+                </span>
             @endif
         </div>
 
-        <div class="flex justify-center items-center gap-1 text-xs text-zinc-400 whitespace-nowrap">
+        <div class="flex justify-center items-center self-center gap-1 text-xs text-zinc-400 whitespace-nowrap">
             @if ($comment->created_at->gt(now()->subDays(1)))
                 <x-lucide-clock class="size-3.5 shrink-0 fill-zinc-100 stroke-zinc-500" />
                 <span>{{ $comment->created_at->diffForHumans() }}</span>
@@ -139,7 +169,7 @@ new class extends Component {
                 'fill-red-500 stroke-red-500' => $comment->isLiked(),
                 'fill-zinc-100 stroke-zinc-500' => !$comment->isLiked(),
             ]) />
-            <span>Подобається</span>
+            <span>{{ $comment->isLiked() ? 'Подобається' : 'Вподобати' }}</span>
         </button>
 
         @if ($comment->likes_count > 0 || $comment->replies->isNotEmpty())
@@ -173,7 +203,11 @@ new class extends Component {
     </div>
 
     <div wire:show="showReplyForm" class="flex flex-col gap-5 mt-5 group" wire:transition x-cloak wire:ignore.self>
-        <textarea wire:model="replyBody" x-ref="replyText" rows="1"
+        <div class="text-sm">
+            <span class="text-zinc-500 font-medium">Я: </span>
+            <span class="text-zinc-700 font-semibold">{{ $this->form->author_name }}</span>
+        </div>
+        <textarea wire:model="form.replyBody" x-ref="replyText" rows="1"
             @input="$el.style.height = '32px'; $el.style.height = $el.scrollHeight + 'px'" placeholder="Введіть відповідь..."
             class="w-full bg-transparent overflow-y-hidden border-0 border-b-2 border-zinc-200 py-0 px-0 text-sm leading-8 focus:ring-0 focus:border-black transition-colors duration-300 resize-none placeholder:text-zinc-500 outline-none box-border"
             style="height: 32px; min-height: 32px;"></textarea>
@@ -197,8 +231,9 @@ new class extends Component {
             @if ($comment->replies_count > 0 && $level === 0)
                 <button wire:click="expanded = !expanded"
                     class="mt-2.5 flex items-center gap-1 text-xs font-semibold text-orange-600 hover:text-orange-700 cursor-pointer transition-colors">
-                    <x-lucide-chevron-down class="size-4 transition-transform duration-300" ::class="expanded ? 'rotate-180' : ''" />
-                    <span wire:text="expanded ? 'Приховати' : 'Обговорення ({{ $comment->descendants_count }})'"></span>
+                    <x-lucide-chevron-down class="size-4 transition-transform duration-300" ::class="$wire.expanded ? 'rotate-180' : ''" />
+                    <span
+                        wire:text="expanded ? 'Приховати' : 'Обговорення ({{ $comment->descendants_count }})'"></span>
                 </button>
             @endif
 

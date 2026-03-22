@@ -29,6 +29,22 @@ class Comment extends Model
             ->orderByDesc('created_at');
     }
 
+    protected static function booted()
+    {
+        static::creating(function ($comment) {
+            $comment->parent_id = $comment->parent_id ?: null;
+
+            $comment->body = strip_tags(trim($comment->body));
+
+            $comment->ip_address = request()->ip();
+
+            if (auth()->check()) {
+                $comment->user_id = auth()->id();
+                $comment->author_name = auth()->user()->name;
+            }
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

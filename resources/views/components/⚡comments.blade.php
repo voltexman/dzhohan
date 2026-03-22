@@ -7,38 +7,15 @@ use Livewire\Attributes\Validate;
 use Livewire\Attributes\Computed;
 use Livewire\WithPagination;
 use Livewire\Attributes\On;
-use Illuminate\Pagination\LengthAwarePaginator;
+use App\Livewire\Forms\CommentForm;
 use App\Models\Comment;
 
 new class extends Component {
     use WithPagination;
 
-    public Model $model; // Product | Article | etc
+    public Model $model;
 
-    #[
-        Validate(
-            'min:2|max:50',
-            message: [
-                'min' => 'Занадто мало символів',
-                'max' => 'Занадто багато символів',
-            ],
-        ),
-    ]
-    public $author_name = '';
-
-    #[
-        Validate(
-            'required|min:3|max:2000',
-            message: [
-                'required' => 'Напишіть коментар',
-                'min' => 'Занадто короткий коментар',
-                'max' => 'Занадто довгий коментар',
-            ],
-        ),
-    ]
-    public $body = '';
-
-    public $replyTo = null;
+    public CommentForm $form;
 
     public function mount(Model $model)
     {
@@ -47,28 +24,14 @@ new class extends Component {
 
     public function send()
     {
-        $this->validate();
+        $validated = $this->form->validate();
 
-        $this->model->comments()->create([
-            'author_name' => $this->author_name,
-            'parent_id' => $this->replyTo,
-            'body' => $this->body,
-            'ip_address' => request()->ip(),
-        ]);
+        $this->model->comments()->create($validated);
 
-        $this->reset(['author_name', 'replyTo', 'body']);
+        $this->form->reset(['body']);
         $this->gotoPage(1, 'commentsPage');
-    }
 
-    public function setReply($id)
-    {
-        $this->replyTo = $this->replyTo === $id ? null : $id;
-    }
-
-    #[On('reply-added')]
-    public function refreshAfterReply()
-    {
-        unset($this->comments);
+        // $this->dispatch('$refresh');
     }
 
     #[Computed]
@@ -78,15 +41,12 @@ new class extends Component {
             ->comments()
             ->whereNull('parent_id')
             ->where('is_active', true)
-            ->withCount([
-                'likes',
-                'descendants as descendants_count', // ← ключовий рядок! рахує всіх нащадків
-            ])
+            ->withCount(['likes', 'descendants as descendants_count'])
             ->with([
                 'likes',
                 'user',
                 'descendants' => function ($q) {
-                    $q->where('is_active', true)->with(['likes', 'user']); // якщо хочеш лайки/авторів у відповідях
+                    $q->where('is_active', true)->with(['likes', 'user']);
                 },
             ])
             ->orderByDesc('descendants_count')
@@ -110,20 +70,22 @@ new class extends Component {
                 @endif
             </h3>
 
-            <button type="button" wire:click="$refresh" wire:island="comment-list" class="cursor-pointer">
+            <x-button variant="ghost" color="light" size="sm" wire:click="$refresh" wire:island="comment-list"
+                wire:loading.attr="disabled" wire:target="$refresh" class="cursor-pointer" icon>
                 <x-lucide-refresh-cw wire:loading.class="animate-spin" wire:target="$refresh"
                     class="size-5 stroke-gray-800" />
-            </button>
+            </x-button>
         </div>
 
         <div>
-            <x-form.input color="soft" type="text" wire:model.trim="author_name" placeholder="Ім’я" />
+            <x-form.input color="soft" type="text" wire:model.trim="form.author_name" placeholder="Ім’я"
+                maxlength="80" :disabled="filled($form->author_name)" />
         </div>
 
         <div>
-            <x-form.textarea wire:model.trim="body" rows="4" required maxlength="500"
-                placeholder="Ваш відгук..." />
-            @error('body')
+            <x-form.textarea wire:model.trim="form.body" rows="5" placeholder="Ваш відгук..." maxlength="500"
+                required icons />
+            @error('form.body')
                 <x-form.error>{{ $message }}</x-form.error>
             @enderror
         </div>
@@ -141,12 +103,36 @@ new class extends Component {
             @include('partials.placeholders.comments')
         @endplaceholder
 
-        <div class="space-y-5" wire:on.comment-added="$refresh" wire:poll.15s.visible>
+        <div class="space-y-5" wire:poll.30s.visible @saved="$refresh">
             @forelse ($this->comments as $comment)
                 <livewire:comment :comment="$comment" wire:key="comment-{{ $comment->id }}" />
             @empty
-                <div class="text-center py-10 text-zinc-500">
-                    Немає коментарів
+                <div class="flex flex-col items-center justify-center py-10 px-5">
+                    <div class="relative mb-5">
+                        {{-- Декоративне коло на фоні --}}
+                        <div class="absolute inset-0 scale-150 bg-orange-100/50 rounded-full blur-2xl"></div>
+
+                        {{-- Іконка --}}
+                        <div
+                            class="relative size-15 flex items-center justify-center rounded-full bg-white border border-zinc-100 text-zinc-400">
+                            <x-lucide-messages-square class="size-7 stroke-[1.5px]" />
+                        </div>
+                    </div>
+
+                    <div class="text-center space-y-1.5">
+                        <h4 class="font-[Oswald] text-sm font-bold text-zinc-900 uppercase tracking-tight">
+                            Тут поки що тихо
+                        </h4>
+                        <p class="text-xs text-zinc-500 leading-relaxed mx-auto">
+                            Будьте першим, хто<br>поділиться своєю думкою!
+                        </p>
+                    </div>
+
+                    {{-- Опціонально: кнопка швидкого скролу до форми --}}
+                    <button @click="window.scrollTo({top: 0, behavior: 'smooth'})"
+                        class="mt-5 text-xs font-bold tracking-widest text-orange-600 hover:text-orange-700 transition-colors">
+                        Написати відгук
+                    </button>
                 </div>
             @endforelse
         </div>

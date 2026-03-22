@@ -21,6 +21,8 @@ new #[Layout('layouts::cart')] class extends Component {
     public function like()
     {
         $this->product->isLiked() ? $this->product->unlike() : $this->product->like();
+
+        $this->isLiked = $this->product->isLiked();
     }
 };
 ?>
@@ -77,15 +79,10 @@ new #[Layout('layouts::cart')] class extends Component {
             <a href="#comments-section" class="flex gap-0.5 items-center">
                 <x-lucide-message-circle class="size-6.5 fill-gray-100 stroke-gray-800" />
             </a>
-            <button type="button" x-data="{
-                active: @entangle('isLiked'),
-                handleLike() {
-                    this.active = !this.active;
-                    $wire.like();
-                }
-            }" @click="handleLike()"
+            <button type="button" wire:click="like"
                 class="flex gap-0.5 items-center cursor-pointer group focus:outline-none">
-                <x-lucide-heart class="size-6.5 transition-all duration-300 group-hover:scale-110" ::class="active ? 'fill-red-600 stroke-red-600' : 'fill-gray-100 stroke-gray-800'" />
+                <x-lucide-heart class="size-6.5 transition-all duration-300 group-hover:scale-110"
+                    x-bind:class="$wire.isLiked ? 'fill-red-600 stroke-red-600' : 'fill-gray-100 stroke-gray-800'" />
             </button>
         </div>
     </div>
@@ -260,15 +257,9 @@ new #[Layout('layouts::cart')] class extends Component {
             <a href="#comments-section" class="text-zinc-400 hover:text-zinc-600 p-2 transition-colors">
                 <x-lucide-message-circle class="size-6 fill-gray-100 stroke-gray-800" />
             </a>
-            <button type="button" x-data="{
-                active: @entangle('isLiked'),
-                handleLike() {
-                    this.active = !this.active;
-                    $wire.like();
-                }
-            }" @click="handleLike()"
-                class="flex gap-0.5 items-center cursor-pointer group focus:outline-none">
-                <x-lucide-heart class="size-6.5 transition-all duration-300 group-hover:scale-110" ::class="active ? 'fill-red-600 stroke-red-600' : 'fill-gray-100 stroke-gray-800'" />
+            <button wire:click="like" class="flex gap-0.5 items-center cursor-pointer group focus:outline-none">
+                <x-lucide-heart class="size-6.5 transition-all duration-300 group-hover:scale-110"
+                    x-bind:class="$wire.isLiked ? 'fill-red-600 stroke-red-600' : 'fill-gray-100 stroke-gray-800'" />
             </button>
         </div>
 
