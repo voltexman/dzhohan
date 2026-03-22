@@ -98,23 +98,24 @@ new class extends Component {
         <div class="flex justify-center items-center gap-1.5">
             {{-- Аватар / іконка --}}
             @if ($comment->user?->hasRole('admin'))
+                {{-- Admin користувач --}}
                 @if ($comment->user->avatar_url)
                     <div class="size-7 shrink-0 rounded-full overflow-hidden border border-zinc-600">
                         <img src="{{ asset($comment->user->avatar_url) }}" alt="Admin"
                             class="w-full h-full object-cover" />
                     </div>
                 @endif
-            @elseif (!$comment->author_name)
-                {{-- Гість без імені --}}
-                <div
-                    class="size-7 shrink-0 flex justify-center items-center rounded-full bg-zinc-100 border border-zinc-200">
-                    <x-lucide-user-round class="size-3.5 shrink-0 stroke-zinc-800" />
-                </div>
-            @else
-                {{-- Є ім’я (гість або користувач) → генерація аватарки --}}
+            @elseif ($comment->author_name)
+                {{-- Гість з ім’ям → генерація аватарки --}}
                 <div class="size-7 rounded-full overflow-hidden border border-zinc-100">
                     <img src="{{ Avatar::create($comment->author_name)->setFont(public_path('fonts/Roboto-Bold.ttf'))->toBase64() }}"
                         alt="{{ $comment->author_name }}" class="w-full h-full object-cover" />
+                </div>
+            @else
+                {{-- Гість без імені → іконка користувача --}}
+                <div
+                    class="size-7 shrink-0 flex justify-center items-center rounded-full bg-zinc-100 border border-zinc-200">
+                    <x-lucide-user-round class="size-3.5 shrink-0 stroke-zinc-800" />
                 </div>
             @endif
 
