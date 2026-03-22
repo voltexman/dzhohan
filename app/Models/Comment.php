@@ -9,12 +9,25 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
 
 class Comment extends Model
 {
-    use HasFactory, Likeable;
+    use HasFactory, Likeable, HasRecursiveRelationships;
 
     protected $fillable = ['user_id', 'parent_id', 'commentable_id', 'commentable_type', 'author_name', 'body', 'is_active', 'ip_address'];
+
+    public function scopePopular($query)
+    {
+        return $query
+            ->withCount([
+                'likes',
+                'descendants as descendants_count'
+            ])
+            ->orderByDesc('descendants_count')
+            ->orderByDesc('likes_count')
+            ->orderByDesc('created_at');
+    }
 
     public function user()
     {

@@ -6,7 +6,8 @@ use Livewire\Component;
 use Livewire\Attributes\Validate;
 use Livewire\Attributes\Computed;
 use Livewire\WithPagination;
-// use Livewire\Attributes\On;
+use Livewire\Attributes\On;
+use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\Comment;
 
 new class extends Component {
@@ -39,8 +40,6 @@ new class extends Component {
 
     public $replyTo = null;
 
-    // protected $paginationTheme = 'tailwind';
-
     public function mount(Model $model)
     {
         $this->model = $model;
@@ -59,15 +58,17 @@ new class extends Component {
 
         $this->reset(['author_name', 'replyTo', 'body']);
         $this->gotoPage(1, 'commentsPage');
-        // $this->dispatch('$refresh');
-        // unset($this->comments);
-        // $this->dispatch('comment-added');
-        // $this->comments;
     }
 
     public function setReply($id)
     {
         $this->replyTo = $this->replyTo === $id ? null : $id;
+    }
+
+    #[On('reply-added')]
+    public function refreshAfterReply()
+    {
+        unset($this->comments);
     }
 
     #[Computed]
@@ -77,20 +78,27 @@ new class extends Component {
             ->comments()
             ->whereNull('parent_id')
             ->where('is_active', true)
-            ->with([
-                'replies' => fn($q) => $q->where('is_active', true)->with(['user', 'parent.user', 'likes']),
+            ->withCount([
                 'likes',
+                'descendants as descendants_count', // ← ключовий рядок! рахує всіх нащадків
             ])
-            ->withCount(['likes', 'replies'])
-            ->latest()
+            ->with([
+                'likes',
+                'user',
+                'descendants' => function ($q) {
+                    $q->where('is_active', true)->with(['likes', 'user']); // якщо хочеш лайки/авторів у відповідях
+                },
+            ])
+            ->orderByDesc('descendants_count')
+            ->orderByDesc('likes_count')
+            ->orderByDesc('created_at')
             ->paginate(10, ['*'], 'commentsPage');
     }
 };
 ?>
 
-<div class="space-y-5 pb-10">
+<div class="space-y-10 pb-10">
     <form class="space-y-5" wire:submit="send">
-
         <div class="flex justify-between">
             <h3 class="text-lg font-semibold font-[SN_Pro]">
                 Залишити коментар
@@ -113,7 +121,8 @@ new class extends Component {
         </div>
 
         <div>
-            <x-form.textarea wire:model.trim="body" rows="4" placeholder="Ваш відгук..." />
+            <x-form.textarea wire:model.trim="body" rows="4" required maxlength="500"
+                placeholder="Ваш відгук..." />
             @error('body')
                 <x-form.error>{{ $message }}</x-form.error>
             @enderror

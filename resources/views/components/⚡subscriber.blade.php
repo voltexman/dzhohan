@@ -7,7 +7,7 @@ use Livewire\Component;
 new class extends Component {
     #[
         Validate(
-            'required|email|unique:subscribers,email|max:100',
+            'required|email:rfc,dns|unique:subscribers,email|max:100',
             message: [
                 'required' => 'Вкажіть поштову адресу',
                 'email' => 'Некоректний EMail',

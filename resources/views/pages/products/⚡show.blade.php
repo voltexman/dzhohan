@@ -240,7 +240,7 @@ new #[Layout('layouts::cart')] class extends Component {
         <livewire:review :$product />
     @endif
 
-    <div class="max-w-xl mt-10 scroll-mt-6 lg:scroll-mt-10 px-5 lg:px-10" id="comments-section">
+    <div class="max-w-xl mt-10 scroll-mt-20 lg:scroll-mt-8 px-5 lg:px-10" id="comments-section">
         <livewire:comments :model="$product" />
     </div>
 

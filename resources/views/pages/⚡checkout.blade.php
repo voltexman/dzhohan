@@ -3,6 +3,7 @@
 use Livewire\Component;
 use App\Models\Order;
 use App\Models\Subscriber;
+use App\Enums\CurrencyType;
 use App\Enums\Order\OrderType;
 use App\Services\CartService;
 use App\Livewire\Forms\OrderForm;
@@ -46,7 +47,7 @@ new class extends Component {
 
         $order->products()->createMany($this->cartService()->itemsForOrder());
 
-        $this->subscribe && Subscriber::firstOrCreate(['email' => $this->form->email]);
+        $this->subscribe && Subscriber::updateOrCreate(['email' => $this->form->email]);
 
         Notification::routes([
             'mail' => env('ADMIN_EMAIL'),
@@ -105,7 +106,7 @@ new class extends Component {
                     <div class="flex flex-col items-end gap-1">
                         @foreach ($this->getTotalsByCurrency() as $code => $sum)
                             <span class="text-3xl font-black text-black tracking-tighter">
-                                {{ \App\Enums\CurrencyType::tryFrom($code)?->format($sum) }}
+                                {{ CurrencyType::tryFrom($code)?->format($sum) }}
                             </span>
                         @endforeach
                     </div>
