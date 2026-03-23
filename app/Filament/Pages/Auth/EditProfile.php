@@ -8,6 +8,11 @@ use Filament\Schemas\Schema;
 
 class EditProfile extends BaseEditProfile
 {
+    protected function getRedirectUrl(): string
+    {
+        return filament()->getPanel('admin')->getUrl();
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema
