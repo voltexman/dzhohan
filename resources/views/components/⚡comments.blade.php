@@ -86,8 +86,8 @@ new class extends Component {
         </div>
 
         <div>
-            <x-form.textarea wire:model.trim="form.body" rows="5" placeholder="Ваш відгук..." maxlength="500"
-                required icons />
+            <x-form.textarea id="comment-body" wire:model.trim="form.body" rows="5" placeholder="Ваш відгук..."
+                maxlength="500" required icons />
             @error('form.body')
                 <x-form.error>{{ $message }}</x-form.error>
             @enderror
@@ -132,9 +132,10 @@ new class extends Component {
                     </div>
 
                     {{-- Опціонально: кнопка швидкого скролу до форми --}}
-                    <button @click="window.scrollTo({top: 0, behavior: 'smooth'})"
-                        class="mt-5 text-xs font-bold tracking-widest text-orange-600 hover:text-orange-700 transition-colors">
-                        Написати відгук
+                    <button
+                        @click="const el = document.getElementById('comment-body'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.focus();"
+                        class="mt-5 text-sm font-semibold tracking-wide text-orange-600 hover:text-orange-700 transition-colors cursor-pointer">
+                        Написати коментар
                     </button>
                 </div>
             @endforelse

@@ -76,9 +76,10 @@ new #[Layout('layouts::cart')] class extends Component {
             {{-- <button type="button">
                 <x-lucide-share-2 class="size-6.5 fill-gray-100 stroke-gray-800" />
             </button> --}}
-            <a href="#comments-section" class="flex gap-0.5 items-center">
+            <div @click="const el = document.getElementById('comment-body'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.focus();"
+                class="flex gap-0.5 items-center cursor-pointer">
                 <x-lucide-message-circle class="size-6.5 fill-gray-100 stroke-gray-800" />
-            </a>
+            </div>
             <button type="button" wire:click="like"
                 class="flex gap-0.5 items-center cursor-pointer group focus:outline-none">
                 <x-lucide-heart class="size-6.5 transition-all duration-300 group-hover:scale-110"
@@ -254,9 +255,10 @@ new #[Layout('layouts::cart')] class extends Component {
         x-cloak>
 
         <div class="flex items-center gap-1 px-1">
-            <a href="#comments-section" class="text-zinc-400 hover:text-zinc-600 p-2 transition-colors">
+            <div @click="const el = document.getElementById('comment-body'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.focus();"
+                class="text-zinc-400 hover:text-zinc-600 p-2 transition-colors cursor-pointer">
                 <x-lucide-message-circle class="size-6 fill-gray-100 stroke-gray-800" />
-            </a>
+            </div>
             <button wire:click="like" class="flex gap-0.5 items-center cursor-pointer group focus:outline-none">
                 <x-lucide-heart class="size-6.5 transition-all duration-300 group-hover:scale-110"
                     x-bind:class="$wire.isLiked ? 'fill-red-600 stroke-red-600' : 'fill-gray-100 stroke-gray-800'" />

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Products\Tables;
 
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -98,6 +99,15 @@ class ProductsTable
                     ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
                 ]),
+            ])
+            ->emptyStateHeading('Ножі не знайдено')
+            ->emptyStateDescription('Спочатку необхідно додати новий ніж')
+            ->emptyStateActions([
+                Action::make('create')
+                    ->label('Додати ніж')
+                    ->url(route('filament.admin.resources.products.create'))
+                    ->icon('heroicon-m-plus')
+                    ->button(),
             ]);
     }
 }

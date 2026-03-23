@@ -13,7 +13,7 @@ use Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
 
 class Comment extends Model
 {
-    use HasFactory, Likeable, HasRecursiveRelationships;
+    use HasFactory, HasRecursiveRelationships, Likeable;
 
     protected $fillable = ['user_id', 'parent_id', 'commentable_id', 'commentable_type', 'author_name', 'body', 'is_active', 'ip_address'];
 
@@ -25,7 +25,7 @@ class Comment extends Model
                 'likes',
                 'descendants as descendants_count' => function ($q) {
                     $q->where('is_active', true);
-                }
+                },
             ])
             ->orderByDesc('descendants_count')
             ->orderByDesc('likes_count')

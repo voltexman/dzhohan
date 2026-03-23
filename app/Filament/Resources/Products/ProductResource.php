@@ -32,7 +32,7 @@ class ProductResource extends Resource
 
     protected static ?string $modelLabel = 'Товари';
 
-    protected static ?string $pluralModelLabel = 'Товари';
+    protected static ?string $pluralModelLabel = 'Ножі';
 
     public static function getGloballySearchableAttributes(): array
     {
