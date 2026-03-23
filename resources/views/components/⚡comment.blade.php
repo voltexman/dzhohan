@@ -103,13 +103,13 @@ new class extends Component {
                 @if ($comment->user->hasRole('admin') && $comment->user->avatar_url)
                     {{-- Адмін --}}
                     <div class="size-7 shrink-0 rounded-full overflow-hidden border border-zinc-600">
-                        <img src="{{ asset($comment->user->avatar_url) }}" alt="Admin"
+                        <img src="{{ Storage::disk('public')->url($comment->user->avatar_url) }}" alt="Admin"
                             class="w-full h-full object-cover" />
                     </div>
                 @elseif ($comment->user->avatar_url)
                     {{-- Звичайний користувач --}}
                     <div class="size-7 shrink-0 rounded-full overflow-hidden border border-zinc-200">
-                        <img src="{{ asset($comment->user->avatar_url) }}" alt="User"
+                        <img src="{{ Storage::disk('public')->url($comment->user->avatar_url) }}" alt="User"
                             class="w-full h-full object-cover" />
                     </div>
                 @else
