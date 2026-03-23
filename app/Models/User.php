@@ -8,6 +8,7 @@ use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar
@@ -31,9 +32,16 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         return $this->hasRole('admin');
     }
 
+    // public function getFilamentAvatarUrl(): ?string
+    // {
+    //     return $this->avatar_url;
+    // }
+
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar_url;
+        return $this->avatar_url
+            ? Storage::disk('public')->url($this->avatar_url)
+            : null;
     }
 
     protected function casts(): array
