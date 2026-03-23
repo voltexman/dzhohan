@@ -8,18 +8,13 @@ use Filament\Schemas\Schema;
 
 class EditProfile extends BaseEditProfile
 {
-    protected function getRedirectUrl(): string
-    {
-        return filament()->getPanel('admin')->getUrl();
-    }
-
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 FileUpload::make('avatar_url')
                     ->hiddenLabel()
-                    ->label('Ваша аватарка')
+                    ->label('Аватарка')
                     ->disk('public')
                     ->avatar()
                     ->imageEditor()
