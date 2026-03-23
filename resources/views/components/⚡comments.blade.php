@@ -29,9 +29,12 @@ new class extends Component {
         $this->model->comments()->create($validated);
 
         $this->form->reset(['body']);
+
+        unset($this->comments);
+
         $this->gotoPage(1, 'commentsPage');
 
-        // $this->dispatch('$refresh');
+        $this->dispatch('comment-added');
     }
 
     #[Computed]
@@ -98,12 +101,12 @@ new class extends Component {
         </x-button>
     </form>
 
-    @island(name: 'comment-list', lazy: true)
+    @island(name: 'comment-list', lazy: true, always: true)
         @placeholder
             @include('partials.placeholders.comments')
         @endplaceholder
 
-        <div class="space-y-5" wire:poll.30s.visible @saved="$refresh">
+        <div class="space-y-5" wire:poll.30s.visible wire:on.comment-added="$refresh">
             @forelse ($this->comments as $comment)
                 <livewire:comment :comment="$comment" wire:key="comment-{{ $comment->id }}" />
             @empty

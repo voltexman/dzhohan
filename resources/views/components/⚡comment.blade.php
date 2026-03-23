@@ -224,8 +224,15 @@ new class extends Component {
     <div wire:show="showReplyForm" class="flex flex-col gap-5 mt-5 group" wire:transition x-cloak>
         <div class="text-sm">
             <span class="text-zinc-500 font-medium">Я: </span>
-            <span class="text-zinc-700 font-semibold">{{ $this->form->author_name }}</span>
+            <span class="text-zinc-700 font-semibold">
+                @if (auth()->check())
+                    {{ auth()->user()->name }}
+                @else
+                    {{ filled($this->form->author_name) ? $this->form->author_name : 'Гість' }}
+                @endif
+            </span>
         </div>
+
         <textarea wire:model="form.replyBody" x-ref="replyText" rows="1"
             @input="$el.style.height = '32px'; $el.style.height = $el.scrollHeight + 'px'" placeholder="Введіть відповідь..."
             class="w-full bg-transparent overflow-y-hidden border-0 border-b-2 border-zinc-200 py-0 px-0 text-sm leading-8 focus:ring-0 focus:border-black transition-colors duration-300 resize-none placeholder:text-zinc-500 outline-none box-border"
