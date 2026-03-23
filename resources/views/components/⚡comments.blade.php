@@ -79,7 +79,7 @@ new class extends Component {
 
         <div>
             <x-form.input color="soft" type="text" wire:model.trim="form.author_name" placeholder="Ім’я"
-                maxlength="80" :disabled="filled($form->author_name)" />
+                maxlength="80" />
         </div>
 
         <div>

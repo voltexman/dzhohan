@@ -20,9 +20,12 @@ class Comment extends Model
     public function scopePopular($query)
     {
         return $query
+            ->where('is_active', true)
             ->withCount([
                 'likes',
-                'descendants as descendants_count'
+                'descendants as descendants_count' => function ($q) {
+                    $q->where('is_active', true);
+                }
             ])
             ->orderByDesc('descendants_count')
             ->orderByDesc('likes_count')

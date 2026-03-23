@@ -26,21 +26,21 @@ new class extends Component {
                 ->popular(),
         ]);
 
-        $this->comment->loadCount(['likes', 'replies', 'descendants as descendants_count']);
+        $this->comment->loadCount(['likes', 'replies', 'descendants as descendants_count' => fn($q) => $q->where('is_active', true)]);
     }
 
     public function toggleLike()
     {
         $this->comment->isLiked() ? $this->comment->unlike() : $this->comment->like();
 
-        $this->comment->loadCount(['likes', 'replies', 'descendants as descendants_count']);
+        $this->comment->loadCount(['likes', 'replies', 'descendants as descendants_count' => fn($q) => $q->where('is_active', true)]);
     }
 
     public function toggleReply()
     {
         $this->showReplyForm = !$this->showReplyForm;
 
-        $this->comment->loadCount(['likes', 'replies', 'descendants as descendants_count']);
+        $this->comment->loadCount(['likes', 'replies', 'descendants as descendants_count' => fn($q) => $q->where('is_active', true)]);
 
         if (!$this->showReplyForm) {
             $this->form->reset('replyBody');
@@ -61,7 +61,7 @@ new class extends Component {
             'commentable_type' => $this->comment->commentable_type,
             'parent_id' => $this->comment->id,
             'body' => $this->form->replyBody,
-            'author_name' => Auth::user()?->name ?? (filled($this->form->author_name) ? $this->form->author_name : 'Гість'),
+            'author_name' => Auth::user()?->name ?? (filled($this->form->author_name) ? trim($this->form->author_name) : null),
             'user_id' => Auth::id(),
             'ip_address' => request()->ip(),
         ]);
@@ -71,12 +71,12 @@ new class extends Component {
         $this->comment->load([
             'replies' => fn($q) => $q
                 ->where('is_active', true)
-                ->popular()
-                ->with(['likes', 'replies', 'user']),
+                ->with(['likes', 'replies', 'user'])
+                ->popular(),
             'likes',
         ]);
 
-        $this->comment->loadCount(['likes', 'replies', 'descendants as descendants_count']);
+        $this->comment->loadCount(['likes', 'replies', 'descendants as descendants_count' => fn($q) => $q->where('is_active', true)]);
     }
 };
 ?>
@@ -85,7 +85,7 @@ new class extends Component {
     'relative',
     'border-b border-zinc-100 last:border-b-0 pb-5' => $level === 0,
     'mt-5' => $level === 0,
-]) wire:transition wire:ignore.self>
+]) wire:transition>
 
     <!-- Автор + дата -->
     @if ($comment->parent_id && $level > 0)
@@ -97,26 +97,44 @@ new class extends Component {
     <div class="flex justify-between items-start gap-2.5">
         <div class="flex justify-center items-center gap-1.5">
             {{-- Аватар / іконка --}}
-            @if ($comment->user?->hasRole('admin'))
-                {{-- Admin користувач --}}
-                @if ($comment->user->avatar_url)
+            @if ($comment->user)
+                {{-- Зареєстрований користувач --}}
+
+                @if ($comment->user->hasRole('admin') && $comment->user->avatar_url)
+                    {{-- Адмін --}}
                     <div class="size-7 shrink-0 rounded-full overflow-hidden border border-zinc-600">
                         <img src="{{ asset($comment->user->avatar_url) }}" alt="Admin"
                             class="w-full h-full object-cover" />
                     </div>
+                @elseif ($comment->user->avatar_url)
+                    {{-- Звичайний користувач --}}
+                    <div class="size-7 shrink-0 rounded-full overflow-hidden border border-zinc-200">
+                        <img src="{{ asset($comment->user->avatar_url) }}" alt="User"
+                            class="w-full h-full object-cover" />
+                    </div>
+                @else
+                    {{-- Користувач без аватарки --}}
+                    <div
+                        class="size-7 shrink-0 flex justify-center items-center rounded-full bg-zinc-100 border border-zinc-200">
+                        <x-lucide-user-round class="size-3.5 stroke-zinc-800" />
+                    </div>
                 @endif
-            @elseif ($comment->author_name)
-                {{-- Гість з ім’ям → генерація аватарки --}}
-                <div class="size-7 rounded-full overflow-hidden border border-zinc-100">
-                    <img src="{{ Avatar::create($comment->author_name)->setFont(public_path('fonts/Roboto-Bold.ttf'))->toBase64() }}"
-                        alt="{{ $comment->author_name }}" class="w-full h-full object-cover" />
-                </div>
             @else
-                {{-- Гість без імені → іконка користувача --}}
-                <div
-                    class="size-7 shrink-0 flex justify-center items-center rounded-full bg-zinc-100 border border-zinc-200">
-                    <x-lucide-user-round class="size-3.5 shrink-0 stroke-zinc-800" />
-                </div>
+                {{-- Гість --}}
+
+                @if (!empty($comment->author_name))
+                    {{-- ✅ ТІЛЬКИ тут генерується аватар --}}
+                    <div class="size-7 rounded-full overflow-hidden border border-zinc-100">
+                        <img src="{{ Avatar::create($comment->author_name)->setFont(public_path('fonts/Roboto-Bold.ttf'))->toBase64() }}"
+                            alt="{{ $comment->author_name }}" class="w-full h-full object-cover" />
+                    </div>
+                @else
+                    {{-- ❌ Гість без імені — НІЯКИХ Avatar::create --}}
+                    <div
+                        class="size-7 shrink-0 flex justify-center items-center rounded-full bg-zinc-100 border border-zinc-200">
+                        <x-lucide-user-round class="size-3.5 stroke-zinc-800" />
+                    </div>
+                @endif
             @endif
 
             {{-- Ім’я користувача / бейдж admin --}}
@@ -203,7 +221,7 @@ new class extends Component {
         @endif
     </div>
 
-    <div wire:show="showReplyForm" class="flex flex-col gap-5 mt-5 group" wire:transition x-cloak wire:ignore.self>
+    <div wire:show="showReplyForm" class="flex flex-col gap-5 mt-5 group" wire:transition x-cloak>
         <div class="text-sm">
             <span class="text-zinc-500 font-medium">Я: </span>
             <span class="text-zinc-700 font-semibold">{{ $this->form->author_name }}</span>
@@ -228,7 +246,7 @@ new class extends Component {
     </div>
 
     @if ($comment->replies->isNotEmpty())
-        <div wire:ignore.self>
+        <div>
             @if ($comment->replies_count > 0 && $level === 0)
                 <button wire:click="expanded = !expanded"
                     class="mt-2.5 flex items-center gap-1 text-xs font-semibold text-orange-600 hover:text-orange-700 cursor-pointer transition-colors">
