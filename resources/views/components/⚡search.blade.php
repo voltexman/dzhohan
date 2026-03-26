@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ProductCategory;
 use App\Models\Product;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Session;
@@ -151,12 +152,19 @@ new class extends Component {
                                         Результати пошуку
                                     </span>
                                     @foreach ($this->results as $product)
-                                        <a href="{{ route('product.show', ['collection' => $product->collection->value, 'product' => $product->slug]) }}"
+                                        <a href="{{ $product->category === ProductCategory::KNIFE
+                                            ? route('knife.show', [
+                                                'collection' => $product->collection?->value,
+                                                'product' => $product,
+                                            ])
+                                            : route('material.show', [
+                                                'product' => $product,
+                                            ]) }}"
                                             wire:navigate
-                                            class="flex items-center gap-5 p-1.5 rounded-md hover:bg-zinc-50 transition-colors">
+                                            class="flex items-center gap-2.5 p-1.5 rounded-md hover:bg-zinc-50 transition-colors">
                                             <div class="size-14 bg-zinc-100 shrink-0 overflow-hidden">
-                                                <img src="{{ Vite::asset('resources/images/header.png') }}"
-                                                    class="size-full object-cover rounded-md"
+                                                <img src="{{ $product->getFirstMediaUrl('products') }}"
+                                                    class="size-full object-cover rounded-sm"
                                                     alt="{{ $product->name }}">
                                             </div>
                                             <div class="flex flex-col">
