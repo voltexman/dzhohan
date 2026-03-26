@@ -1,34 +1,59 @@
-// import { animate, onScroll } from "animejs";
+import { createTimeline, splitText, onScroll, stagger } from "animejs";
 
-// const initAnimations = () => {
-//     animate(".logo", {
-//         translateX: [0, "-45vw"],
-//         translateY: [0, "-40vh"],
-//         scale: [1, 0.35],
-//         easing: "easeOutQuad",
-//         autoplay: onScroll({
-//             sync: 1,
-//             enter: "top bottom",
-//             leave: "top top",
-//         }),
-//     });
-// };
-// document.addEventListener("livewire:navigated", () => {
-//     initAnimations();
-// });
+const initHeaderAnimation = () => {
+    const tl = createTimeline({
+        autoplay: onScroll({ target: "header" }),
+        defaults: {
+            duration: 1500,
+            ease: "out(4)",
+        },
+    });
 
-// document.addEventListener("livewire:updated", () => {
-//     initAnimations();
-// });
+    const headerTitle = splitText(".main-header-title", { type: "words" });
+    const collections = splitText(".main-header-collections", {
+        type: "words",
+    });
 
-// document.addEventListener("livewire:load", () => {
-//     initAnimations();
-// });
+    tl.add(".main-header-logo", {
+        opacity: [0, 1],
+        scale: [0.5, 1],
+    })
+        .add(
+            headerTitle.words,
+            {
+                opacity: [0, 1],
+                x: [() => (Math.random() - 0.5) * 400, 0],
+                y: [() => (Math.random() - 0.5) * 400, 0],
+                scale: [0, 1],
+                rotate: [() => (Math.random() - 0.5) * 45, 0],
+                delay: stagger(60, { from: "random" }),
+            },
+            "-=1000",
+        )
+        .add(
+            collections.words,
+            {
+                opacity: [0, 1],
+                x: [() => (Math.random() - 0.5) * 600, 0],
+                y: [() => (Math.random() - 0.5) * 300, 0],
+                scale: [2, 1],
+                delay: stagger(40, { from: "random" }),
+            },
+            "-=800",
+        )
+        // .add(".logo-phone-number", {
+        //     opacity: [0, 1],
+        //     x: ["-120%", 0],
+        //     ease: "inOutElastic",
+        //     duration: 1200,
+        // })
+        .init();
+};
 
-// document.addEventListener("livewire:init", () => {
-//     initAnimations();
-// });
+document.addEventListener("livewire:navigated", () => {
+    initHeaderAnimation();
+});
 
-// Livewire.hook("morph.updated", ({ el, component }) => {
-//     initAnimations();
-// });
+document.addEventListener("DOMContentLoaded", () => {
+    initHeaderAnimation();
+});

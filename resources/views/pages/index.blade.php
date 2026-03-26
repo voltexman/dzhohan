@@ -14,25 +14,22 @@ name('home');
 </x-slot>
 
 @section('header')
-    <header class="relative h-screen w-full bg-cover bg-center bg-no-repeat animate-ricochet lg:animate-none"
+    <header class="relative h-screen w-full bg-cover bg-center bg-no-repeat animate-ricochet lg:animate-none overflow-hidden"
         style="background-image: url('{{ Vite::asset('resources/images/header.png') }}')">
         <div class="absolute inset-0 bg-black/40"></div>
         <div class="relative z-10 flex flex-col items-center justify-center h-full">
             <img src="{{ Vite::asset('resources/images/logo_light.svg') }}"
-                class="size-50 lg:size-70 drop-shadow-xl logo will-change-transform z-1000!" alt="">
+                class="main-header-logo size-50 lg:size-70 drop-shadow-xl logo will-change-transform z-1000!" alt="">
             <h1
-                class="text-zinc-100 text-4xl md:text-6xl font-bold uppercase text-center max-w-lg font-[Russo_One] drop-shadow-xl">
+                class="main-header-title text-zinc-100 text-4xl md:text-6xl font-bold uppercase text-center max-w-lg font-[Russo_One] drop-shadow-xl">
                 Продаж та <br> замовлення <br> <span class="text-orange-500/90">ножів</span>
             </h1>
             <div
-                class="flex gap-1.5 mt-5 text-white/70 flex-wrap mx-auto justify-center items-center max-w-3xs px-5 w-full leading-4">
+                class="main-header-collections flex gap-2.5 mt-5 text-white/70 flex-wrap mx-auto justify-center items-center max-w-3xs px-5 w-full leading-4">
                 <div class="text-sm font-[Oswald] tracking-wider">Тактичні</div>
-                <div class="size-1.5 rounded-full bg-white flex-none"></div>
                 <div class="text-sm font-[Oswald] tracking-wider">Кухонні</div>
-                <div class="size-1.5 rounded-full bg-white flex-none"></div>
                 <div class="text-sm font-[Oswald] tracking-wider">Мисливські</div><br>
                 <div class="text-sm font-[Oswald] tracking-wider">Щоденні</div>
-                <div class="size-1.5 rounded-full bg-white flex-none"></div>
                 <div class="text-sm font-[Oswald] tracking-wider">Туристичні</div>
             </div>
         </div>

@@ -1,6 +1,10 @@
 {
+  "_scroll-CPZymDuY.js": {
+    "file": "assets/scroll-CPZymDuY.js",
+    "name": "scroll"
+  },
   "node_modules/photoswipe/dist/photoswipe.esm.js": {
-    "file": "assets/photoswipe.esm-LPgz5Zzj.js",
+    "file": "assets/photoswipe.esm-C7pi8syI.js",
     "name": "photoswipe.esm",
     "src": "node_modules/photoswipe/dist/photoswipe.esm.js",
     "isDynamicEntry": true
@@ -228,16 +232,22 @@
     ]
   },
   "resources/js/pages/main.js": {
-    "file": "assets/main-BhAG2AeP.js",
+    "file": "assets/main-D3hQCUq0.js",
     "name": "main",
     "src": "resources/js/pages/main.js",
-    "isEntry": true
+    "isEntry": true,
+    "imports": [
+      "_scroll-CPZymDuY.js"
+    ]
   },
   "resources/js/pages/product.js": {
-    "file": "assets/product-DSfJEevv.js",
+    "file": "assets/product-0RUnu1Lm.js",
     "name": "product",
     "src": "resources/js/pages/product.js",
     "isEntry": true,
+    "imports": [
+      "_scroll-CPZymDuY.js"
+    ],
     "dynamicImports": [
       "node_modules/photoswipe/dist/photoswipe.esm.js"
     ],
