@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\AttributeValue;
+use Illuminate\Support\Collection;
 use App\Enums\ProductCategory;
 use App\Enums\CurrencyType;
 use Livewire\Attributes\Title;
@@ -10,14 +12,11 @@ use App\Models\Attribute;
 use Livewire\WithPagination;
 use Livewire\Attributes\Url;
 use Livewire\Attributes\Session;
-use Livewire\Attributes\On;
 use Livewire\Attributes\Computed;
 use App\Models\Product;
 
-new #[Title('Каталог ножів ручної роботи — купити авторський ніж')] class extends Component {
+new class extends Component {
     use WithPagination;
-
-    protected $paginationTheme = 'tailwind';
 
     public ?string $collection = null;
 
@@ -25,77 +24,85 @@ new #[Title('Каталог ножів ручної роботи — купит�
     public string $search = '';
 
     #[Url]
+    public array $filters = [];
+
+    #[Url]
     public array $currency = [];
-
-    #[Url(history: true)]
-    public $blade_length_from = null;
-    #[Url(history: true)]
-    public $blade_length_to = null;
-
-    #[Url(history: true)]
-    public $blade_thickness_from = null;
-    #[Url(history: true)]
-    public $blade_thickness_to = null;
 
     #[Url]
     public array $collections = [];
-
-    #[Url]
-    public array $steels = [];
-
-    #[Url]
-    public array $blade_shapes = [];
-
-    #[Url]
-    public array $handle_materials = [];
-
-    #[Url]
-    public array $blade_grinds = [];
 
     #[Url]
     public string $status = 'all';
 
     #[Url]
     public int $price_from = 0;
+
     #[Url]
     public int $price_to = 0;
 
-    public int $minLimit, $maxLimit;
-    public float $minBladeLen, $maxBladeLen;
-    public float $minThickness, $maxThickness;
+    #[Url(history: true)]
+    public $blade_length_from = null;
 
-    public $filters = [];
+    #[Url(history: true)]
+    public $blade_length_to = null;
+
+    #[Url(history: true)]
+    public $blade_thickness_from = null;
+
+    #[Url(history: true)]
+    public $blade_thickness_to = null;
+
+    public int $minLimit = 0;
+    public int $maxLimit = 5000;
+
+    public float $minBladeLen = 0;
+    public float $maxBladeLen = 300;
+
+    public float $minThickness = 0;
+    public float $maxThickness = 10;
 
     #[Session]
-    public $sortBy = 'created_at';
+    public string $sortBy = 'created_at';
 
     #[Session]
-    public $sortDirection = 'desc';
+    public string $sortDirection = 'desc';
 
     #[Session]
-    public $view = 'grid';
+    public string $view = 'grid';
 
-    public $perPage = 12;
+    public int $perPage = 12;
 
+    // ====================== MOUNT ======================
     public function mount()
     {
-        $this->minLimit = (int) Product::min('price') ?: 0;
-        $this->maxLimit = (int) Product::max('price') ?: 5000;
-        $this->price_from = $this->minLimit;
-        $this->price_to = $this->maxLimit;
+        // Ціна - спочатку рахуємо мінімум і максимум
+        $this->minLimit = (int) Product::where('category', ProductCategory::KNIFE)->min('price') ?: 0;
+        $this->maxLimit = (int) Product::where('category', ProductCategory::KNIFE)->max('price') ?: 5000;
 
-        // 2. Ліміти довжини
-        $this->minBladeLen = (float) Product::min('blade_length') ?: 0;
-        $this->maxBladeLen = (float) Product::max('blade_length') ?: 300;
-        $this->blade_length_from ??= $this->minBladeLen;
-        $this->blade_length_to ??= $this->maxBladeLen;
+        // Важливо: встановлюємо тільки якщо значення ще не прийшли з URL
+        if ($this->price_from === 0 || $this->price_from === null) {
+            $this->price_from = $this->minLimit;
+        }
+        if ($this->price_to === 0 || $this->price_to === null || $this->price_to > $this->maxLimit) {
+            $this->price_to = $this->maxLimit;
+        }
 
-        // 3. Ліміти товщини
-        $this->minThickness = (float) Product::min('blade_thickness') ?: 0;
-        $this->maxThickness = (float) Product::max('blade_thickness') ?: 10;
-        $this->blade_thickness_from ??= $this->minThickness;
-        $this->blade_thickness_to ??= $this->maxThickness;
+        // Довжина клинка
+        $this->minBladeLen = (float) Product::where('category', ProductCategory::KNIFE)->min('blade_length') ?: 0;
+        $this->maxBladeLen = (float) Product::where('category', ProductCategory::KNIFE)->max('blade_length') ?: 300;
 
+        $this->blade_length_from = $this->blade_length_from ?? $this->minBladeLen;
+        $this->blade_length_to = $this->blade_length_to ?? $this->maxBladeLen;
+
+        // Товщина обуху
+        $this->minThickness = (float) Product::where('category', ProductCategory::KNIFE)->min('blade_thickness') ?: 0;
+        $this->maxThickness = (float) Product::where('category', ProductCategory::KNIFE)->max('blade_thickness') ?: 10;
+
+        $this->blade_thickness_from = $this->blade_thickness_from ?? $this->minThickness;
+        $this->blade_thickness_to = $this->blade_thickness_to ?? $this->maxThickness;
+
+        // Валюта
         if (empty($this->currency)) {
             $this->currency = CurrencyType::values();
         }
@@ -103,28 +110,10 @@ new #[Title('Каталог ножів ручної роботи — купит�
         $this->view = Cookie::get('product_view', 'grid');
     }
 
-    public function resetPrice()
-    {
-        $this->price_from = $this->minLimit;
-        $this->price_to = $this->maxLimit;
-    }
-
     public function resetFilters()
     {
-        $this->search = '';
+        $this->reset(['search', 'status', 'currency', 'collections', 'price_from', 'price_to', 'blade_length_from', 'blade_length_to', 'blade_thickness_from', 'blade_thickness_to', 'filters']);
 
-        $this->status = 'all';
-        $this->currency = CurrencyType::values();
-        $this->collections = [];
-        $this->steels = [];
-        $this->handle_materials = [];
-        $this->blade_shapes = [];
-        $this->blade_grinds = [];
-
-        $this->price_from = $this->minLimit;
-        $this->price_to = $this->maxLimit;
-
-        // Скидаємо діапазони до лімітів БД
         $this->price_from = $this->minLimit;
         $this->price_to = $this->maxLimit;
 
@@ -139,49 +128,249 @@ new #[Title('Каталог ножів ручної роботи — купит�
         }
     }
 
+    public function resetPrice()
+    {
+        $this->price_from = $this->minLimit;
+        $this->price_to = $this->maxLimit;
+    }
+
     #[Computed]
     public function activeFilters(): array
     {
-        $filters = [];
+        $active = [];
 
+        // 1. Пошук
         if ($this->search) {
-            $filters[] = 'Пошук: ' . $this->search;
+            $active[] = [
+                'type' => 'search',
+                'label' => 'Пошук: ' . $this->search,
+                'value' => null,
+            ];
         }
 
+        // 2. Статус
         if ($this->status !== 'all') {
-            $filters[] = $this->status === 'in_stock' ? 'В наявності' : 'Продані';
+            $active[] = [
+                'type' => 'status',
+                'label' => $this->status === 'in_stock' ? 'В наявності' : 'Продані',
+                'value' => null,
+            ];
         }
 
+        // 3. Ціна
         if ($this->price_from > $this->minLimit || $this->price_to < $this->maxLimit) {
-            $filters[] = "Ціна: {$this->price_from}-{$this->price_to}";
+            $active[] = [
+                'type' => 'price',
+                'label' => "Ціна: {$this->price_from}–{$this->price_to} грн",
+                'value' => null,
+            ];
         }
 
+        // 4. Довжина клинка
         if ($this->blade_length_from > $this->minBladeLen || $this->blade_length_to < $this->maxBladeLen) {
-            $filters[] = "Довжина: {$this->blade_length_from}-{$this->blade_length_to} мм";
+            $active[] = [
+                'type' => 'blade_length',
+                'label' => "Довжина: {$this->blade_length_from}–{$this->blade_length_to} мм",
+                'value' => null,
+            ];
         }
 
+        // 5. Товщина обуху
         if ($this->blade_thickness_from > $this->minThickness || $this->blade_thickness_to < $this->maxThickness) {
-            $filters[] = 'Товщина: ' . round($this->blade_thickness_from, 1) . '-' . round($this->blade_thickness_to, 1) . ' мм';
+            $active[] = [
+                'type' => 'blade_thickness',
+                'label' => 'Товщина обуху: ' . round($this->blade_thickness_from, 1) . '–' . round($this->blade_thickness_to, 1) . ' мм',
+                'value' => null,
+            ];
         }
 
+        // 6. Колекції
         foreach ($this->collections as $slug) {
             if (request()->routeIs('products.collection') && $slug === $this->collection) {
                 continue;
             }
-            $filters[] = KnifeCollection::tryFrom($slug)?->getLabel();
+            if ($label = KnifeCollection::tryFrom($slug)?->getLabel()) {
+                $active[] = [
+                    'type' => 'collection',
+                    'label' => $label,
+                    'value' => $slug,
+                ];
+            }
         }
 
-        return array_filter($filters);
+        // 7. Динамічні атрибути
+        if (!empty($this->filters)) {
+            $attributes = Attribute::whereIn('slug', array_keys($this->filters))
+                ->with('values')
+                ->get()
+                ->keyBy('slug');
+
+            foreach ($this->filters as $slug => $valueIds) {
+                if (empty($valueIds)) {
+                    continue;
+                }
+
+                $attribute = $attributes->get($slug);
+                if (!$attribute) {
+                    continue;
+                }
+
+                foreach ($valueIds as $valueId) {
+                    $value = $attribute->values->firstWhere('id', $valueId);
+                    if (!$value) {
+                        continue;
+                    }
+
+                    $active[] = [
+                        'type' => 'attribute',
+                        'label' => "{$attribute->name}: {$value->value}",
+                        'slug' => $slug,
+                        'valueId' => $valueId, // ← важливо для видалення одного значення
+                    ];
+                }
+            }
+        }
+
+        return $active;
+    }
+
+    public function removeFilter(string $type, string $slug = '', $valueId = null)
+    {
+        match ($type) {
+            'search' => ($this->search = ''),
+            'status' => ($this->status = 'all'),
+            'price' => $this->resetPriceRange(),
+            'blade_length' => $this->resetBladeLength(),
+            'blade_thickness' => $this->resetBladeThickness(),
+            'collection' => ($this->collections = array_values(array_diff($this->collections, [$slug]))),
+            'attribute' => $this->removeAttributeValue($slug, $valueId),
+            default => null,
+        };
+    }
+
+    private function resetPriceRange(): void
+    {
+        $this->price_from = $this->minLimit;
+        $this->price_to = $this->maxLimit;
+    }
+
+    private function resetBladeLength(): void
+    {
+        $this->blade_length_from = $this->minBladeLen;
+        $this->blade_length_to = $this->maxBladeLen;
+    }
+
+    private function resetBladeThickness(): void
+    {
+        $this->blade_thickness_from = $this->minThickness;
+        $this->blade_thickness_to = $this->maxThickness;
+    }
+
+    private function removeAttributeValue(string $slug, $valueId): void
+    {
+        if (!isset($this->filters[$slug])) {
+            return;
+        }
+
+        if ($valueId !== null && is_numeric($valueId)) {
+            // Видаляємо тільки одне конкретне значення
+            $this->filters[$slug] = array_diff($this->filters[$slug], [(int) $valueId]);
+
+            if (empty($this->filters[$slug])) {
+                unset($this->filters[$slug]);
+            }
+        } else {
+            // Якщо valueId не передано — видаляємо весь атрибут
+            unset($this->filters[$slug]);
+        }
+    }
+
+    #[Computed]
+    public function stockCounts()
+    {
+        $baseQuery = Product::query()->where('category', ProductCategory::KNIFE)->where('is_active', true)->when($this->collection, fn($q) => $q->where('collection', $this->collection));
+
+        return [
+            'available' => (clone $baseQuery)->where('quantity', '>', 0)->count(),
+            'sold' => (clone $baseQuery)->where('quantity', '=', 0)->count(),
+        ];
+    }
+
+    #[Computed]
+    public function currentCollectionLabel()
+    {
+        return KnifeCollection::tryFrom((string) $this->collection)?->getLabel();
+    }
+
+    #[Computed]
+    public function products()
+    {
+        return Product::query()
+            ->where('category', ProductCategory::KNIFE)
+            ->where('is_active', true)
+            ->when($this->collection, fn($q) => $q->where('collection', $this->collection))
+            ->when($this->search, function ($q, $search) {
+                $q->where(function ($q2) use ($search) {
+                    $q2->where('name', 'like', "%{$search}%")
+                        ->orWhere('sku', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                });
+            })
+            ->when(!empty($this->collections), fn($q) => $q->whereIn('collection', $this->collections))
+            ->when($this->status === 'in_stock', fn($q) => $q->where('quantity', '>', 0))
+            ->when($this->status === 'sold', fn($q) => $q->where('quantity', '=', 0))
+            ->when($this->price_from > 0, fn($q) => $q->where('price', '>=', $this->price_from))
+            ->when($this->price_to > 0, fn($q) => $q->where('price', '<=', $this->price_to))
+            ->when($this->blade_length_from !== null, fn($q) => $q->where('blade_length', '>=', (float) $this->blade_length_from))
+            ->when($this->blade_length_to !== null, fn($q) => $q->where('blade_length', '<=', (float) $this->blade_length_to))
+            ->when($this->blade_thickness_from !== null, fn($q) => $q->where('blade_thickness', '>=', (float) $this->blade_thickness_from))
+            ->when($this->blade_thickness_to !== null, fn($q) => $q->where('blade_thickness', '<=', (float) $this->blade_thickness_to))
+            ->when(!empty($this->filters), function ($q) {
+                foreach ($this->filters as $slug => $values) {
+                    if (empty($values)) {
+                        continue;
+                    }
+                    $q->whereHas('attributeValues', function ($pivot) use ($slug, $values) {
+                        $pivot->whereIn('attribute_value_id', $values)->whereHas('attribute', fn($attr) => $attr->where('slug', $slug));
+                    });
+                }
+            })
+            ->with(['media'])
+            ->withCount(['likes', 'comments'])
+            ->orderBy($this->sortBy, $this->sortDirection)
+            ->paginate($this->perPage);
+    }
+
+    #[Computed]
+    public function allAttributes(): Collection
+    {
+        return Attribute::with('values')
+            ->where('group', ProductCategory::KNIFE->value ?? 'knife')
+            ->orderBy('sort')
+            ->get();
+    }
+
+    // ====================== ДОП. МЕТОДИ ======================
+    public function toggleFilter(string $slug, int $valueId)
+    {
+        if (!isset($this->filters[$slug])) {
+            $this->filters[$slug] = [];
+        }
+
+        if (in_array($valueId, $this->filters[$slug])) {
+            $this->filters[$slug] = array_diff($this->filters[$slug], [$valueId]);
+        } else {
+            $this->filters[$slug][] = $valueId;
+        }
+
+        if (empty($this->filters[$slug])) {
+            unset($this->filters[$slug]);
+        }
     }
 
     public function updatedView($value)
     {
         Cookie::queue('product_view', $value, 43200);
-    }
-
-    public function loadMore()
-    {
-        $this->perPage += 4;
     }
 
     public function setView($value): void
@@ -199,81 +388,16 @@ new #[Title('Каталог ножів ручної роботи — купит�
         Cookie::queue('product_sort_dir', $direction, 60 * 24 * 30);
     }
 
-    #[Computed]
-    public function stockCounts()
+    public function loadMore()
     {
-        $baseQuery = Product::query()->where('is_active', true)->when($this->collection, fn($q) => $q->where('collection', $this->collection));
-
-        return [
-            'available' => (clone $baseQuery)->where('quantity', '>', 0)->count(),
-            'sold' => (clone $baseQuery)->where('quantity', 0)->count(),
-        ];
-    }
-
-    #[Computed]
-    public function currentCollectionLabel()
-    {
-        return KnifeCollection::tryFrom((string) $this->collection)?->getLabel();
-    }
-
-    public function toggleFilter(string $slug, int $valueId)
-    {
-        if (!isset($this->filters[$slug])) {
-            $this->filters[$slug] = [];
-        }
-
-        if (in_array($valueId, $this->filters[$slug])) {
-            // прибираємо
-            $this->filters[$slug] = array_diff($this->filters[$slug], [$valueId]);
-        } else {
-            // додаємо
-            $this->filters[$slug][] = $valueId;
-        }
-
-        // чистимо порожні масиви
-        if (empty($this->filters[$slug])) {
-            unset($this->filters[$slug]);
-        }
-    }
-
-    #[Computed]
-    public function products()
-    {
-        return Product::query()
-            ->where('category', ProductCategory::KNIFE)
-            ->with(['media'])
-            ->withCount(['likes', 'comments'])
-            ->when($this->collection, fn($q) => $q->where('collection', $this->collection))
-            ->filter([
-                'search' => $this->search,
-                'collections' => $this->collections,
-                'status' => $this->status,
-                'price_from' => $this->price_from,
-                'price_to' => $this->price_to,
-                'blade_length_from' => $this->blade_length_from,
-                'blade_length_to' => $this->blade_length_to,
-                'blade_thickness_from' => $this->blade_thickness_from,
-                'blade_thickness_to' => $this->blade_thickness_to,
-                'attributes' => $this->filters,
-            ])
-            ->orderBy($this->sortBy, $this->sortDirection)
-            ->paginate($this->perPage);
-    }
-
-    #[Computed]
-    public function allAttributes(): \Illuminate\Support\Collection
-    {
-        return Attribute::with('values')->orderBy('sort')->get();
-    }
-
-    #[Computed]
-    public function categoryCounts()
-    {
-        return Product::query()->where('is_active', true)->select('collection')->selectRaw('count(*) as total')->groupBy('collection')->pluck('total', 'collection')->toArray();
+        $this->perPage += 4;
     }
 };
 ?>
 
+<x-slot name="title">
+    Каталог ножів ручної роботи — купити авторський ніж
+</x-slot>
 <x-slot name="description">
     Каталог ножів ручної роботи: мисливські, кухонні та універсальні ножі. Висока якість матеріалів, ручне виготовлення
     та доставка по Україні.
@@ -337,7 +461,6 @@ new #[Title('Каталог ножів ручної роботи — купит�
                 class="sticky top-16 z-40 px-5 py-2.5 lg:px-0 bg-zinc-100 lg:bg-zinc-50 border-b lg:border-0 border-zinc-200 flex flex-col gap-0.5">
                 <div class="flex justify-between gap-x-0.5 lg:gap-x-2.5">
                     @php
-                        // Створюємо відфільтровану колекцію один раз для всього блоку
                         $displayFilters = collect($this->activeFilters)->filter(
                             fn($f) => $f !== $this->currentCollectionLabel(),
                         );
@@ -382,7 +505,29 @@ new #[Title('Каталог ножів ручної роботи — купит�
                     </x-drawer>
                 </div>
 
-                @if ($displayFilters->isNotEmpty())
+                @if (!empty($this->activeFilters))
+                    <div class="flex flex-wrap items-center gap-1.5 mt-2.5">
+                        @foreach ($this->activeFilters as $filter)
+                            <div class="group flex items-center gap-0.5 bg-zinc-100 px-1.5 py-0.5 rounded">
+                                <span class="text-xs font-semibold text-zinc-700">{{ $filter['label'] }}</span>
+
+                                <button
+                                    wire:click="removeFilter('{{ $filter['type'] }}', '{{ $filter['slug'] ?? '' }}', {{ $filter['valueId'] ?? 'null' }})"
+                                    class="ml-0.5 text-zinc-400 hover:text-red-500 p-0.5 rounded-full hover:bg-red-50 transition">
+                                    <x-lucide-x class="size-3.5" />
+                                </button>
+                            </div>
+                        @endforeach
+
+                        <button wire:click="resetFilters"
+                            class="ml-2 text-xs text-red-500 hover:text-red-600 font-medium flex items-center gap-0.5 cursor-pointer">
+                            <x-lucide-rotate-ccw class="size-3.5" />
+                            Очистити все
+                        </button>
+                    </div>
+                @endif
+
+                {{-- @if ($displayFilters->isNotEmpty())
                     <div class="w-full flex flex-wrap items-center gap-1.5 mt-1.5">
                         @foreach ($displayFilters as $filter)
                             <div
@@ -391,7 +536,6 @@ new #[Title('Каталог ножів ручної роботи — купит�
                             </div>
                         @endforeach
 
-                        {{-- Тепер кнопка з'явиться тільки якщо є що скидати (крім самої колекції) --}}
                         <button wire:click="resetFilters" wire:loading.attr="disabled"
                             class="bg-orange-500 size-4 flex justify-center items-center rounded-full hover:bg-orange-700 transition ml-1.5 cursor-pointer disabled:opacity-50">
                             <x-lucide-x wire:loading.remove wire:target="resetFilters" class="size-3 stroke-white" />
@@ -399,8 +543,7 @@ new #[Title('Каталог ножів ручної роботи — купит�
                                 class="size-3 stroke-white animate-spin" />
                         </button>
                     </div>
-                @endif
-
+                @endif --}}
             </div>
 
             @island('products-list', lazy: true, always: true)

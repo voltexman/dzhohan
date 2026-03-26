@@ -94,9 +94,11 @@ new #[Layout('layouts::cart')] class extends Component {
 
     <div class="flex flex-col mt-2.5 px-5 lg:px-10">
         <div class="text-black font-[SN_Pro] text-xl font-semibold">{{ $product->name }}</div>
-        <div class="text-zinc-600 text-sm font-[Oswald] font-medium tracking-wider leading-none">
-            {{ $product->collection?->getLabel() }}
-        </div>
+        @if ($product->category === ProductCategory::KNIFE)
+            <div class="text-zinc-600 text-sm font-[Oswald] font-medium tracking-wider leading-none">
+                {{ $product->collection->getLabel() }}
+            </div>
+        @endif
     </div>
 
     <div class="flex items-center justify-between mt-5 px-5 lg:px-10" x-intersect.threshold.50="show = false"
@@ -154,14 +156,14 @@ new #[Layout('layouts::cart')] class extends Component {
                     @endif
                 @else
                     <span class="text-zinc-700 text-sm font-medium">
-                        В наявності: {{ $product->quantity }}
+                        В наявності: <span class="text-zinc-900 font-bold">{{ $product->quantity }}</span> шт.
                     </span>
                 @endif
             </x-table.cell>
         </x-table.row>
     </x-table>
 
-    @if ($product->total_length || $product->blade_length || $product->blade_thickness)
+    @if ($product->category === ProductCategory::KNIFE)
         <div class="flex items-center gap-1.5 ps-5 mt-5 lg:ms-10 lg:ps-0">
             <div class="flex-none me-1.5">
                 <x-lucide-ruler class="size-8 fill-zinc-100 stroke-zinc-600 stroke-[1.5]" />

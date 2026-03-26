@@ -13,11 +13,11 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
+use Filament\Forms\Components\Hidden;
 
 class MaterialForm
 {
@@ -25,6 +25,9 @@ class MaterialForm
     {
         return $schema
             ->components([
+                Hidden::make('category')
+                    ->default(ProductCategory::MATERIAL)
+                    ->dehydrated(),
                 Tabs::make('Product Details')
                     ->columnSpanFull()
                     ->tabs([
@@ -180,8 +183,8 @@ class MaterialForm
                         Tab::make('Характеристики')
                             ->icon('heroicon-m-list-bullet')
                             ->schema([
-                                Repeater::make('knifeAttributes')
-                                    ->relationship('knifeAttributes')
+                                Repeater::make('materialAttributes')
+                                    ->relationship('materialAttributes')
                                     ->reorderable('sort')
                                     ->orderColumn('sort')
                                     ->reorderableWithButtons()
@@ -208,9 +211,11 @@ class MaterialForm
                                             ->createOptionUsing(function (array $data) {
                                                 return Attribute::create([
                                                     'name' => $data['name'],
-                                                    'group' => 'knife',
+                                                    'group' => 'material',
                                                 ])->id;
-                                            }),
+                                            })
+                                            // Додаємо це, щоб відображалася назва, а не id
+                                            ->getOptionLabelUsing(fn($value) => Attribute::find($value)?->name),
 
                                         Select::make('attribute_value_id')
                                             ->label('Значення')
@@ -235,7 +240,9 @@ class MaterialForm
                                                     'attribute_id' => $attributeId,
                                                     'value' => $data['value'],
                                                 ])->id;
-                                            }),
+                                            })
+                                            // Додаємо це, щоб відображалося значення, а не id
+                                            ->getOptionLabelUsing(fn($value) => AttributeValue::find($value)?->value),
                                     ])
                                     ->columns(2)
                                     ->defaultItems(0)

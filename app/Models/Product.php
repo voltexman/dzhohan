@@ -121,24 +121,12 @@ class Product extends Model implements HasMedia
             ->orderBy('sort');
     }
 
-    // public function url(): string
-    // {
-    //     if ($this->category === ProductCategory::KNIFE) {
-
-    //         if (!$this->collection) {
-    //             throw new \Exception("Knife [{$this->id}] must have collection");
-    //         }
-
-    //         return route('knife.show', [
-    //             'collection' => $this->collection->value,
-    //             'knife' => $this->slug,
-    //         ]);
-    //     }
-
-    //     return route('material.show', [
-    //         'product' => $this->slug,
-    //     ]);
-    // }
+    public function materialAttributes()
+    {
+        return $this->hasMany(ProductAttributeValue::class)
+            ->whereHas('attribute', fn($q) => $q->where('group', 'material'))
+            ->orderBy('sort');
+    }
 
     public function productAttributeValues(): HasMany
     {

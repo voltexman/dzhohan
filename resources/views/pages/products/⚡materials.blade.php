@@ -17,25 +17,27 @@ new class extends Component {
     #[Url]
     public string $search = '';
 
+    #[Url]
+    public int $price_from = 0;
+
+    #[Url]
+    public int $price_to = 0;
+
     #[Session]
     public $sortBy = 'created_at';
 
     #[Session]
     public $sortDirection = 'desc';
 
+    #[Url]
+    public array $filters = [];
+
     #[Session]
-    public $view = 'grid';
+    public string $view = 'grid';
 
-    public $perPage = 12;
-
-    #[Url]
-    public int $price_from = 0;
-    #[Url]
-    public int $price_to = 0;
+    public int $perPage = 12;
 
     public int $minLimit, $maxLimit;
-
-    public $filters = [];
 
     public function mount()
     {
@@ -102,23 +104,6 @@ new class extends Component {
         Cookie::queue('product_sort_dir', $direction, 60 * 24 * 30);
     }
 
-    #[Computed]
-    public function stockCounts()
-    {
-        $baseQuery = Product::query()->where('is_active', true)->when($this->collection, fn($q) => $q->where('collection', $this->collection));
-
-        return [
-            'available' => (clone $baseQuery)->where('quantity', '>', 0)->count(),
-            'sold' => (clone $baseQuery)->where('quantity', 0)->count(),
-        ];
-    }
-
-    #[Computed]
-    public function currentCollectionLabel()
-    {
-        return KnifeCollection::tryFrom((string) $this->collection)?->getLabel();
-    }
-
     public function toggleFilter(string $slug, int $valueId)
     {
         if (!isset($this->filters[$slug])) {
@@ -142,7 +127,10 @@ new class extends Component {
     #[Computed]
     public function allAttributes(): Collection
     {
-        return Attribute::with('values')->where('group', 'material')->orderBy('sort')->get();
+        return Attribute::with('values')
+            ->where('group', ProductCategory::MATERIAL ?? 'material')
+            ->orderBy('sort')
+            ->get();
     }
 
     #[Computed]
@@ -150,11 +138,31 @@ new class extends Component {
     {
         return Product::query()
             ->where('category', ProductCategory::MATERIAL)
+            ->where('is_active', true)
+            ->when($this->search, function ($q, $search) {
+                $q->where(function ($q2) use ($search) {
+                    $q2->where('name', 'like', "%{$search}%")
+                        ->orWhere('sku', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                });
+            })
+            ->when($this->price_from > 0, fn($q) => $q->where('price', '>=', $this->price_from))
+            ->when($this->price_to > 0, fn($q) => $q->where('price', '<=', $this->price_to))
+
+            // Фільтрація за динамічними атрибутами
+            ->when(!empty($this->filters), function ($q) {
+                foreach ($this->filters as $slug => $valueIds) {
+                    if (empty($valueIds)) {
+                        continue;
+                    }
+
+                    $q->whereHas('attributeValues', function ($pv) use ($slug, $valueIds) {
+                        $pv->whereIn('attribute_value_id', $valueIds)->whereHas('attribute', fn($a) => $a->where('slug', $slug));
+                    });
+                }
+            })
             ->with(['media'])
             ->withCount(['likes', 'comments'])
-            ->filter([
-                'search' => $this->search,
-            ])
             ->orderBy($this->sortBy, $this->sortDirection)
             ->paginate($this->perPage);
     }
@@ -185,9 +193,7 @@ new class extends Component {
                 <div class="flex justify-between gap-x-0.5 lg:gap-x-2.5">
                     @php
                         // Створюємо відфільтровану колекцію один раз для всього блоку
-                        $displayFilters = collect($this->activeFilters)->filter(
-                            fn($f) => $f !== $this->currentCollectionLabel(),
-                        );
+                        $displayFilters = collect($this->activeFilters);
                     @endphp
 
                     <x-form.input size="sm" wire:model.trim.live.debounce.300ms="search" placeholder="Пошук ножів"

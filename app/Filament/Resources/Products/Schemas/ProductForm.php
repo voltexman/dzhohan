@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Products\Schemas;
 
+use App\Enums\ProductCategory;
 use App\Enums\CurrencyType;
 use App\Enums\KnifeCollection;
 use App\Models\Attribute;
@@ -19,6 +20,7 @@ use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
+use Filament\Forms\Components\Hidden;
 
 class ProductForm
 {
@@ -26,6 +28,9 @@ class ProductForm
     {
         return $schema
             ->components([
+                Hidden::make('category')
+                    ->default(ProductCategory::KNIFE)
+                    ->dehydrated(),
                 Tabs::make('Product Details')
                     ->columnSpanFull()
                     ->tabs([
