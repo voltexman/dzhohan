@@ -2,14 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Enums\BladeFinish;
-use App\Enums\BladeGrind;
-use App\Enums\BladeShape;
 use App\Enums\CurrencyType;
-use App\Enums\HandleMaterial;
+use App\Enums\KnifeCollection;
 use App\Enums\ProductCategory;
-use App\Enums\SheathType;
-use App\Enums\SteelType;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,29 +14,42 @@ class ProductFactory extends Factory
 
     public function definition(): array
     {
+        $category = fake()->randomElement(ProductCategory::cases());
+
         return [
             'name' => fake()->words(2, true),
             'slug' => fake()->unique()->slug(),
             'sku' => fake()->unique()->bothify('??-####'),
             'description' => fake()->paragraph(3),
             'price' => fake()->randomFloat(2, 1500, 12000),
-            'quantity' => fake()->numberBetween(0, 1),
             'is_active' => fake()->boolean(90),
-            'collection' => fake()->randomElement(ProductCategory::cases()),
-            'currency' => fake()->randomElement(CurrencyType::cases()),
 
-            // Характеристики (Enums)
-            'steel' => fake()->randomElement(SteelType::cases()),
-            'blade_shape' => fake()->randomElement(BladeShape::cases()),
-            'blade_finish' => fake()->randomElement(BladeFinish::cases()),
-            'blade_grind' => fake()->randomElement(BladeGrind::cases()),
-            'handle_material' => fake()->randomElement(HandleMaterial::cases()),
-            'sheath' => fake()->randomElement(SheathType::cases()),
+            'category' => $category,
 
-            // Розміри
-            'total_length' => fake()->randomFloat(1, 150, 350),
-            'blade_length' => fake()->randomFloat(1, 70, 220),
-            'blade_thickness' => fake()->randomFloat(1, 1.5, 6.0),
+            'currency' => $category === ProductCategory::MATERIAL
+                ? CurrencyType::UAH
+                : fake()->randomElement(CurrencyType::cases()),
+
+            'quantity' => $category === ProductCategory::MATERIAL
+                ? fake()->numberBetween(1, 10)
+                : fake()->numberBetween(0, 1),
+
+            'collection' => $category === ProductCategory::KNIFE
+                ? fake()->randomElement(KnifeCollection::cases())
+                : null,
+
+            // Розміри тільки для ножів
+            'total_length' => $category === ProductCategory::KNIFE
+                ? fake()->randomFloat(1, 150, 350)
+                : null,
+
+            'blade_length' => $category === ProductCategory::KNIFE
+                ? fake()->randomFloat(1, 70, 220)
+                : null,
+
+            'blade_thickness' => $category === ProductCategory::KNIFE
+                ? fake()->randomFloat(1, 1.5, 6.0)
+                : null,
         ];
     }
 
@@ -49,7 +57,7 @@ class ProductFactory extends Factory
     {
         return $this->afterCreating(function (Product $product) {
             collect(range(1, rand(2, 6)))->each(function () use ($product) {
-                $path = database_path('seeders/images/product-test-'.rand(1, 12).'.jpg');
+                $path = database_path('seeders/images/product-test-' . rand(1, 12) . '.jpg');
 
                 if (file_exists($path)) {
                     $product->addMedia($path)

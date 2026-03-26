@@ -1,6 +1,8 @@
-@props(['product', 'view', 'collection'])
+@props(['product', 'view', 'collection' => null])
 
-<a href="{{ route('product.show', ['collection' => $product->collection->value, 'product' => $product->slug]) }}"
+<a href="{{ $product->category === \App\Enums\ProductCategory::KNIFE
+    ? route('knife.show', [$product->collection, $product->slug])
+    : route('material.show', $product->slug) }}"
     @class([
         'relative transition group overflow-hidden',
         'rounded-sm bg-white border border-zinc-200/50' => $view === 'grid',
@@ -56,14 +58,14 @@
     ])>
         <h3 @class([
             'font-semibold font-[SN_Pro] transition line-clamp-1 drop-shadow-xl',
-            'text-xl text-gray-800 group-hover:text-orange-600' => $view !== 'grid',
-            'text-xl text-gray-800 group-hover:text-orange-600' => $view !== 'list',
-            'text-white text-xl' => $view === 'cards',
+            'text-lg text-gray-800 group-hover:text-orange-600' => $view !== 'grid',
+            'text-lg text-gray-800 group-hover:text-orange-600' => $view !== 'list',
+            'text-white text-lg' => $view === 'cards',
         ])>
             {{ $product->name }}
         </h3>
 
-        @if (!$collection)
+        @if (!$collection && $product->category === \App\Enums\ProductCategory::KNIFE && $product->collection)
             <div @class([
                 'font-[Oswald] tracking-wide w-full',
                 'text-gray-600' => $view !== 'cards',
@@ -98,7 +100,7 @@
                     'w-full font-[Oswald] text-orange-500 font-semibold text-nowrap',
                     'text-lg' => $view === 'grid',
                     'text-base' => $view === 'list',
-                    'text-xl' => $view === 'cards',
+                    'text-xl drop-shadow-lg' => $view === 'cards',
                 ])>
                     {{ $product->currency->format($product->price) }}
                 </div>
@@ -157,14 +159,16 @@
         </div>
 
         {{-- Відображаємо опис для Списку та Карток --}}
-        @if ($view === 'list' || $view === 'cards')
-            <div @class([
-                'line-clamp-2',
-                'text-zinc-700 text-sm max-w-lg' => $view === 'list',
-                'mt-2.5 text-zinc-300 text-base max-w-xl' => $view === 'cards',
-            ])>
-                {{ $product->description }}
-            </div>
-        @endif
+        @isset($product->description)
+            @if ($view === 'list' || $view === 'cards')
+                <div @class([
+                    'line-clamp-2',
+                    'text-zinc-700 text-sm' => $view === 'list',
+                    'mt-1.5 text-zinc-300 font-medium text-sm' => $view === 'cards',
+                ])>
+                    {{ strip_tags($product->description) }}
+                </div>
+            @endif
+        @endisset
     </div>
 </a>

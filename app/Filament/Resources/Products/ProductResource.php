@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Products;
 
+use App\Enums\ProductCategory;
 use App\Filament\Resources\Products\Pages\CreateProduct;
 use App\Filament\Resources\Products\Pages\EditProduct;
 use App\Filament\Resources\Products\Pages\ListProducts;
@@ -34,6 +35,12 @@ class ProductResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Ножі';
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->where('category', ProductCategory::KNIFE);
+    }
+
     public static function getGloballySearchableAttributes(): array
     {
         return ['name'];
@@ -43,7 +50,7 @@ class ProductResource extends Resource
     {
         return [
             'Колекція' => $record->collection->getLabel(),
-            'Ціна' => $record->price.' грн',
+            'Ціна' => $record->price . ' грн',
         ];
     }
 

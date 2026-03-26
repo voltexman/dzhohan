@@ -105,7 +105,8 @@ new class extends Component {
 
                         <x-nav variant="offcanvas" class="flex-1 overflow-y-auto">
                             <x-nav.item label="Головна" url="home" icon="home" />
-                            <x-nav.item label="Товари" url="products" icon="package" />
+                            <x-nav.item label="Ножі" url="knives" icon="package" />
+                            <x-nav.item label="Матеріали" url="materials" icon="package" />
                             <x-nav.item label="Галерея" url="gallery" icon="images" />
                             <x-nav.item label="Блог" url="blog" icon="newspaper" />
                             <x-nav.item label="Замовлення" url="order" icon="package-open" />

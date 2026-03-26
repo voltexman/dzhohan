@@ -1,13 +1,8 @@
 <?php
 
-use App\Enums\BladeFinish;
-use App\Enums\BladeGrind;
-use App\Enums\BladeShape;
 use App\Enums\CurrencyType;
-use App\Enums\HandleMaterial;
+use App\Enums\KnifeCollection;
 use App\Enums\ProductCategory;
-use App\Enums\SheathType;
-use App\Enums\SteelType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -24,21 +19,16 @@ return new class extends Migration
             $table->text('description')->nullable();
 
             $table->decimal('price', 8, 2);
+            $table->enum('currency', CurrencyType::cases())->default(CurrencyType::EUR);
             $table->unsignedInteger('quantity')->default(1);
             $table->boolean('is_active')->default(true);
-            $table->enum('collection', ProductCategory::values())->index();
-            $table->enum('currency', CurrencyType::cases())->default(CurrencyType::EUR);
 
-            $table->decimal('total_length', 6, 1)->default(0)->comment('Загальна довжина, мм');
-            $table->decimal('blade_length', 6, 1)->default(0)->comment('Довжина леза, мм');
-            $table->decimal('blade_thickness', 4, 1)->default(0)->comment('Товщина леза, мм');
+            $table->enum('category', ProductCategory::values())->index();
+            $table->enum('collection', KnifeCollection::values())->nullable()->index();
 
-            $table->enum('steel', SteelType::values())->nullable()->index()->comment('Марка сталі');
-            $table->enum('blade_shape', BladeShape::values())->nullable()->index()->comment('Профіль клинка');
-            $table->enum('blade_grind', BladeGrind::values())->nullable()->comment('Тип спусків');
-            $table->enum('blade_finish', BladeFinish::values())->nullable()->comment('Покриття клинка');
-            $table->enum('handle_material', HandleMaterial::values())->nullable()->comment('Матеріал руків’я');
-            $table->enum('sheath', SheathType::values())->nullable()->comment('Піхви / Чохол');
+            $table->decimal('total_length', 6, 1)->default(0)->nullable()->comment('Загальна довжина, мм');
+            $table->decimal('blade_length', 6, 1)->default(0)->nullable()->comment('Довжина леза, мм');
+            $table->decimal('blade_thickness', 4, 1)->default(0)->nullable()->comment('Товщина леза, мм');
 
             $table->softDeletes();
             $table->timestamps();

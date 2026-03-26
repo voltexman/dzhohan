@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\ProductCategory;
+use App\Enums\KnifeCollection;
 use function Laravel\Folio\name;
 name('home');
 ?>
@@ -115,7 +115,9 @@ name('home');
 
     <section class="bg-zinc-100 py-20 px-5 lg:px-0">
         <div class="max-w-5xl mx-auto">
-            <h2 class="font-[Russo_One] text-3xl text-center text-gray-900">Мої колекції</h2>
+            <h2 class="font-[Russo_One] text-3xl text-center text-gray-900">
+                Мої <span class="text-orange-500">колекції</span>
+            </h2>
             <div class="my-2.5 mx-auto w-22 h-1 bg-orange-500"></div>
 
             <div class="max-w-sm mx-auto text-center text-gray-700 text-sm">
@@ -124,7 +126,7 @@ name('home');
 
             <div
                 class="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-2.5 lg:gap-5 auto-rows-[minmax(180px,auto)] mt-10">
-                @each('partials.product.main-page-collections', ProductCategory::cases(), 'collection')
+                @each('partials.product.main-page-collections', KnifeCollection::cases(), 'collection')
             </div>
         </div>
     </section>
@@ -138,7 +140,7 @@ name('home');
             </div>
 
             <div class="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-[minmax(180px,auto)] mt-10">
-                @each('partials.product.main-page-collections', ProductCategory::cases(), 'collection')
+                @each('partials.product.main-page-collections', KnifeCollection::cases(), 'collection')
             </div>
         </div>
     </section> --}}
@@ -179,34 +181,42 @@ name('home');
 
     <section class="bg-zinc-50 py-20 px-5 lg:px-0" x-data="{ open: null }">
         <div class="max-w-5xl mx-auto">
-            <h2 class="font-[Russo_One] text-3xl text-center text-gray-900">Часті запитання</h2>
+            <h2 class="font-[Russo_One] text-3xl text-center text-gray-900">
+                Часті <span class="text-orange-500">запитання</span>
+            </h2>
             <div class="my-2.5 mx-auto w-22 h-1 bg-orange-500"></div>
             <div class="max-w-sm mx-auto text-center text-gray-700 text-sm">
                 Відповіді на питання, які найчастіше виникають при замовленні або купівлі ножа.
             </div>
 
-            <div class="md:columns-2 gap-x-10 items-start mt-10" x-data="{ open: null }">
-                @foreach ($settings->faqs as $faq)
-                    <div
-                        class="overflow-hidden transition-all duration-300 border-b border-gray-200/80 last:border-b-0">
-                        <button @click="open === {{ $loop->index }} ? open = null : open = {{ $loop->index }}"
-                            class="w-full py-2.5 lg:py-5 text-left flex justify-between items-center outline-none cursor-pointer group">
-                            <span
-                                class="font-medium lg:font-semibold text-gray-900 lg:text-lg transition-colors group-hover:text-amber-700">
-                                {{ $faq['question'] }}
-                            </span>
-                            <span class="ml-4 shrink-0 transition-transform duration-300"
-                                :class="open === {{ $loop->index }} ? 'rotate-45' : ''">
-                                <x-lucide-plus class="size-5"
-                                    x-bind:class="open === {{ $loop->index }} ? 'stroke-zinc-600' : 'stroke-zinc-400'" />
-                            </span>
-                        </button>
-                        <div x-show="open === {{ $loop->index }}" x-collapse x-cloak
-                            class="pb-5 text-gray-600 leading-relaxed text-sm">
-                            {{ $faq['answer'] }}
+            <div class="grid lg:grid-cols-2 lg:gap-5 items-start">
+                <div class="hidden lg:flex justify-center items-center">
+                    <img src="{{ Vite::asset('resources/images/faq-section.png') }}"
+                        class="size-full object-contain drop-shadow-xl" alt="" />
+                </div>
+
+                <div class="mt-10" x-data="{ open: null }">
+                    @foreach ($settings->faqs as $faq)
+                        <div class="overflow-hidden border-b border-gray-200/80 last:border-b-0">
+                            <button @click="open === {{ $loop->index }} ? open = null : open = {{ $loop->index }}"
+                                class="w-full py-2.5 lg:py-3.5 text-left flex justify-between items-center outline-none cursor-pointer group">
+                                <span
+                                    class="font-medium lg:font-semibold text-zinc-900 transition-colors group-hover:text-amber-700">
+                                    {{ $faq['question'] }}
+                                </span>
+                                <span class="ml-4 shrink-0 transition-transform duration-300"
+                                    :class="open === {{ $loop->index }} ? 'rotate-45' : ''">
+                                    <x-lucide-plus class="size-5"
+                                        x-bind:class="open === {{ $loop->index }} ? 'stroke-zinc-600' : 'stroke-zinc-400'" />
+                                </span>
+                            </button>
+                            <div x-show="open === {{ $loop->index }}" x-collapse x-cloak
+                                class="pb-5 text-zinc-600 leading-relaxed text-sm">
+                                {{ $faq['answer'] }}
+                            </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
         </div>
     </section>
@@ -224,7 +234,7 @@ name('home');
             <h2 class="text-4xl md:text-7xl font-[Russo_One] mb-5 text-center leading-none tracking-tighter uppercase 
                    bg-fixed bg-no-repeat bg-cover bg-center bg-clip-text text-transparent"
                 style="background-image: url('{{ Vite::asset('resources/images/steel-section-bg.png') }}');">
-                Сталь для<br>майстрів
+                Все для<br>майстрів
             </h2>
 
             <p class="text-gray-700 max-w-md mx-auto text-center font-light leading-relaxed mb-5">
@@ -236,15 +246,12 @@ name('home');
             <!-- Кнопка -->
             <div class="relative w-fit mx-auto group">
                 <span class="absolute -inset-1 bg-white/10 rounded-sm animate-ping"></span>
-                <a href="#"
-                    class="relative flex items-center px-5 py-3.5 bg-zinc-200 text-zinc-900 font-[Oswald] text-lg font-semibold uppercase tracking-wider transition-all hover:bg-orange-500 hover:text-white">
+                <a href="{{ route('materials') }}"
+                    class="relative flex items-center px-5 py-3.5 bg-zinc-200 text-zinc-900 font-[Oswald] text-lg font-semibold uppercase tracking-wider transition-all hover:bg-orange-500 hover:text-white"
+                    wire:navigate>
                     В магазин
-                    <svg xmlns="http://www.w3.org"
-                        class="size-6 shrink-0 ms-3 transition-transform group-hover:translate-x-2" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
+                    <x-lucide-move-right
+                        class="size-6 shrink-0 ms-3 transition-transform group-hover:translate-x-2.5" />
                 </a>
             </div>
 

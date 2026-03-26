@@ -1,4 +1,4 @@
-@use('App\Enums\ProductCategory')
+@use('App\Enums\KnifeCollection')
 @use('App\Enums\HandleMaterial')
 @use('App\Enums\CurrencyType')
 @use('App\Enums\BladeGrind')
@@ -57,49 +57,22 @@
         <!-- 3. КОЛЕКЦІЇ -->
         @if (!$collection)
             <x-filter.group title="Колекції" icon="layers" model="collections" persist="filter-collections">
-
                 <div class="flex flex-wrap gap-2.5">
-                    @foreach (ProductCategory::cases() as $categoryCase)
+                    @foreach (KnifeCollection::cases() as $categoryCase)
                         <x-filter.badge :value="$categoryCase->value" :label="$categoryCase->getLabel()" model="collections" :active="in_array($categoryCase->value, $collections)" />
                     @endforeach
                 </div>
             </x-filter.group>
         @endif
 
-        <!-- ФІЛЬТР: МАРКА СТАЛІ -->
-        <x-filter.group title="Марка сталі" icon="anvil" model="steels" persist="filter-steel">
-            <div class="flex flex-wrap gap-1.5">
-                @foreach (SteelType::cases() as $steel)
-                    <x-filter.checkbox :value="$steel->value" :label="$steel->getLabel()" model="steels" />
-                @endforeach
-            </div>
-        </x-filter.group>
-
-        <!-- ФІЛЬТР: МАТЕРІАЛ РУКІВ'Я -->
-        <x-filter.group title="Матеріал руків`я" icon="anvil" model="handle_materials" persist="handle_materials">
-            <div class="flex flex-wrap gap-1.5">
-                @foreach (HandleMaterial::cases() as $material)
-                    <x-filter.checkbox :value="$material->value" :label="$material->getLabel()" model="handle_materials" />
-                @endforeach
-            </div>
-        </x-filter.group>
-
-        <!-- 4. ПРОФІЛЬ КЛИНКА -->
-        <x-filter.group title="Профіль клинка" icon="spline" model="blade_shapes" persist="blade_shapes">
-            <div class="flex flex-wrap gap-1.5">
-                @foreach (BladeShape::cases() as $shape)
-                    <x-filter.checkbox :value="$shape->value" :label="$shape->getLabel()" model="blade_shapes" />
-                @endforeach
-            </div>
-        </x-filter.group>
-
-        {{-- 5. ТИПИ СПУСКІВ --}}
-        <x-filter.group title="Типи спусків" icon="triangle" model="blade_grinds" persist="blade_grinds">
-            <div class="flex flex-wrap gap-1.5">
-                @foreach (BladeGrind::cases() as $grind)
-                    <x-filter.checkbox :value="$grind->value" :label="$grind->getLabel()" model="blade_grinds" />
-                @endforeach
-            </div>
-        </x-filter.group>
+        @foreach ($this->allAttributes as $attribute)
+            <x-filter.group :title="$attribute->name" :model="'filters.' . $attribute->slug" :persist="'filter-' . $attribute->slug">
+                <div class="flex flex-wrap gap-2.5">
+                    @foreach ($attribute->values as $value)
+                        <x-filter.option :attribute="$attribute" :value="$value" :filters="$filters" />
+                    @endforeach
+                </div>
+            </x-filter.group>
+        @endforeach
     </x-scrollbar>
 </div>

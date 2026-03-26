@@ -1,4 +1,4 @@
-@use(App\Enums\ProductCategory)
+@use(App\Enums\KnifeCollection)
 @use(App\Enums\SteelType)
 @use(App\Enums\BladeShape)
 @use(App\Enums\BladeGrind)

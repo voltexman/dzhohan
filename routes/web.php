@@ -2,28 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
+Route::livewire('/products/knife', 'pages::products.list')->name('knives');
+Route::livewire('/products/knife/{collection}', 'pages::products.list')->name('knives.collection');
+Route::livewire('/products/knife/{collection}/{product:slug}', 'pages::products.show')->name('knife.show');
 
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
+Route::livewire('/products/material', 'pages::products.materials')->name('materials');
+Route::livewire('/products/material/{product:slug}', 'pages::products.show')->name('material.show');
 
-// 1. Загальний список усіх товарів
-Route::livewire('/products', 'pages::products.list')
-    ->name('products');
-
-// 2. Список товарів конкретної колекції (напр. /products/outdoor)
-// Важливо: параметр {collection} має збігатися з ключем у вашому Enum url()
-Route::livewire('/products/{collection}', 'pages::products.list')
-    ->name('products.collection');
-
-// 3. Сторінка конкретного товару всередині колекції (напр. /products/outdoor/super-knife)
-// Використовуємо {product:slug} для автоматичного пошуку моделі за слагом
-Route::livewire('/products/{collection}/{product:slug}', 'pages::products.show')
-    ->name('product.show');
-
-// Інші сторінки сайту
 Route::livewire('/gallery', 'pages::gallery')->name('gallery');
 Route::livewire('/blog', 'pages::blog.list')->name('blog');
 Route::livewire('/blog/{post}', 'pages::blog.show')->name('blog.show');

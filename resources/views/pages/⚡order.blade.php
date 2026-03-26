@@ -4,7 +4,7 @@ use Livewire\Attributes\Title;
 use App\Livewire\Forms;
 use App\Enums\SteelType;
 use App\Enums\Order\OrderType;
-use App\Enums\ProductCategory;
+use App\Enums\KnifeCollection;
 use App\Enums\BladeShape;
 use App\Models\Order;
 use App\Models\Subscriber;
@@ -126,7 +126,7 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                 </button>
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 lg:gap-5">
-                    @foreach (ProductCategory::cases() as $type)
+                    @foreach (KnifeCollection::cases() as $type)
                         <button type="button" wire:click="knife_type = '{{ $type->getLabel() }}'"
                             :class="$wire.knife_type === '{{ $type->getLabel() }}' ? 'border-orange-500 bg-orange-50' :
                                 'border-gray-200'"

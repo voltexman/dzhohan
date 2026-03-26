@@ -197,7 +197,7 @@ new class extends Component {
                 <!-- Контент акордеона (Badge Cloud) -->
                 <div x-show="expanded" x-collapse>
                     <div class="flex flex-wrap gap-2.5">
-                        @foreach (App\Enums\ProductCategory::cases() as $category)
+                        @foreach (App\Enums\KnifeCollection::cases() as $category)
                             @php $isActive = in_array($category->value, $categories); @endphp
 
                             <label

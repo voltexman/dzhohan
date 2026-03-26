@@ -115,7 +115,7 @@
     <x-nav class="lg:order-1 mx-auto" x-cloak>
         <x-nav.item label="Головна" url="home" icon="home" />
         <x-nav.item label="Про мене" url="about" icon="user-round" />
-        <x-nav.item label="Товари" url="products" icon="package" />
+        <x-nav.item label="Ножі" url="knives" icon="package" />
         <x-nav.item label="Галерея" url="gallery" icon="images" />
         <x-nav.item label="Блог" url="blog" icon="newspaper" />
         <x-nav.item label="Контакти" url="contacts" icon="notebook-text" />
@@ -347,7 +347,7 @@
                 <x-nav class="h-full">
                     <x-nav.item label="Головна" url="home" icon="home" />
                     <x-nav.item label="Про мене" url="about" icon="user-round" />
-                    <x-nav.item label="Товари" url="products" icon="package" />
+                    <x-nav.item label="Товари" url="knives" icon="package" />
                     <x-nav.item label="Галерея" url="gallery" icon="images" />
                     <x-nav.item label="Блог" url="blog" icon="newspaper" />
                     <x-nav.item label="Контакти" url="contacts" icon="notebook-text" />
@@ -386,7 +386,7 @@
                 x-bind:class="$wire.open ? 'lg:text-gray-800' : 'lg:text-zinc-100'" />
             <x-nav.item label="Про мене" url="about" icon="user-round"
                 x-bind:class="$wire.open ? 'lg:text-gray-800' : 'lg:text-zinc-100'" />
-            <x-nav.item label="Товари" url="products" icon="package"
+            <x-nav.item label="Ножі" url="knives" icon="package"
                 x-bind:class="$wire.open ? 'lg:text-gray-800' : 'lg:text-zinc-100'" />
             <x-nav.item label="Галерея" url="gallery" icon="images"
                 x-bind:class="$wire.open ? 'lg:text-gray-800' : 'lg:text-zinc-100'" />

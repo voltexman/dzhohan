@@ -14,6 +14,7 @@ class PagesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->paginated(false)
             ->columns([
                 TextColumn::make('title')
                     ->label('Заголовок')

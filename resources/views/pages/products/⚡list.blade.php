@@ -1,10 +1,12 @@
 <?php
 
+use App\Enums\ProductCategory;
 use App\Enums\CurrencyType;
 use Livewire\Attributes\Title;
-use App\Enums\ProductCategory;
+use App\Enums\KnifeCollection;
 use Illuminate\Support\Facades\Cookie;
 use Livewire\Component;
+use App\Models\Attribute;
 use Livewire\WithPagination;
 use Livewire\Attributes\Url;
 use Livewire\Attributes\Session;
@@ -95,7 +97,7 @@ new #[Title('Каталог ножів ручної роботи — купит�
         $this->blade_thickness_to ??= $this->maxThickness;
 
         if (empty($this->currency)) {
-            $this->currency = \App\Enums\CurrencyType::values(); // Отримаємо ['uah', 'usd', 'eur']
+            $this->currency = CurrencyType::values();
         }
 
         $this->view = Cookie::get('product_view', 'grid');
@@ -166,23 +168,7 @@ new #[Title('Каталог ножів ручної роботи — купит�
             if (request()->routeIs('products.collection') && $slug === $this->collection) {
                 continue;
             }
-            $filters[] = ProductCategory::tryFrom($slug)?->getLabel();
-        }
-
-        foreach ($this->steels as $steelSlug) {
-            $filters[] = \App\Enums\SteelType::tryFrom($steelSlug)?->getLabel() ?? $steelSlug;
-        }
-
-        foreach ($this->blade_shapes as $shapeSlug) {
-            $filters[] = \App\Enums\BladeShape::tryFrom($shapeSlug)?->getLabel() ?? $shapeSlug;
-        }
-
-        foreach ($this->handle_materials as $materialSlug) {
-            $filters[] = \App\Enums\HandleMaterial::tryFrom($materialSlug)?->getLabel() ?? $materialSlug;
-        }
-
-        foreach ($this->blade_grinds as $grindSlug) {
-            $filters[] = \App\Enums\BladeGrind::tryFrom($grindSlug)?->getLabel() ?? $grindSlug;
+            $filters[] = KnifeCollection::tryFrom($slug)?->getLabel();
         }
 
         return array_filter($filters);
@@ -227,38 +213,57 @@ new #[Title('Каталог ножів ручної роботи — купит�
     #[Computed]
     public function currentCollectionLabel()
     {
-        return ProductCategory::tryFrom((string) $this->collection)?->getLabel();
+        return KnifeCollection::tryFrom((string) $this->collection)?->getLabel();
+    }
+
+    public function toggleFilter(string $slug, int $valueId)
+    {
+        if (!isset($this->filters[$slug])) {
+            $this->filters[$slug] = [];
+        }
+
+        if (in_array($valueId, $this->filters[$slug])) {
+            // прибираємо
+            $this->filters[$slug] = array_diff($this->filters[$slug], [$valueId]);
+        } else {
+            // додаємо
+            $this->filters[$slug][] = $valueId;
+        }
+
+        // чистимо порожні масиви
+        if (empty($this->filters[$slug])) {
+            unset($this->filters[$slug]);
+        }
     }
 
     #[Computed]
     public function products()
     {
         return Product::query()
-            // 1. Завантажуємо медіа відразу, щоб не "покласти" базу
+            ->where('category', ProductCategory::KNIFE)
             ->with(['media'])
             ->withCount(['likes', 'comments'])
-
-            // 3. Якщо є конкретна категорія (наприклад, відкрита сторінка "Складні ножі")
             ->when($this->collection, fn($q) => $q->where('collection', $this->collection))
-
             ->filter([
                 'search' => $this->search,
-                'currency' => $this->currency,
+                'collections' => $this->collections,
+                'status' => $this->status,
+                'price_from' => $this->price_from,
+                'price_to' => $this->price_to,
                 'blade_length_from' => $this->blade_length_from,
                 'blade_length_to' => $this->blade_length_to,
                 'blade_thickness_from' => $this->blade_thickness_from,
                 'blade_thickness_to' => $this->blade_thickness_to,
-                'collections' => $this->collections,
-                'steels' => $this->steels,
-                'blade_shapes' => $this->blade_shapes,
-                'handle_materials' => $this->handle_materials,
-                'blade_grinds' => $this->blade_grinds,
-                'status' => $this->status,
-                'price_from' => $this->price_from,
-                'price_to' => $this->price_to,
+                'attributes' => $this->filters,
             ])
             ->orderBy($this->sortBy, $this->sortDirection)
             ->paginate($this->perPage);
+    }
+
+    #[Computed]
+    public function allAttributes(): \Illuminate\Support\Collection
+    {
+        return Attribute::with('values')->orderBy('sort')->get();
     }
 
     #[Computed]
@@ -276,14 +281,14 @@ new #[Title('Каталог ножів ручної роботи — купит�
 
 @section('header')
     <x-header :image="Vite::asset(
-        'resources/images/' . (ProductCategory::tryFrom((string) $this->collection)?->images() ?? 'header.png'),
+        'resources/images/' . (KnifeCollection::tryFrom((string) $this->collection)?->images() ?? 'header.png'),
     )">
         <x-slot:title>
-            {{ ProductCategory::tryFrom((string) $this->collection)?->getLabel() ?? 'Каталог ножів' }}
+            {{ KnifeCollection::tryFrom((string) $this->collection)?->getLabel() ?? 'Каталог ножів' }}
         </x-slot:title>
 
         <x-slot:description>
-            {{ ProductCategory::tryFrom((string) $this->collection)?->description() ?? 'Оберіть ніж зі складу або замовте виготовлення.' }}
+            {{ KnifeCollection::tryFrom((string) $this->collection)?->description() ?? 'Оберіть ніж зі складу або замовте виготовлення.' }}
         </x-slot:description>
 
         @if ($this->stockCounts['available'] || $this->stockCounts['sold'])
@@ -324,7 +329,7 @@ new #[Title('Каталог ножів ручної роботи — купит�
 
         <main class="flex-1 lg:col-span-2 flex flex-col gap-5 lg:pt-8 pb-10">
             @includeWhen($this->collection === null, 'partials.product.collections', [
-                'collections' => ProductCategory::cases(),
+                'collections' => KnifeCollection::cases(),
             ])
 
             <!-- Кнопка відкриття фільтрів на мобілці -->

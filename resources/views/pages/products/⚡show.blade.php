@@ -1,6 +1,7 @@
 <?php
 
 use Livewire\Attributes\Layout;
+use App\Enums\ProductCategory;
 use Livewire\Component;
 use App\Models\Product;
 
@@ -66,10 +67,13 @@ new #[Layout('layouts::cart')] class extends Component {
 
 <section x-data="{ show: false }" class="bg-white min-h-screen pt-10 relative mt-[70vh] lg:mt-0">
     <div class="flex justify-between px-5 lg:px-10">
-        <a href="{{ $product->collection->url() }}" class="flex items-center gap-1.5 text-zinc-700 hover:text-zinc-800"
-            wire:navigate>
+        <a href="{{ $product->category === ProductCategory::KNIFE ? $product->collection->url() : route('materials') }}"
+            class="flex items-center gap-1.5 text-zinc-700 hover:text-zinc-800" wire:navigate>
+
             <x-lucide-chevron-left class="size-6 shrink-0" />
-            <span class="text-xs font-semibold tracking-wide">До колекції</span>
+            <span class="text-xs font-semibold tracking-wide">
+                {{ $product->category === ProductCategory::KNIFE ? 'До колекції' : 'До магазину' }}
+            </span>
         </a>
 
         <div class="flex gap-4">
@@ -91,14 +95,14 @@ new #[Layout('layouts::cart')] class extends Component {
     <div class="flex flex-col mt-2.5 px-5 lg:px-10">
         <div class="text-black font-[SN_Pro] text-xl font-semibold">{{ $product->name }}</div>
         <div class="text-zinc-600 text-sm font-[Oswald] font-medium tracking-wider leading-none">
-            {{ $product->collection->getLabel() }}
+            {{ $product->collection?->getLabel() }}
         </div>
     </div>
 
     <div class="flex items-center justify-between mt-5 px-5 lg:px-10" x-intersect.threshold.50="show = false"
         x-intersect:leave.threshold.50="show = true">
         <div class="text-2xl font-[Oswald] font-semibold text-orange-500">
-            {{ $product->currency->format($product->price) }}
+            {{ $product->currency?->format($product->price) }}
         </div>
 
         <x-button wire:key="cart-btn-{{ $product->id }}" x-data="{ loading: false }" size="md"
@@ -117,67 +121,40 @@ new #[Layout('layouts::cart')] class extends Component {
     </div>
 
     <x-table class="flex-none lg:ms-10 mt-10 w-full lg:max-w-md">
-        @if ($product->sku)
-            <x-table.row>
-                <x-table.cell class="font-semibold text-black text-nowrap">Артикул (SKU)</x-table.cell>
-                <x-table.cell class="text-gray-700">{{ $product->sku }}</x-table.cell>
-            </x-table.row>
-        @endif
+        <x-table.row>
+            <x-table.cell class="font-semibold text-black text-nowrap">Артикул (SKU)</x-table.cell>
+            <x-table.cell class="text-gray-700">{{ $product->sku }}</x-table.cell>
+        </x-table.row>
 
-        @if ($product->steel)
+        @foreach ($product->productAttributeValues as $item)
             <x-table.row>
-                <x-table.cell class="font-semibold text-black text-nowrap">Марка сталі</x-table.cell>
-                <x-table.cell class="text-gray-700">{{ $product->steel->getLabel() }}</x-table.cell>
+                <x-table.cell class="font-semibold text-black text-nowrap">
+                    {{ $item->attribute->name }}
+                </x-table.cell>
+                <x-table.cell class="text-gray-700">
+                    {{ $item->value->value }}
+                </x-table.cell>
             </x-table.row>
-        @endif
-
-        @if ($product->blade_grind)
-            <x-table.row>
-                <x-table.cell class="font-semibold text-black text-nowrap">Тип спусків</x-table.cell>
-                <x-table.cell class="text-gray-700">{{ $product->blade_grind->getLabel() }}</x-table.cell>
-            </x-table.row>
-        @endif
-
-        @if ($product->blade_shape)
-            <x-table.row>
-                <x-table.cell class="font-semibold text-black text-nowrap">Профіль клинка</x-table.cell>
-                <x-table.cell class="text-gray-700">{{ $product->blade_shape->getLabel() }}</x-table.cell>
-            </x-table.row>
-        @endif
-
-        @if ($product->blade_finish)
-            <x-table.row>
-                <x-table.cell class="font-semibold text-black text-nowrap">Фінішна обробка</x-table.cell>
-                <x-table.cell class="text-gray-700">{{ $product->blade_finish->getLabel() }}</x-table.cell>
-            </x-table.row>
-        @endif
-
-        @if ($product->handle_material)
-            <x-table.row>
-                <x-table.cell class="font-semibold text-black text-nowrap">Матеріал руків'я</x-table.cell>
-                <x-table.cell class="text-gray-700">{{ $product->handle_material->getLabel() }}</x-table.cell>
-            </x-table.row>
-        @endif
-
-        @if ($product->sheath)
-            <x-table.row>
-                <x-table.cell class="font-semibold text-black text-nowrap">Піхви / Чохол</x-table.cell>
-                <x-table.cell class="text-gray-700">{{ $product->sheath->getLabel() }}</x-table.cell>
-            </x-table.row>
-        @endif
+        @endforeach
 
         <x-table.row>
             <x-table.cell class="font-semibold text-black text-nowrap">Наявність</x-table.cell>
             <x-table.cell>
-                @if ($product->hasStock())
-                    <x-lucide-check-circle class="size-5 stroke-green-500 inline-flex mr-1" />
-                    <span class="text-green-500 text-sm font-medium">В наявності</span>
-                @else
-                    <span class="text-red-500 text-sm block font-medium">
-                        Немає в наявності
-                        <span class="text-[11px] text-gray-500 leading-4 block font-normal">
-                            можу виготовити спеціально для вас
+                @if ($product->category === \App\Enums\ProductCategory::KNIFE)
+                    @if ($product->hasStock())
+                        <x-lucide-check-circle class="size-5 stroke-green-500 inline-flex mr-1" />
+                        <span class="text-green-500 text-sm font-medium">В наявності</span>
+                    @else
+                        <span class="text-red-500 text-sm block font-medium">
+                            Немає в наявності
+                            <span class="text-[11px] text-gray-500 leading-4 block font-normal">
+                                можу виготовити спеціально для вас
+                            </span>
                         </span>
+                    @endif
+                @else
+                    <span class="text-zinc-700 text-sm font-medium">
+                        В наявності: {{ $product->quantity }}
                     </span>
                 @endif
             </x-table.cell>
@@ -227,7 +204,7 @@ new #[Layout('layouts::cart')] class extends Component {
 
     <div class="max-w-3xl mt-10 space-y-2.5 px-5 lg:px-10">
         <h3 class="text-lg font-semibold font-[SN_Pro]">Огляд та особливості</h3>
-        <p class="text-gray-700 font-[Inter]">{{ $product->description }}</p>
+        <p class="text-gray-700 font-[Inter]">{!! $product->description !!}</p>
     </div>
 
     <div class="px-5 lg:px-10 mt-5 flex flex-wrap gap-2.5">

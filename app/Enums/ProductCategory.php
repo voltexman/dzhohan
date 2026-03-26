@@ -6,83 +6,36 @@ use Filament\Support\Contracts\HasLabel;
 
 enum ProductCategory: string implements HasLabel
 {
-    case TACTICAL = 'tactical';
-    case KITCHEN = 'kitchen';
-    case HUNTING = 'hunting';
-    case EDC = 'everyday';
-    case OUTDOOR = 'outdoor';
+    case KNIFE = 'knife';
+    case MATERIAL = 'material';
 
     public function getLabel(): string
     {
         return match ($this) {
-            self::TACTICAL => 'Тактичні ножі',
-            self::KITCHEN => 'Кухонні ножі',
-            self::HUNTING => 'Для полювання',
-            self::EDC => 'На кожен день',
-            self::OUTDOOR => 'Для походів',
+            self::KNIFE => 'Ножі',
+            self::MATERIAL => 'Матеріали',
         };
     }
 
-    public function images(): string
+    public function url(?string $collection = null): string
     {
         return match ($this) {
-            self::TACTICAL => 'tactical-category-bg.png',
-            self::KITCHEN => 'kitchen-category-bg.png',
-            self::HUNTING => 'hunting-category-bg.png',
-            self::EDC => 'everyday-category-bg.png',
-            self::OUTDOOR => 'outdoor-category-bg.png',
+            self::KNIFE => $collection
+                ? route('knives.collection', ['collection' => $collection])
+                : route('knives'),
+            self::MATERIAL => route('materials'),
         };
-    }
-
-    public function icons(): string
-    {
-        return match ($this) {
-            self::TACTICAL => 'tactical-icon.png',
-            self::KITCHEN => 'kitchen-icon.png',
-            self::HUNTING => 'hunting-icon.png',
-            self::EDC => 'everyday-icon.png',
-            self::OUTDOOR => 'outdoor-icon.png',
-        };
-    }
-
-    public function title(): string
-    {
-        return match ($this) {
-            self::TACTICAL => 'Тактичні ножі — військові, бойові, тактичне спорядження',
-            self::KITCHEN => 'Кухонні ножі — професійні та домашні набори',
-            self::HUNTING => 'Мисливські ножі — надійні ножі для полювання',
-            self::EDC => 'EDC ножі — ножі на кожен день',
-            self::OUTDOOR => 'Туристичні ножі — для походів та кемпінгу',
-        };
-    }
-
-    public function description(): string
-    {
-        return match ($this) {
-            self::TACTICAL => 'Міцні тактичні ножі для військових, виживання та екстремальних умов.',
-            self::KITCHEN => 'Кухонні ножі для шефів та дому. Висока якість сталі та ергономіка.',
-            self::HUNTING => 'Ножі для полювання, обробки дичини та роботи в польових умовах.',
-            self::EDC => 'Компактні складані ножі для щоденного носіння.',
-            self::OUTDOOR => 'Надійні ножі для туризму, кемпінгу та активного відпочинку.',
-        };
-    }
-
-    public function url(): string
-    {
-        return route('products.collection', [
-            'collection' => $this->value,
-        ]);
     }
 
     public static function options(): array
     {
         return collect(self::cases())
-            ->mapWithKeys(fn ($case) => [$case->value => $case->getLabel()])
+            ->mapWithKeys(fn($case) => [$case->value => $case->getLabel()])
             ->toArray();
     }
 
     public static function values(): array
     {
-        return array_map(fn ($case) => $case->value, self::cases());
+        return array_map(fn($case) => $case->value, self::cases());
     }
 }

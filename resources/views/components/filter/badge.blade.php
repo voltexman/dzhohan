@@ -2,7 +2,7 @@
 
 <label
     class="relative inline-flex items-center px-2.5 py-1.5 rounded-sm border cursor-pointer transition-all duration-300 select-none
-    {{ $active ? 'bg-neutral-900 border-neutral-900 text-white' : 'bg-white border-neutral-200 text-gray-600 hover:border-neutral-200 hover:bg-neutral-100' }}">
+    {{ $active ? 'bg-neutral-900 border-neutral-900 text-white' : 'bg-white border-zinc-200 text-zinc-600 hover:border-neutral-200 hover:bg-neutral-100' }}">
 
     <input type="checkbox" value="{{ $value }}" wire:model.live="{{ $model }}" class="hidden">
 

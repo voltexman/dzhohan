@@ -51,9 +51,9 @@
     <meta name="twitter:image" content="{{ $og_image ?? Vite::asset('resources/images/header.png') }}">
 
     {{-- Favicon --}}
-    <link rel="icon" href="/favicon.ico" sizes="any">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="icon" href="/favicons/favicon.ico" sizes="any">
+    <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png">
 
     {{-- Theme --}}
     <meta name="theme-color" content="#000000">
@@ -77,7 +77,8 @@
 
         <x-nav class="hidden lg:flex lg:mx-auto" x-cloak>
             <x-nav.item label="Головна" url="home" icon="home" />
-            <x-nav.item label="Товари" url="products" icon="package" />
+            <x-nav.item label="Ножі" url="knives" icon="package" />
+            <x-nav.item label="Матеріали" url="materials" icon="package" />
             <x-nav.item label="Галерея" url="gallery" icon="images" />
             <x-nav.item label="Блог" url="blog" icon="newspaper" />
             <x-nav.item label="Замовлення" url="order" icon="package-open" />

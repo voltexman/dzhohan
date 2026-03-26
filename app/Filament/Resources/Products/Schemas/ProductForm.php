@@ -2,18 +2,15 @@
 
 namespace App\Filament\Resources\Products\Schemas;
 
-use App\Enums\BladeFinish;
-use App\Enums\BladeGrind;
-use App\Enums\BladeShape;
 use App\Enums\CurrencyType;
-use App\Enums\HandleMaterial;
-use App\Enums\ProductCategory;
-use App\Enums\SheathType;
-use App\Enums\SteelType;
+use App\Enums\KnifeCollection;
+use App\Models\Attribute;
+use App\Models\AttributeValue;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
@@ -40,7 +37,7 @@ class ProductForm
                                     ->required()
                                     ->maxLength(255)
                                     ->live(onBlur: true)
-                                    ->afterStateUpdated(fn ($set, $state) => $set('slug', Str::slug($state)))
+                                    ->afterStateUpdated(fn($set, $state) => $set('slug', Str::slug($state)))
                                     ->validationMessages([
                                         'required' => 'Будь ласка, введіть назву ножа',
                                         'unique' => 'Ніж з такою назвою вже існує',
@@ -50,13 +47,13 @@ class ProductForm
                                     ->label('URL адреса (slug)')
                                     ->required()
                                     ->unique(ignoreRecord: true)
-                                    ->disabled(fn ($get) => ! $get('is_slug_editable'))
+                                    ->disabled(fn($get) => ! $get('is_slug_editable'))
                                     ->dehydrated()
                                     ->suffixAction(
                                         Action::make('toggleSlugEditable')
                                             ->icon('heroicon-m-lock-closed')
                                             ->color('gray')
-                                            ->action(fn ($set, $get) => $set('is_slug_editable', ! $get('is_slug_editable')))
+                                            ->action(fn($set, $get) => $set('is_slug_editable', ! $get('is_slug_editable')))
                                     )
                                     ->validationMessages([
                                         'required' => 'Будь ласка, вкажіть url адресу',
@@ -104,26 +101,29 @@ class ProductForm
 
                                         TextInput::make('sku')
                                             ->label('Артикул (SKU)')
-                                            ->default(fn () => 'KN-'.strtoupper(Str::random(6)))
+                                            ->default(fn() => 'KN-' . strtoupper(Str::random(6)))
                                             ->unique(ignoreRecord: true)
                                             ->required()
                                             ->readOnly()
                                             ->suffixAction(
                                                 Action::make('generateSku')
                                                     ->icon('heroicon-m-arrow-path')
-                                                    ->action(fn ($set) => $set('sku', 'KN-'.strtoupper(Str::random(6))))
+                                                    ->action(fn($set) => $set('sku', 'KN-' . strtoupper(Str::random(6))))
                                             ),
 
                                     ])->columnSpanFull(),
 
-                                Textarea::make('description')
-                                    ->rows(6)
-                                    ->extraAttributes(['class' => 'resize-none'])
-                                    ->label('Опис та особливості')
+                                RichEditor::make('description')
+                                    ->toolbarButtons([
+                                        ['bold', 'italic', 'underline', 'strike'],
+                                        ['alignStart', 'alignCenter', 'alignEnd'],
+                                        ['blockquote', 'bulletList', 'orderedList'],
+                                        ['undo', 'redo'],
+                                    ])
                                     ->columnSpanFull(),
 
                                 Select::make('collection')
-                                    ->options(ProductCategory::class)
+                                    ->options(KnifeCollection::class)
                                     ->native(false)
                                     ->label('Колекція')
                                     ->required()
@@ -140,9 +140,15 @@ class ProductForm
                                     ->preload()
                                     ->rule(['min:1', 'max:6'])
                                     ->label('Теги')
+                                    // 🔥 Повідомлення, якщо пошук не дав результатів
+                                    ->noSearchResultsMessage('Теги не знайдено. Спробуйте інший запит або створіть новий.')
+
+                                    // 🔥 Повідомлення, якщо список значень взагалі порожній (наприклад, для нового атрибута)
+                                    ->noOptionsMessage('Теги відсутні. Створіть новий')
                                     ->createOptionForm([
                                         TextInput::make('name')
                                             ->required()
+                                            ->label('Тег')
                                             ->maxLength(255),
                                     ])
                                     ->validationMessages([
@@ -190,25 +196,23 @@ class ProductForm
                         Tab::make('Характеристики')
                             ->icon('heroicon-m-list-bullet')
                             ->schema([
-                                Section::make('Клинок')
-                                    ->icon('heroicon-m-scissors')
-                                    ->columns(3)
+                                Section::make('Технічні параметри')
+                                    ->description('Розміри ножа')
                                     ->schema([
-                                        Select::make('steel')
-                                            ->label('Марка сталі')
-                                            ->options(SteelType::class)
-                                            ->searchable()
-                                            ->native(false),
-
-                                        Select::make('blade_shape')
-                                            ->label('Профіль клинка')
-                                            ->options(BladeShape::class)
-                                            ->native(false),
-
-                                        Select::make('blade_grind')
-                                            ->label('Тип спусків')
-                                            ->options(BladeGrind::class)
-                                            ->native(false),
+                                        TextInput::make('total_length')
+                                            ->label('Загальна довжина')
+                                            ->numeric()
+                                            ->required()
+                                            ->minValue(0)
+                                            ->step(0.1)
+                                            ->suffix('мм')
+                                            ->default(0)
+                                            ->placeholder('напр. 250')
+                                            ->validationMessages([
+                                                'required' => 'Загальна довжина ножа є обов’язковою.',
+                                                'numeric' => 'Будь ласка, введіть число.',
+                                                'min' => 'Довжина не може бути меншою за 0.',
+                                            ]),
 
                                         TextInput::make('blade_length')
                                             ->label('Довжина леза')
@@ -217,12 +221,12 @@ class ProductForm
                                             ->minValue(0)
                                             ->step(0.1)
                                             ->suffix('мм')
+                                            ->default(0)
                                             ->validationMessages([
                                                 'required' => 'Будь ласка, вкажіть довжину леза.',
                                                 'numeric' => 'Тут має бути число.',
                                                 'min' => 'Довжина не може бути меншою за 0.',
-                                            ])
-                                            ->default(0),
+                                            ]),
 
                                         TextInput::make('blade_thickness')
                                             ->label('Товщина леза')
@@ -238,40 +242,72 @@ class ProductForm
                                                 'numeric' => 'Тут має бути число.',
                                                 'min' => 'Товщина не може бути від’ємною.',
                                             ]),
+                                    ])
+                                    ->columns(3),
 
-                                        Select::make('blade_finish')
-                                            ->label('Покриття')
-                                            ->options(BladeFinish::class)
-                                            ->native(false),
-                                    ]),
-
-                                Grid::make(3)
+                                Repeater::make('knifeAttributes')
+                                    ->relationship('knifeAttributes')
+                                    ->reorderable('sort')
+                                    ->orderColumn('sort')
+                                    ->reorderableWithButtons()
+                                    ->collapsible()
                                     ->schema([
-                                        TextInput::make('total_length')
-                                            ->label('Загальна довжина')
-                                            ->numeric()
+                                        Select::make('attribute_id')
+                                            ->label('Параметр')
+                                            // Фільтруємо за групою
+                                            ->options(Attribute::where('group', 'knife')->pluck('name', 'id'))
                                             ->required()
-                                            ->minValue(0)
-                                            ->step(0.1)
-                                            ->suffix('мм')
-                                            ->default(0)
-                                            ->placeholder('напр. 250')
-                                            ->validationMessages([
-                                                'required' => 'Загальна довжина ножа є обов’язковою.',
-                                                'numeric' => 'Будь ласка, введіть число (наприклад: 255.5).',
-                                                'min' => 'Довжина не може бути меншою за 0.',
-                                            ]),
+                                            ->searchable()
+                                            ->preload()
+                                            ->live()
+                                            ->distinct()
+                                            ->noSearchResultsMessage('Параметрів не знайдено.')
+                                            ->noOptionsMessage('Параметри для ножів відсутні.')
+                                            ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+                                            ->afterStateUpdated(fn($set) => $set('attribute_value_id', null))
+                                            ->createOptionForm([
+                                                TextInput::make('name')
+                                                    ->label('Назва параметра')
+                                                    ->required(),
+                                            ])
+                                            ->createOptionUsing(function (array $data) {
+                                                return Attribute::create([
+                                                    'name' => $data['name'],
+                                                    'group' => 'knife',
+                                                ])->id;
+                                            }),
 
-                                        Select::make('handle_material')
-                                            ->label('Матеріал руків’я')
-                                            ->options(HandleMaterial::class)
-                                            ->native(false),
+                                        Select::make('attribute_value_id')
+                                            ->label('Значення')
+                                            ->required()
+                                            ->searchable()
+                                            ->preload()
+                                            ->noSearchResultsMessage('Значень не знайдено. Спробуйте інший запит або створіть нове.')
+                                            ->noOptionsMessage('Для цього параметра ще не створено жодного значення.')
+                                            ->options(fn($get) => AttributeValue::where('attribute_id', $get('attribute_id'))->pluck('value', 'id'))
+                                            ->disabled(fn($get) => ! $get('attribute_id'))
+                                            ->createOptionForm([
+                                                TextInput::make('value')
+                                                    ->label('Нове значення')
+                                                    ->required(),
+                                            ])
+                                            ->createOptionUsing(function (array $data, $get) {
+                                                $attributeId = $get('attribute_id');
 
-                                        Select::make('sheath')
-                                            ->label('Піхви / Чохол')
-                                            ->options(SheathType::class)
-                                            ->native(false),
-                                    ]),
+                                                ! $attributeId && throw new \Exception('Спочатку оберіть параметр');
+
+                                                return AttributeValue::create([
+                                                    'attribute_id' => $attributeId,
+                                                    'value' => $data['value'],
+                                                ])->id;
+                                            }),
+                                    ])
+                                    ->columns(2)
+                                    ->defaultItems(0)
+                                    ->addActionLabel('Додати характеристику')
+                                    ->itemLabel(
+                                        fn(array $state): ?string => Attribute::find($state['attribute_id'] ?? null)?->name ?? 'Нова характеристика'
+                                    )->label('Характеристики ножа'),
                             ]),
                     ]),
             ]);

@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         }
         $tags = Tag::all();
 
-        Product::factory(10)->create()->each(function ($product) use ($tags) {
+        Product::factory(25)->create()->each(function ($product) use ($tags) {
             Review::factory(rand(0, 5))
                 ->for($product)
                 ->create();

@@ -2,14 +2,9 @@
 
 namespace App\Models;
 
-use App\Enums\BladeFinish;
-use App\Enums\BladeGrind;
-use App\Enums\BladeShape;
 use App\Enums\CurrencyType;
-use App\Enums\HandleMaterial;
+use App\Enums\KnifeCollection;
 use App\Enums\ProductCategory;
-use App\Enums\SheathType;
-use App\Enums\SteelType;
 use App\Traits\Likeable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,35 +29,20 @@ class Product extends Model implements HasMedia
         'price',
         'quantity',
         'is_active',
+        'category',
         'collection',
         'currency',
 
         'total_length',    // Загальна довжина
         'blade_length',    // Довжина леза
         'blade_thickness', // Товщина леза
-
-        'steel',           // Марка сталі (Enum)
-        'blade_shape',     // Профіль клинка (Enum)
-        'blade_finish',    // Фінішна обробка (Enum)
-        'blade_grind',     // Тип спусків (Enum)
-        'handle_material', // Матеріал руків'я (Enum)
-        'sheath',          // Піхви (Enum)
     ];
 
     protected $casts = [
         // Базові фільтри
-        'collection' => ProductCategory::class,
+        'category' => ProductCategory::class,
+        'collection' => KnifeCollection::class,
         'currency' => CurrencyType::class,
-
-        // Характеристики леза
-        'steel' => SteelType::class,
-        'blade_shape' => BladeShape::class,
-        'blade_finish' => BladeFinish::class,
-        'blade_grind' => BladeGrind::class,
-
-        // Руків'я та аксесуари
-        'handle_material' => HandleMaterial::class,
-        'sheath' => SheathType::class,
 
         // Числові значення (для точності)
         'total_length' => 'decimal:2',
@@ -90,42 +70,79 @@ class Product extends Model implements HasMedia
     public function scopeFilter($query, array $filters)
     {
         return $query->where('is_active', true)
+
             ->when($filters['search'] ?? null, function ($q, $search) {
-                $q->where(function ($query) use ($search) {
-                    $query->where('name', 'like', "%{$search}%")
+                $q->where(function ($q2) use ($search) {
+                    $q2->where('name', 'like', "%{$search}%")
                         ->orWhere('sku', 'like', "%{$search}%")
                         ->orWhere('description', 'like', "%{$search}%");
                 });
             })
+            ->when($filters['collections'] ?? null, fn($q, $v) => $q->whereIn('collection', (array) $v))
+            ->when(($filters['status'] ?? null) === 'in_stock', fn($q) => $q->where('quantity', '>', 0))
+            ->when(($filters['status'] ?? null) === 'sold', fn($q) => $q->where('quantity', 0))
+            ->when($filters['price_from'] ?? null, fn($q, $v) => $q->where('price', '>=', $v))
+            ->when($filters['price_to'] ?? null, fn($q, $v) => $q->where('price', '<=', $v))
+            ->when($filters['blade_length_from'] ?? null, fn($q, $v) => $q->where('blade_length', '>=', $v))
+            ->when($filters['blade_length_to'] ?? null, fn($q, $v) => $q->where('blade_length', '<=', $v))
+            ->when($filters['blade_thickness_from'] ?? null, fn($q, $v) => $q->where('blade_thickness', '>=', $v))
+            ->when($filters['blade_thickness_to'] ?? null, fn($q, $v) => $q->where('blade_thickness', '<=', $v))
 
-            // ->when(!empty($filters['currency']), function ($q, $v) {
-            //     $q->whereIn('currency', (array)$v);
-            // })
+            // 🔥 ДИНАМІЧНІ АТРИБУТИ
+            ->when($filters['attributes'] ?? null, function ($q, $attributes) {
+                foreach ($attributes as $slug => $values) {
 
-            ->when($filters['collections'] ?? null, fn ($q, $cat) => $q->whereIn('collection', $cat))
+                    if (empty($values)) {
+                        continue;
+                    }
 
-            ->when(isset($filters['status']) && $filters['status'] !== 'all', function ($q) use ($filters) {
-                return $filters['status'] === 'in_stock'
-                    ? $q->where('quantity', '>', 0)
-                    : $q->where('quantity', '=', 0);
-            })
-
-            ->when($filters['price_from'] ?? null, fn ($q, $from) => $q->where('price', '>=', $from))
-            ->when($filters['price_to'] ?? null, fn ($q, $to) => $q->where('price', '<=', $to))
-
-            ->when($filters['blade_length_from'] ?? null, fn ($q, $v) => $q->where('blade_length', '>=', $v))
-            ->when($filters['blade_length_to'] ?? null, fn ($q, $v) => $q->where('blade_length', '<=', $v))
-
-            ->when($filters['blade_thickness_from'] ?? null, fn ($q, $v) => $q->where('blade_thickness', '>=', $v))
-            ->when($filters['blade_thickness_to'] ?? null, fn ($q, $v) => $q->where('blade_thickness', '<=', $v))
-
-            ->when($filters['steels'] ?? null, fn ($q, $v) => $q->whereIn('steel', $v))
-            ->when($filters['blade_shapes'] ?? null, fn ($q, $v) => $q->whereIn('blade_shape', $v))
-            ->when($filters['handle_materials'] ?? null, fn ($q, $v) => $q->whereIn('handle_material', $v))
-
-            ->when($filters['blade_grinds'] ?? null, function ($q, $v) {
-                $q->whereIn('blade_grind', (array) $v);
+                    $q->whereHas('attributeValues', function ($q2) use ($slug, $values) {
+                        $q2->whereIn('attribute_values.id', $values)
+                            ->whereHas('attribute', fn($q3) => $q3->where('slug', $slug));
+                    });
+                }
             });
+    }
+
+    public function attributeValues()
+    {
+        return $this->belongsToMany(
+            AttributeValue::class,
+            'product_attribute_values',
+            'product_id',
+            'attribute_value_id'
+        )->withPivot('attribute_id', 'sort');
+    }
+
+    public function knifeAttributes()
+    {
+        return $this->hasMany(ProductAttributeValue::class)
+            ->whereHas('attribute', fn($q) => $q->where('group', 'knife'))
+            ->orderBy('sort');
+    }
+
+    // public function url(): string
+    // {
+    //     if ($this->category === ProductCategory::KNIFE) {
+
+    //         if (!$this->collection) {
+    //             throw new \Exception("Knife [{$this->id}] must have collection");
+    //         }
+
+    //         return route('knife.show', [
+    //             'collection' => $this->collection->value,
+    //             'knife' => $this->slug,
+    //         ]);
+    //     }
+
+    //     return route('material.show', [
+    //         'product' => $this->slug,
+    //     ]);
+    // }
+
+    public function productAttributeValues(): HasMany
+    {
+        return $this->hasMany(ProductAttributeValue::class)->orderBy('sort');
     }
 
     public function reviews(): HasMany
