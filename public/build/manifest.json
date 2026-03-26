@@ -6,7 +6,7 @@
     "isDynamicEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-C7Q7yiGc.css",
+    "file": "assets/app-BvsJ2MFY.css",
     "name": "app",
     "names": [
       "app.css"
@@ -41,10 +41,6 @@
   "resources/images/everyday-icon.png": {
     "file": "assets/everyday-icon-CLiNBqW8.png",
     "src": "resources/images/everyday-icon.png"
-  },
-  "resources/images/faq-section.png": {
-    "file": "assets/faq-section-DKIOpZWd.png",
-    "src": "resources/images/faq-section.png"
   },
   "resources/images/header-knife.svg": {
     "file": "assets/header-knife-BY7sFvGz.svg",

@@ -1,14 +1,14 @@
-@props(['trigger', 'header', 'footer'])
+@props(['trigger', 'header', 'footer', 'position' => 'end', 'size' => 'md'])
 
 <div x-data="{
     open: false,
     mobileFullWidth: true,
 
     // 'start', 'end', 'top', 'bottom'
-    position: 'end',
+    position: '{{ $position }}',
 
     // 'xs', 'sm', 'md', 'lg', 'xl'
-    size: 'md',
+    size: '{{ $size }}',
 
     // Set transition classes based on position
     transitionClasses: {
@@ -36,12 +36,10 @@
         },
     },
 }" x-on:keydown.esc.prevent="open = false" {{ $attributes->class('') }}>
-    {{-- Trigger --}}
     <button x-on:click="open = true" type="button"
-        class="lg:hidden relative rounded-md p-1.5 transition-colors duration-500">
+        class="relative rounded-md p-1.5 transition-colors duration-500 cursor-pointer">
         {{ $trigger }}
     </button>
-    {{-- End Trigger --}}
 
     <template x-teleport="body">
         <div x-cloak x-show="open" x-transition:enter="transition ease-out duration-300"
@@ -51,7 +49,7 @@
             aria-labelledby="pm-offcanvas-title"
             class="z-90 fixed inset-0 overflow-hidden bg-stone-900/60 backdrop-blur-sm"
             x-effect="document.body.style.overflow = open ? 'hidden' : 'auto'">
-            <!-- Offcanvas Sidebar -->
+
             <div x-cloak x-show="open" x-on:click.away="open = false" x-bind="transitionClasses"
                 x-transition:enter="transition ease-out duration-300"
                 x-transition:enter-end="translate-x-0 translate-y-0"
@@ -71,22 +69,19 @@
                     'sm:max-w-xl': size === 'xl' && !(position === 'top' || position === 'bottom'),
                     'max-w-72': !mobileFullWidth && !(position === 'top' || position === 'bottom'),
                 }">
-                <!-- Header -->
+
                 @isset($header)
                     <div
-                        {{ $header->attributes->class('flex min-h-16 flex-none items-center justify-between px-6 md:px-10') }}>
+                        {{ $header->attributes->class('flex font-[Oswald] tracking-wide min-h-16 bg-zinc-50 border-b border-zinc-100 flex-none items-center justify-between px-5 md:px-10') }}>
                         {{ $header }}
                     </div>
                 @endisset
-                <!-- Close Button -->
+
                 <button x-on:click="open = false" type="button"
                     class="absolute top-3 right-3 inline-flex items-center justify-center size-8 rounded-full bg-black text-zinc-50 hover:bg-zinc-800 hover:text-zinc-200 transition-colors duration-300 cursor-pointer">
                     <x-lucide-x class="-mx-1 inline-block size-4" />
                 </button>
-                <!-- END Close Button -->
-                <!-- END Header -->
 
-                <!-- Content -->
                 <div class="flex grow flex-col overflow-y-auto">
                     <div x-transition:enter="transition ease-out duration-300"
                         x-transition:enter-start="opacity-0 translate-y-4"
@@ -94,17 +89,17 @@
                         x-transition:leave="transition ease-in duration-200"
                         x-transition:leave-start="opacity-100 translate-y-0"
                         x-transition:leave-end="opacity-0 translate-y-4"
-                        class="flex flex-col size-full max-w-xl mx-auto">
+                        class="flex flex-col size-full max-w-xl mx-auto p-5 lg:p-10">
                         {{ $slot }}
                     </div>
                 </div>
 
                 @isset($footer)
-                    {{ $footer }}
+                    <div {{ $footer->attributes->class('relative px-5 py-5 md:px-10') }}>
+                        {{ $footer }}
+                    </div>
                 @endisset
-                <!-- END Content -->
             </div>
-            <!-- END Offcanvas Sidebar -->
         </div>
     </template>
 </div>

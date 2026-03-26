@@ -23,6 +23,17 @@ enum KnifeCollection: string implements HasLabel
         };
     }
 
+    public function getShortLabel(): string
+    {
+        return match ($this) {
+            self::TACTICAL => 'Тактичні',
+            self::KITCHEN => 'Кухонні',
+            self::HUNTING => 'Мисливські',
+            self::EDC => 'Щоденні',
+            self::OUTDOOR => 'Туристичні',
+        };
+    }
+
     public function images(): string
     {
         return match ($this) {

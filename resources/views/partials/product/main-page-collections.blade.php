@@ -14,14 +14,14 @@
     {{-- контент (має бути відносним, щоб бути над фоном) --}}
     <div class="relative z-10 text-white">
         <div class="text-xl lg:text-2xl font-[Oswald] font-semibold tracking-wide">
-            {{ $collection->getLabel() }}
+            {{ $collection->getShortLabel() }}
         </div>
 
         <div class="text-sm mt-1 opacity-90 max-w-xs hidden lg:block line-clamp-2">
             {{ $collection->description() }}
         </div>
 
-        <div class="mt-3 inline-flex items-center gap-1 text-orange-400 font-medium">
+        <div class="mt-1.5 inline-flex items-center gap-1 text-orange-400 font-medium text-sm lg:text-base">
             <span>Переглянути</span>
             <x-lucide-arrow-right class="size-4 group-hover:translate-x-2 transition-transform duration-300" />
         </div>

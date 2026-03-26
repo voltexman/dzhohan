@@ -5,6 +5,9 @@ use function Laravel\Folio\name;
 name('home');
 ?>
 
+<x-slot name="title">
+    Авторські ножі ручної роботи
+</x-slot>
 <x-slot name="description">
     Виготовлення авторських ножів ручної роботи на замовлення. Унікальний дизайн, якісна сталь, доставка по Україні.
     Оберіть свій ідеальний ніж.
@@ -13,41 +16,34 @@ name('home');
 @section('header')
     <header class="relative h-screen w-full bg-cover bg-center bg-no-repeat animate-ricochet lg:animate-none"
         style="background-image: url('{{ Vite::asset('resources/images/header.png') }}')">
-
-        {{-- затемнення --}}
         <div class="absolute inset-0 bg-black/40"></div>
-
-        {{-- контент поверх --}}
         <div class="relative z-10 flex flex-col items-center justify-center h-full">
             <img src="{{ Vite::asset('resources/images/logo_light.svg') }}"
                 class="size-50 lg:size-70 drop-shadow-xl logo will-change-transform z-1000!" alt="">
-
             <h1
                 class="text-zinc-100 text-4xl md:text-6xl font-bold uppercase text-center max-w-lg font-[Russo_One] drop-shadow-xl">
                 Продаж та <br> замовлення <br> <span class="text-orange-500/90">ножів</span>
             </h1>
-
             <div
                 class="flex gap-1.5 mt-5 text-white/70 flex-wrap mx-auto justify-center items-center max-w-3xs px-5 w-full leading-4">
-                <div class="text-xs font-[Oswald] tracking-wider">Тактичні</div>
+                <div class="text-sm font-[Oswald] tracking-wider">Тактичні</div>
                 <div class="size-1.5 rounded-full bg-white flex-none"></div>
-                <div class="text-xs font-[Oswald] tracking-wider">Кухонні</div>
+                <div class="text-sm font-[Oswald] tracking-wider">Кухонні</div>
                 <div class="size-1.5 rounded-full bg-white flex-none"></div>
-                <div class="text-xs font-[Oswald] tracking-wider">Мисливські</div><br>
-                <div class="text-xs font-[Oswald] tracking-wider">Щоденні</div>
+                <div class="text-sm font-[Oswald] tracking-wider">Мисливські</div><br>
+                <div class="text-sm font-[Oswald] tracking-wider">Щоденні</div>
                 <div class="size-1.5 rounded-full bg-white flex-none"></div>
-                <div class="text-xs font-[Oswald] tracking-wider">Туристичні</div>
+                <div class="text-sm font-[Oswald] tracking-wider">Туристичні</div>
             </div>
         </div>
-
         <a href="#about-me" class="absolute z-10 bottom-5 left-1/2 -translate-x-1/2 animate-bounce">
             <img src="{{ Vite::asset('resources/images/header-knife.svg') }}" class="size-12 -rotate-32" alt="">
         </a>
     </header>
 @endsection
 
-<x-layouts::app title="Авторські ножі ручної роботи">
-    <section class="bg-zinc-50 py-20 px-5 lg:px-0 scroll-mt-15" id="about-me">
+<x-layouts::app>
+    <section class="bg-zinc-50 py-20 px-6 lg:px-0 scroll-mt-15" id="about-me">
         <div class="max-w-5xl mx-auto grid lg:grid-cols-2 gap-5 lg:gap-10">
             <div class="overflow-hidden">
                 <img src="{{ Vite::asset('resources/images/i-am.jpg') }}"
@@ -131,20 +127,6 @@ name('home');
         </div>
     </section>
 
-    {{-- <section class="bg-zinc-100 py-20">
-        <div class="max-w-5xl mx-auto">
-            <h2 class="font-[Russo_One] text-3xl text-center text-gray-900">Мої колекції</h2>
-            <div class="my-2.5 mx-auto w-22 h-1 bg-orange-500"></div>
-            <div class="max-w-sm mx-auto text-center text-gray-700 text-sm">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero quam nulla fuga optio.
-            </div>
-
-            <div class="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-[minmax(180px,auto)] mt-10">
-                @each('partials.product.main-page-collections', KnifeCollection::cases(), 'collection')
-            </div>
-        </div>
-    </section> --}}
-
     <section class="bg-orange-500 py-20 px-5 lg:px-0"
         style="background-image: url('{{ Vite::asset('resources/images/bg-manufacture.svg') }}'); background-size: cover, cover; background-repeat: no-repeat;">
         <div class="max-w-5xl mx-auto grid lg:grid-cols-[2fr_1fr_1fr] items-center gap-y-10 gap-x-2.5">
@@ -179,7 +161,7 @@ name('home');
         </div>
     </section>
 
-    <section class="bg-zinc-50 py-20 px-5 lg:px-0" x-data="{ open: null }">
+    <section class="bg-zinc-50 py-20 px-6 lg:px-0" x-data="{ open: null }">
         <div class="max-w-5xl mx-auto">
             <h2 class="font-[Russo_One] text-3xl text-center text-gray-900">
                 Часті <span class="text-orange-500">запитання</span>
@@ -189,13 +171,23 @@ name('home');
                 Відповіді на питання, які найчастіше виникають при замовленні або купівлі ножа.
             </div>
 
-            <div class="grid lg:grid-cols-2 lg:gap-5 items-start">
-                <div class="hidden lg:flex justify-center items-center">
-                    <img src="{{ Vite::asset('resources/images/faq-section.png') }}"
-                        class="size-full object-contain drop-shadow-xl" alt="" />
+            <div class="grid lg:grid-cols-2 gap-5 items-start">
+                <div class="order-2 lg:order-1 size-full flex flex-col gap-5 mt-10 lg:mt-15 items-center">
+                    <x-lucide-message-circle-question-mark class="size-20 fill-orange-100 stroke-orange-600 shrink-0"
+                        stroke-width="1.25" />
+                    <div class="text-xl font-[Oswald] text-zinc-700 text-center font-semibold">
+                        Зв'язатися з майстром
+                    </div>
+                    <div class="text-center text-balance">
+                        Якщо у вас є інші запитання — звертайтеся. Я завжди готовий надати вичерпну відповідь.
+                    </div>
+                    <a href="{{ route('contacts') }}" wire:navigate
+                        class="text-orange-600 font-bold hover:text-orange-700 transition-colors duration-300">
+                        Звернутись
+                    </a>
                 </div>
 
-                <div class="mt-10" x-data="{ open: null }">
+                <div class="order-1 lg:order-2 mt-10" x-data="{ open: null }">
                     @foreach ($settings->faqs as $faq)
                         <div class="overflow-hidden border-b border-gray-200/80 last:border-b-0">
                             <button @click="open === {{ $loop->index }} ? open = null : open = {{ $loop->index }}"
@@ -221,7 +213,7 @@ name('home');
         </div>
     </section>
 
-    <section class="py-20 relative bg-fixed bg-no-repeat bg-cover bg-center px-5 lg:px-0"
+    <section class="py-20 relative bg-fixed bg-no-repeat bg-cover bg-center px-6 lg:px-0"
         style="background-image: url('{{ Vite::asset('resources/images/steel-section-bg.png') }}');">
 
         <!-- Напівпрозорий темний оверлей на всю секцію (опціонально) -->
