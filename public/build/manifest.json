@@ -1,22 +1,18 @@
 {
-  "C:/Users/volte/AppData/Local/Yarn/Berry/cache/photoswipe-npm-5.4.4-f7a755162f-10c0.zip/node_modules/photoswipe/dist/photoswipe.esm.js": {
+  "node_modules/photoswipe/dist/photoswipe.esm.js": {
     "file": "assets/photoswipe.esm-LPgz5Zzj.js",
     "name": "photoswipe.esm",
-    "src": "C:/Users/volte/AppData/Local/Yarn/Berry/cache/photoswipe-npm-5.4.4-f7a755162f-10c0.zip/node_modules/photoswipe/dist/photoswipe.esm.js",
+    "src": "node_modules/photoswipe/dist/photoswipe.esm.js",
     "isDynamicEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-BSNgUEUQ.css",
+    "file": "assets/app-BSSlxQ7-.css",
     "name": "app",
     "names": [
       "app.css"
     ],
     "src": "resources/css/app.css",
     "isEntry": true
-  },
-  "resources/images/about-section.png": {
-    "file": "assets/about-section-BgkOPGsJ.png",
-    "src": "resources/images/about-section.png"
   },
   "resources/images/bg-footer.svg": {
     "file": "assets/bg-footer-CxwMOdtj.svg",
@@ -45,6 +41,10 @@
   "resources/images/everyday-icon.png": {
     "file": "assets/everyday-icon-CLiNBqW8.png",
     "src": "resources/images/everyday-icon.png"
+  },
+  "resources/images/faq-section.png": {
+    "file": "assets/faq-section-DKIOpZWd.png",
+    "src": "resources/images/faq-section.png"
   },
   "resources/images/header-knife.svg": {
     "file": "assets/header-knife-BY7sFvGz.svg",
@@ -243,7 +243,7 @@
     "src": "resources/js/pages/product.js",
     "isEntry": true,
     "dynamicImports": [
-      "C:/Users/volte/AppData/Local/Yarn/Berry/cache/photoswipe-npm-5.4.4-f7a755162f-10c0.zip/node_modules/photoswipe/dist/photoswipe.esm.js"
+      "node_modules/photoswipe/dist/photoswipe.esm.js"
     ],
     "css": [
       "assets/product-DOg8h1BU.css"
