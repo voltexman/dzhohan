@@ -145,7 +145,7 @@ new class extends Component {
                     wire:navigate>
                     Оформити замовлення
                 </a>
-                <button wire:click="open = null" class="w-fit text-sm text-zinc-500 font-medium py-2.5 cursor-pointer">
+                <button x-on:click="open = null" class="w-fit text-sm text-zinc-500 font-medium py-2.5 cursor-pointer">
                     Продовжити покупки
                 </button>
             </div>
