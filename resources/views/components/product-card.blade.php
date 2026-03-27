@@ -4,7 +4,7 @@
     ? route('knife.show', [$product->collection, $product->slug])
     : route('material.show', $product->slug) }}"
     @class([
-        'relative transition group overflow-hidden',
+        'relative transition group overflow-hidden product-card',
         'rounded-sm bg-white border border-zinc-200/50' => $view === 'grid',
         'flex gap-2.5 items-center' => $view === 'list',
         'rounded-sm h-[400px] md:h-[400px]' => $view === 'cards',

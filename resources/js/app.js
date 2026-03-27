@@ -3,13 +3,6 @@ import.meta.glob(["../images/**", "../fonts/**"], { eager: true });
 
 import "preline";
 
-import { Calendar } from "vanilla-calendar-pro";
-
-import "vanilla-calendar-pro/styles/index.css";
-import "vanilla-calendar-pro/styles/themes/light.css";
-
-window.Calendar = Calendar;
-
 function initPrelineComponents() {
     if (
         window.HSStaticMethods &&

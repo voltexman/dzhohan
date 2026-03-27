@@ -606,3 +606,5 @@ new class extends Component {
         </main>
     </div>
 </section>
+
+@vite('resources/js/pages/product-list.js')

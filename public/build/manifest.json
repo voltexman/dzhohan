@@ -1,16 +1,16 @@
 {
-  "_scroll-CPZymDuY.js": {
-    "file": "assets/scroll-CPZymDuY.js",
+  "_scroll-Dl_O9r_e.js": {
+    "file": "assets/scroll-Dl_O9r_e.js",
     "name": "scroll"
   },
   "node_modules/photoswipe/dist/photoswipe.esm.js": {
-    "file": "assets/photoswipe.esm-C7pi8syI.js",
+    "file": "assets/photoswipe.esm-CNbi_jDX.js",
     "name": "photoswipe.esm",
     "src": "node_modules/photoswipe/dist/photoswipe.esm.js",
     "isDynamicEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-379wBd_q.css",
+    "file": "assets/app-C5D0I0Re.css",
     "name": "app",
     "names": [
       "app.css"
@@ -223,36 +223,39 @@
     "src": "resources/images/tactical-icon.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app-BgZO3D9-.js",
+    "file": "assets/app-CN5RTBEb.js",
     "name": "app",
     "src": "resources/js/app.js",
-    "isEntry": true,
-    "css": [
-      "assets/app-DfWQA4J0.css"
-    ]
+    "isEntry": true
   },
   "resources/js/pages/main.js": {
-    "file": "assets/main-Cq8zcWAH.js",
+    "file": "assets/main-BVWAg8Wx.js",
     "name": "main",
     "src": "resources/js/pages/main.js",
     "isEntry": true,
     "imports": [
-      "_scroll-CPZymDuY.js"
+      "_scroll-Dl_O9r_e.js"
     ]
   },
-  "resources/js/pages/product.js": {
-    "file": "assets/product-0RUnu1Lm.js",
-    "name": "product",
-    "src": "resources/js/pages/product.js",
+  "resources/js/pages/product-list.js": {
+    "file": "assets/product-list-YZSzwotf.js",
+    "name": "product-list",
+    "src": "resources/js/pages/product-list.js",
+    "isEntry": true
+  },
+  "resources/js/pages/product-show.js": {
+    "file": "assets/product-show-BNV_5nIy.js",
+    "name": "product-show",
+    "src": "resources/js/pages/product-show.js",
     "isEntry": true,
     "imports": [
-      "_scroll-CPZymDuY.js"
+      "_scroll-Dl_O9r_e.js"
     ],
     "dynamicImports": [
       "node_modules/photoswipe/dist/photoswipe.esm.js"
     ],
     "css": [
-      "assets/product-DOg8h1BU.css"
+      "assets/product-show-DOg8h1BU.css"
     ]
   }
 }

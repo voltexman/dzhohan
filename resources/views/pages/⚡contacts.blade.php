@@ -67,7 +67,7 @@ new class extends Component {
         </div>
     </div>
 
-    <div class="max-w-5xl mx-auto">
+    <div class="max-w-5xl mx-auto mt-10">
         <x-section.title>
             Зв'яжіться<x-slot:orange>зі мною</x-slot:orange>
         </x-section.title>
