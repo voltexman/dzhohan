@@ -20,8 +20,6 @@
 </head>
 
 <body>
-    <x-loading-overlay />
-
     <div x-data="{ scrolled: false }" @scroll.window="scrolled = window.scrollY > 50" x-init="scrolled = window.scrollY > 50"
         class="fixed z-50 top-0 text-white w-full lg:w-20 h-16 lg:h-screen flex flex-row lg:flex-col items-center justify-between px-4 lg:py-4 transition-colors duration-500 bg-linear-to-b lg:bg-linear-to-r from-black/70 from-0% via-black/50 via-40% to-transparent to-90%"
         :class="scrolled ? 'bg-black/90 backdrop-blur-xs shadow-lg lg:bg-transparent lg:backdrop-blur-none lg:shadow-none' :

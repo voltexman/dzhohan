@@ -64,8 +64,6 @@
 </head>
 
 <body>
-    <x-loading-overlay />
-
     <div x-data="{ scrolled: false }" @scroll.window="scrolled = window.scrollY > 50" x-init="scrolled = window.scrollY > 50"
         class="fixed z-50 top-0 h-16 text-white w-full flex items-center justify-between px-4 transition-colors duration-500"
         :class="scrolled ? 'bg-black/90 backdrop-blur-xs shadow-lg text-white' : 'bg-transparent text-white'">
