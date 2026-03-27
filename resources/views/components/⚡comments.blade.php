@@ -80,10 +80,10 @@ new class extends Component {
             </x-button>
         </div>
 
-        <div>
+        @guest
             <x-form.input color="soft" type="text" wire:model.trim="form.author_name" placeholder="Ім’я"
                 maxlength="80" />
-        </div>
+        @endguest
 
         <div>
             <x-form.textarea id="comment-body" wire:model.trim="form.body" rows="5" placeholder="Ваш відгук..."
@@ -112,16 +112,12 @@ new class extends Component {
             @empty
                 <div class="flex flex-col items-center justify-center py-10 px-5">
                     <div class="relative mb-5">
-                        {{-- Декоративне коло на фоні --}}
                         <div class="absolute inset-0 scale-150 bg-orange-100/50 rounded-full blur-2xl"></div>
-
-                        {{-- Іконка --}}
                         <div
                             class="relative size-15 flex items-center justify-center rounded-full bg-white border border-zinc-100 text-zinc-400">
                             <x-lucide-messages-square class="size-7 stroke-[1.5px]" />
                         </div>
                     </div>
-
                     <div class="text-center space-y-1.5">
                         <h4 class="font-[Oswald] text-sm font-bold text-zinc-900 uppercase tracking-tight">
                             Тут поки що тихо
@@ -131,7 +127,6 @@ new class extends Component {
                         </p>
                     </div>
 
-                    {{-- Опціонально: кнопка швидкого скролу до форми --}}
                     <button
                         @click="const el = document.getElementById('comment-body'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.focus();"
                         class="mt-5 text-sm font-semibold tracking-wide text-orange-600 hover:text-orange-700 transition-colors cursor-pointer">

@@ -68,13 +68,13 @@ new class extends Component {
     </div>
 
     <div class="max-w-5xl mx-auto">
-        <h2 class="font-[Russo_One] text-3xl text-center text-zinc-800 mt-10">
-            Зв'яжіться <span class="text-orange-500">зі мною</span>
-        </h2>
-        <div class="text-sm text-gray-600 max-w-md text-center mx-auto mt-5">
-            Маєте цікаву ідею, пропозицію або будь-яке питання? Не вагайтесь – напишіть мені листа і я обов'язково
-            ознайомлюсь!
-        </div>
+        <x-section.title>
+            Зв'яжіться<x-slot:orange>зі мною</x-slot:orange>
+        </x-section.title>
+        <x-section.description>
+            Маєте цікаву ідею, пропозицію або будь-яке питання?
+            Не вагайтесь – напишіть мені листа і я обов'язково ознайомлюсь!
+        </x-section.description>
 
         <div class="grid lg:grid-cols-2 gap-y-10 pt-10">
             <div class="order-2 lg:order-1 flex flex-col gap-y-7.5">

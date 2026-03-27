@@ -86,12 +86,12 @@ enum KnifeCollection: string implements HasLabel
     public static function options(): array
     {
         return collect(self::cases())
-            ->mapWithKeys(fn($case) => [$case->value => $case->getLabel()])
+            ->mapWithKeys(fn ($case) => [$case->value => $case->getLabel()])
             ->toArray();
     }
 
     public static function values(): array
     {
-        return array_map(fn($case) => $case->value, self::cases());
+        return array_map(fn ($case) => $case->value, self::cases());
     }
 }

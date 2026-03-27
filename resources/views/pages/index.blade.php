@@ -25,7 +25,7 @@ name('home');
                 Продаж та <br> замовлення <br> <span class="text-orange-500/90">ножів</span>
             </h1>
             <div
-                class="main-header-collections flex gap-2.5 mt-5 text-white/70 flex-wrap mx-auto justify-center items-center max-w-3xs px-5 w-full leading-4">
+                class="main-header-collections flex gap-x-2.5 mt-5 text-white/70 flex-wrap mx-auto justify-center items-center max-w-3xs px-5 w-full leading-4">
                 <div class="text-sm font-[Oswald] tracking-wider">Тактичні</div>
                 <div class="text-sm font-[Oswald] tracking-wider">Кухонні</div>
                 <div class="text-sm font-[Oswald] tracking-wider">Мисливські</div><br>
@@ -116,14 +116,12 @@ name('home');
 
     <section class="bg-zinc-100 py-20 px-5 lg:px-0">
         <div class="max-w-5xl mx-auto">
-            <h2 class="font-[Russo_One] text-3xl text-center text-gray-900">
-                Мої <span class="text-orange-500">колекції</span>
-            </h2>
-            <div class="my-2.5 mx-auto w-22 h-1 bg-orange-500"></div>
-
-            <div class="max-w-sm mx-auto text-center text-gray-700 text-sm">
+            <x-section.title>
+                Мої<x-slot:orange>колекції</x-slot:orange>
+            </x-section.title>
+            <x-section.description>
                 Знайдіть ідеальний ніж серед ретельно підібраних колекцій для будь-яких ваших потреб.
-            </div>
+            </x-section.description>
 
             <div
                 class="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-2.5 lg:gap-5 auto-rows-[minmax(180px,auto)] mt-10">
@@ -168,13 +166,12 @@ name('home');
 
     <section class="bg-zinc-50 py-20 px-6 lg:px-0" x-data="{ open: null }">
         <div class="max-w-5xl mx-auto">
-            <h2 class="font-[Russo_One] text-3xl text-center text-gray-900">
-                Часті <span class="text-orange-500">запитання</span>
-            </h2>
-            <div class="my-2.5 mx-auto w-22 h-1 bg-orange-500"></div>
-            <div class="max-w-sm mx-auto text-center text-gray-700 text-sm">
+            <x-section.title>
+                Часті<x-slot:orange>запитання</x-slot:orange>
+            </x-section.title>
+            <x-section.description>
                 Відповіді на питання, які найчастіше виникають при замовленні або купівлі ножа.
-            </div>
+            </x-section.description>
 
             <div class="grid lg:grid-cols-2 gap-5 items-start">
                 <div class="order-2 lg:order-1 size-full flex flex-col gap-5 mt-10 lg:mt-15 items-center">

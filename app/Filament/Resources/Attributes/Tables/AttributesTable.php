@@ -39,7 +39,7 @@ class AttributesTable
                 EditAction::make()
                     ->slideOver()
                     ->modalWidth('xl')
-                    ->modalHeading(fn($record) => "Редагування: {$record->name}"),
+                    ->modalHeading(fn ($record) => "Редагування: {$record->name}"),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

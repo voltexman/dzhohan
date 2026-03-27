@@ -1,24 +1,54 @@
 import { createTimeline, splitText, onScroll, stagger } from "animejs";
 
 const initHeaderAnimation = () => {
+    // Перевіряємо, чи існують потрібні елементи
+    const titleEl = document.querySelector(".main-header-title");
+    const collectionsEl = document.querySelector(".main-header-collections");
+    const logoEl = document.querySelector(".main-header-logo");
+
+    if (!titleEl && !collectionsEl && !logoEl) {
+        console.warn("Header animation elements not found. Skipping...");
+        return;
+    }
+
+    // Видаляємо попередні спліти (щоб не накопичувалися дублювання)
+    document
+        .querySelectorAll('.split-word, .split-line, [class*="split-"]')
+        .forEach((el) => {
+            if (el.parentNode)
+                el.parentNode.replaceChild(el.cloneNode(true), el); // простий revert
+        });
+
     const tl = createTimeline({
-        autoplay: onScroll({ target: "header" }),
+        autoplay: onScroll({ target: "header" }), // або document.body, якщо потрібно
         defaults: {
             duration: 1500,
             ease: "out(4)",
         },
     });
 
-    const headerTitle = splitText(".main-header-title", { type: "words" });
-    const collections = splitText(".main-header-collections", {
-        type: "words",
-    });
+    let headerTitle = null;
+    let collections = null;
 
-    tl.add(".main-header-logo", {
-        opacity: [0, 1],
-        scale: [0.5, 1],
-    })
-        .add(
+    if (titleEl) {
+        headerTitle = splitText(titleEl, { type: "words" });
+    }
+
+    if (collectionsEl) {
+        collections = splitText(collectionsEl, { type: "words" });
+    }
+
+    // Логотип
+    if (logoEl) {
+        tl.add(logoEl, {
+            opacity: [0, 1],
+            scale: [0.5, 1],
+        });
+    }
+
+    // Заголовок
+    if (headerTitle && headerTitle.words) {
+        tl.add(
             headerTitle.words,
             {
                 opacity: [0, 1],
@@ -29,8 +59,12 @@ const initHeaderAnimation = () => {
                 delay: stagger(60, { from: "random" }),
             },
             "-=1000",
-        )
-        .add(
+        );
+    }
+
+    // Колекції
+    if (collections && collections.words) {
+        tl.add(
             collections.words,
             {
                 opacity: [0, 1],
@@ -40,14 +74,19 @@ const initHeaderAnimation = () => {
                 delay: stagger(40, { from: "random" }),
             },
             "-=800",
-        )
-        .init();
+        );
+    }
+
+    tl.init();
 };
 
-document.addEventListener("livewire:navigated", () => {
-    initHeaderAnimation();
-});
+// Запуск при повному завантаженні сторінки
+document.addEventListener("DOMContentLoaded", initHeaderAnimation);
 
-document.addEventListener("DOMContentLoaded", () => {
-    initHeaderAnimation();
+// Запуск після кожної Livewire навігації
+document.addEventListener("livewire:navigated", () => {
+    // Невелика затримка — дає Livewire завершити заміну DOM
+    setTimeout(() => {
+        initHeaderAnimation();
+    }, 100); // 50–150мс зазвичай вистачає
 });

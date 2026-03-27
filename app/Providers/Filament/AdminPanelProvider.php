@@ -27,7 +27,7 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->favicon(public_path('favicons/favicon.svg'))
+            ->favicon(asset('favicons/favicon.svg'))
             ->spa()
             ->breadcrumbs(false)
             ->profile(EditProfile::class)
