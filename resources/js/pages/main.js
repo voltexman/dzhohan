@@ -41,12 +41,6 @@ const initHeaderAnimation = () => {
             },
             "-=800",
         )
-        // .add(".logo-phone-number", {
-        //     opacity: [0, 1],
-        //     x: ["-120%", 0],
-        //     ease: "inOutElastic",
-        //     duration: 1200,
-        // })
         .init();
 };
 

@@ -86,21 +86,29 @@ name('home');
             </div>
         </div>
 
-        <div class="grid lg:grid-cols-3 max-w-5xl w-full mx-auto mt-5 lg:mt-15 gap-5 lg:gap-10">
-            <div class="space-y-5">
-                <div class="font-[Russo_One] text-4xl lg:text-5xl text-orange-500">12+</div>
-                <div class="h-1 w-16 bg-orange-500"></div>
-                <div class="text-gray-700 font-normal">Років праці, старань, навчання та експериментів</div>
+        <div class="grid grid-cols-3 max-w-5xl w-full mx-auto mt-5 lg:mt-15 gap-5 lg:gap-10">
+            <div class="space-y-2.5 lg:space-y-5 text-center lg:text-left">
+                <div class="font-[Russo_One] text-3xl lg:text-5xl text-orange-500">12+</div>
+                <div class="h-1 w-16 bg-orange-500 mx-auto lg:mx-0"></div>
+                <div class="lg:hidden text-gray-700 font-normal text-sm">Років<br>праці</div>
+                <div class="hidden lg:block text-gray-700 font-normal">
+                    Років праці, старань, навчання та експериментів
+                </div>
             </div>
-            <div class="space-y-5">
-                <div class="font-[Russo_One] text-4xl lg:text-5xl text-orange-500">300+</div>
-                <div class="h-1 w-16 bg-orange-500"></div>
-                <div class="text-gray-700 font-normal">Задоволених клієнтів, які користуються моїми роботами</div>
+            <div class="space-y-2.5 lg:space-y-5 text-center lg:text-left">
+                <div class="font-[Russo_One] text-3xl lg:text-5xl text-orange-500">300+</div>
+                <div class="h-1 w-16 bg-orange-500 mx-auto lg:mx-0"></div>
+                <div class="lg:hidden text-gray-700 font-normal text-sm">Задоволених<br>клієнтів</div>
+                <div class="hidden lg:block text-gray-700 font-normal">
+                    Задоволених клієнтів, які користуються моїми роботами
+                </div>
             </div>
-            <div class="space-y-5">
-                <div class="font-[Russo_One] text-4xl lg:text-5xl text-orange-500">1000+</div>
-                <div class="h-1 w-16 bg-orange-500"></div>
-                <div class="text-gray-700 font-normal">Унікальних та якісно виготовлених товарів різних категорій
+            <div class="space-y-2.5 lg:space-y-5 text-center lg:text-left">
+                <div class="font-[Russo_One] text-3xl lg:text-5xl text-orange-500">1000+</div>
+                <div class="h-1 w-16 bg-orange-500 mx-auto lg:mx-0"></div>
+                <div class="lg:hidden text-gray-700 font-normal text-sm">Унікальних<br>ножів</div>
+                <div class="hidden lg:block text-gray-700 font-normal">
+                    Унікальних та якісно виготовлених товарів різних категорій
                 </div>
             </div>
         </div>
@@ -114,7 +122,7 @@ name('home');
             <div class="my-2.5 mx-auto w-22 h-1 bg-orange-500"></div>
 
             <div class="max-w-sm mx-auto text-center text-gray-700 text-sm">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero quam nulla fuga optio.
+                Знайдіть ідеальний ніж серед ретельно підібраних колекцій для будь-яких ваших потреб.
             </div>
 
             <div

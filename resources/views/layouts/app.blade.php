@@ -73,7 +73,7 @@
                     <img src="{{ Vite::asset('resources/images/logo_light.svg') }}" class="size-20" alt="logo">
                 </a>
             @else
-                <div class="flex lg:hidden items-center font-[Oswald] text-lg text-zinc-50 me-auto logo-phone-number">
+                <div class="flex lg:hidden items-center font-[Oswald] text-lg text-zinc-50 me-auto">
                     {{ $settings->phone }}
                 </div>
             @endunless
