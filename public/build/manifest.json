@@ -3,14 +3,21 @@
     "file": "assets/scroll-Dl_O9r_e.js",
     "name": "scroll"
   },
+  "_timeline-c76BhkvO.js": {
+    "file": "assets/timeline-c76BhkvO.js",
+    "name": "timeline",
+    "imports": [
+      "_scroll-Dl_O9r_e.js"
+    ]
+  },
   "node_modules/photoswipe/dist/photoswipe.esm.js": {
-    "file": "assets/photoswipe.esm-CNbi_jDX.js",
+    "file": "assets/photoswipe.esm-Dg1DCDX5.js",
     "name": "photoswipe.esm",
     "src": "node_modules/photoswipe/dist/photoswipe.esm.js",
     "isDynamicEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-C5D0I0Re.css",
+    "file": "assets/app-BLrxlbU7.css",
     "name": "app",
     "names": [
       "app.css"
@@ -223,18 +230,23 @@
     "src": "resources/images/tactical-icon.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app-CN5RTBEb.js",
+    "file": "assets/app-B535_tBt.js",
     "name": "app",
     "src": "resources/js/app.js",
-    "isEntry": true
+    "isEntry": true,
+    "imports": [
+      "_scroll-Dl_O9r_e.js",
+      "_timeline-c76BhkvO.js"
+    ]
   },
   "resources/js/pages/main.js": {
-    "file": "assets/main-BVWAg8Wx.js",
+    "file": "assets/main-Dnk7uS7Q.js",
     "name": "main",
     "src": "resources/js/pages/main.js",
     "isEntry": true,
     "imports": [
-      "_scroll-Dl_O9r_e.js"
+      "_scroll-Dl_O9r_e.js",
+      "_timeline-c76BhkvO.js"
     ]
   },
   "resources/js/pages/product-list.js": {
@@ -244,7 +256,7 @@
     "isEntry": true
   },
   "resources/js/pages/product-show.js": {
-    "file": "assets/product-show-BNV_5nIy.js",
+    "file": "assets/product-show-Do3ns9_0.js",
     "name": "product-show",
     "src": "resources/js/pages/product-show.js",
     "isEntry": true,

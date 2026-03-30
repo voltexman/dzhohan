@@ -273,9 +273,26 @@ class ProductForm
                                                     ->required(),
                                             ])
                                             ->createOptionUsing(function (array $data) {
+                                                // Генеруємо slug з назви
+                                                $slug = \Illuminate\Support\Str::slug($data['name']);
+                                                $group = 'knife'; // Тут вказуємо групу, для якої створюємо
+
+                                                // Перевіряємо, чи такий атрибут уже існує саме в ЦІЙ групі
+                                                $existing = Attribute::where('group', $group)
+                                                    ->where(function ($query) use ($data, $slug) {
+                                                        $query->where('name', $data['name'])
+                                                            ->orWhere('slug', $slug);
+                                                    })
+                                                    ->first();
+
+                                                if ($existing) {
+                                                    return $existing->id;
+                                                }
+
                                                 return Attribute::create([
                                                     'name' => $data['name'],
-                                                    'group' => 'knife',
+                                                    'slug' => $slug,
+                                                    'group' => $group,
                                                 ])->id;
                                             }),
 

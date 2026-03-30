@@ -41,7 +41,7 @@ class MaterialForm
                                             ->required()
                                             ->maxLength(255)
                                             ->live(onBlur: true)
-                                            ->afterStateUpdated(fn ($set, $state) => $set('slug', Str::slug($state)))
+                                            ->afterStateUpdated(fn($set, $state) => $set('slug', Str::slug($state)))
                                             ->validationMessages([
                                                 'required' => 'Будь ласка, введіть назву ножа',
                                                 'unique' => 'Ніж з такою назвою вже існує',
@@ -51,13 +51,13 @@ class MaterialForm
                                             ->label('URL адреса (slug)')
                                             ->required()
                                             ->unique(ignoreRecord: true)
-                                            ->disabled(fn ($get) => ! $get('is_slug_editable'))
+                                            ->disabled(fn($get) => ! $get('is_slug_editable'))
                                             ->dehydrated()
                                             ->suffixAction(
                                                 Action::make('toggleSlugEditable')
                                                     ->icon('heroicon-m-lock-closed')
                                                     ->color('gray')
-                                                    ->action(fn ($set, $get) => $set('is_slug_editable', ! $get('is_slug_editable')))
+                                                    ->action(fn($set, $get) => $set('is_slug_editable', ! $get('is_slug_editable')))
                                             )
                                             ->validationMessages([
                                                 'required' => 'Будь ласка, вкажіть url адресу',
@@ -98,14 +98,14 @@ class MaterialForm
 
                                         TextInput::make('sku')
                                             ->label('Артикул (SKU)')
-                                            ->default(fn () => 'KN-'.strtoupper(Str::random(6)))
+                                            ->default(fn() => 'KN-' . strtoupper(Str::random(6)))
                                             ->unique(ignoreRecord: true)
                                             ->required()
                                             ->readOnly()
                                             ->suffixAction(
                                                 Action::make('generateSku')
                                                     ->icon('heroicon-m-arrow-path')
-                                                    ->action(fn ($set) => $set('sku', 'KN-'.strtoupper(Str::random(6))))
+                                                    ->action(fn($set) => $set('sku', 'KN-' . strtoupper(Str::random(6))))
                                             ),
 
                                     ])->columnSpanFull(),
@@ -202,20 +202,36 @@ class MaterialForm
                                             ->noSearchResultsMessage('Параметрів не знайдено.')
                                             ->noOptionsMessage('Параметри для ножів відсутні.')
                                             ->disableOptionsWhenSelectedInSiblingRepeaterItems()
-                                            ->afterStateUpdated(fn ($set) => $set('attribute_value_id', null))
+                                            ->afterStateUpdated(fn($set) => $set('attribute_value_id', null))
                                             ->createOptionForm([
                                                 TextInput::make('name')
                                                     ->label('Назва параметра')
                                                     ->required(),
                                             ])
                                             ->createOptionUsing(function (array $data) {
+                                                $name = $data['name'];
+                                                $group = 'material'; // або ProductCategory::MATERIAL
+                                                $slug = \Illuminate\Support\Str::slug($name);
+
+                                                // Спершу шукаємо, чи є такий атрибут саме в цій групі
+                                                // Це захистить від помилки Duplicate Entry
+                                                $attribute = Attribute::where('group', $group)
+                                                    ->where('name', $name)
+                                                    ->first();
+
+                                                if ($attribute) {
+                                                    return $attribute->id;
+                                                }
+
+                                                // Якщо немає — створюємо з усіма потрібними полями
                                                 return Attribute::create([
-                                                    'name' => $data['name'],
-                                                    'group' => 'material',
+                                                    'name' => $name,
+                                                    'slug' => $slug, // ОБОВ'ЯЗКОВО додаємо slug
+                                                    'group' => $group,
                                                 ])->id;
                                             })
                                             // Додаємо це, щоб відображалася назва, а не id
-                                            ->getOptionLabelUsing(fn ($value) => Attribute::find($value)?->name),
+                                            ->getOptionLabelUsing(fn($value) => Attribute::find($value)?->name),
 
                                         Select::make('attribute_value_id')
                                             ->label('Значення')
@@ -224,8 +240,8 @@ class MaterialForm
                                             ->preload()
                                             ->noSearchResultsMessage('Значень не знайдено. Спробуйте інший запит або створіть нове.')
                                             ->noOptionsMessage('Для цього параметра ще не створено жодного значення.')
-                                            ->options(fn ($get) => AttributeValue::where('attribute_id', $get('attribute_id'))->pluck('value', 'id'))
-                                            ->disabled(fn ($get) => ! $get('attribute_id'))
+                                            ->options(fn($get) => AttributeValue::where('attribute_id', $get('attribute_id'))->pluck('value', 'id'))
+                                            ->disabled(fn($get) => ! $get('attribute_id'))
                                             ->createOptionForm([
                                                 TextInput::make('value')
                                                     ->label('Нове значення')
@@ -242,13 +258,13 @@ class MaterialForm
                                                 ])->id;
                                             })
                                             // Додаємо це, щоб відображалося значення, а не id
-                                            ->getOptionLabelUsing(fn ($value) => AttributeValue::find($value)?->value),
+                                            ->getOptionLabelUsing(fn($value) => AttributeValue::find($value)?->value),
                                     ])
                                     ->columns(2)
                                     ->defaultItems(0)
                                     ->addActionLabel('Додати характеристику')
                                     ->itemLabel(
-                                        fn (array $state): ?string => Attribute::find($state['attribute_id'] ?? null)?->name ?? 'Нова характеристика'
+                                        fn(array $state): ?string => Attribute::find($state['attribute_id'] ?? null)?->name ?? 'Нова характеристика'
                                     )->hiddenLabel(true),
                             ]),
                     ]),

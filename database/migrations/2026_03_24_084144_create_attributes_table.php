@@ -10,11 +10,15 @@ return new class extends Migration
     {
         Schema::create('attributes', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->string('slug')->unique();
+            $table->string('name');
+            $table->string('slug');
+
             $table->text('description')->nullable();
             $table->string('group')->nullable();
             $table->integer('sort')->default(0);
+
+            $table->unique(['group', 'name']);
+            $table->unique(['group', 'slug']);
         });
 
         Schema::create('attribute_values', function (Blueprint $table) {
