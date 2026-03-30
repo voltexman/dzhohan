@@ -25,20 +25,14 @@ class ListAttributes extends ListRecords
         return [
             'knife' => Tab::make('Для ножів')
                 ->label('Параметри ножа')
-                ->modifyQueryUsing(fn ($query) => $query->where('group', 'knife'))
+                ->modifyQueryUsing(fn($query) => $query->where('group', 'knife'))
                 ->badge($model::where('group', 'knife')->count())
                 ->badgeColor('primary'),
 
             'material' => Tab::make('Матеріали')
                 ->label('Для матеріалів')
-                ->modifyQueryUsing(fn ($query) => $query->where('group', 'material'))
+                ->modifyQueryUsing(fn($query) => $query->where('group', 'material'))
                 ->badge($model::where('group', 'material')->count())
-                ->badgeColor('warning'),
-
-            'order' => Tab::make('Для замовлень')
-                ->label('Для замовлень')
-                ->modifyQueryUsing(fn ($query) => $query->where('group', 'order'))
-                ->badge($model::where('group', 'order')->count())
                 ->badgeColor('warning'),
         ];
     }

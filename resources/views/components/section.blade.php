@@ -5,7 +5,7 @@
 
 <section {{ $attributes->class('lg:min-h-screen bg-neutral-50') }}>
     <div @class([
-        'max-w-5xl mx-auto gap-10',
+        'max-w-5xl xl:max-w-6xl mx-auto gap-10',
         'grid lg:grid-cols-3' => $sidebar,
     ])>
 

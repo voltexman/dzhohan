@@ -61,7 +61,6 @@ new class extends Component {
 
     public function getTotalsByCurrency(): array
     {
-        // Беремо кошик із сесії (якщо порожньо — пустий масив)
         $cart = session()->get('cart', []);
         $totals = [];
 

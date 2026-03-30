@@ -88,7 +88,9 @@ name('home');
 
         <div class="grid grid-cols-3 max-w-5xl w-full mx-auto mt-5 lg:mt-15 gap-5 lg:gap-10">
             <div class="space-y-2.5 lg:space-y-5 text-center lg:text-left">
-                <div class="font-[Russo_One] text-3xl lg:text-5xl text-orange-500">12+</div>
+                <div class="font-[Russo_One] text-3xl lg:text-5xl text-orange-500">
+                    12+
+                </div>
                 <div class="h-1 w-16 bg-orange-500 mx-auto lg:mx-0"></div>
                 <div class="lg:hidden text-gray-700 font-normal text-sm">Років<br>праці</div>
                 <div class="hidden lg:block text-gray-700 font-normal">
@@ -96,7 +98,9 @@ name('home');
                 </div>
             </div>
             <div class="space-y-2.5 lg:space-y-5 text-center lg:text-left">
-                <div class="font-[Russo_One] text-3xl lg:text-5xl text-orange-500">300+</div>
+                <div class="font-[Russo_One] text-3xl lg:text-5xl text-orange-500">
+                    300+
+                </div>
                 <div class="h-1 w-16 bg-orange-500 mx-auto lg:mx-0"></div>
                 <div class="lg:hidden text-gray-700 font-normal text-sm">Задоволених<br>клієнтів</div>
                 <div class="hidden lg:block text-gray-700 font-normal">
@@ -104,7 +108,9 @@ name('home');
                 </div>
             </div>
             <div class="space-y-2.5 lg:space-y-5 text-center lg:text-left">
-                <div class="font-[Russo_One] text-3xl lg:text-5xl text-orange-500">1000+</div>
+                <div class="font-[Russo_One] text-3xl lg:text-5xl text-orange-500">
+                    1000+
+                </div>
                 <div class="h-1 w-16 bg-orange-500 mx-auto lg:mx-0"></div>
                 <div class="lg:hidden text-gray-700 font-normal text-sm">Унікальних<br>ножів</div>
                 <div class="hidden lg:block text-gray-700 font-normal">
@@ -114,7 +120,7 @@ name('home');
         </div>
     </section>
 
-    <section class="bg-zinc-100 py-20 px-5 lg:px-0">
+    <section class="bg-zinc-100 py-20 px-5 lg:px-0 overflow-hidden">
         <div class="max-w-5xl mx-auto">
             <x-section.title>
                 Мої<x-slot:orange>колекції</x-slot:orange>
@@ -164,7 +170,7 @@ name('home');
         </div>
     </section>
 
-    <section class="bg-zinc-50 py-20 px-6 lg:px-0" x-data="{ open: null }">
+    <section class="bg-zinc-50 py-20 px-6 lg:px-0 overflow-hidden" x-data="{ open: null }">
         <div class="max-w-5xl mx-auto">
             <x-section.title>
                 Часті<x-slot:orange>запитання</x-slot:orange>
@@ -215,14 +221,14 @@ name('home');
         </div>
     </section>
 
-    <section class="py-20 relative bg-fixed bg-no-repeat bg-cover bg-center px-6 lg:px-0"
+    <section class="py-20 relative bg-fixed bg-no-repeat bg-cover bg-center px-6 lg:px-0 overflow-hidden"
         style="background-image: url('{{ Vite::asset('resources/images/steel-section-bg.png') }}');">
 
         <!-- Напівпрозорий темний оверлей на всю секцію (опціонально) -->
         <div class="absolute inset-0 bg-black/70"></div>
 
         <!-- Контентний блок: тепер він має суцільний сірий колір -->
-        <div class="relative max-w-2xl mx-auto text-white p-10 md:p-15 bg-zinc-50">
+        <div class="relative max-w-2xl mx-auto text-white p-10 md:p-15 bg-zinc-50 for-masters-section">
 
             <!-- Заголовок: bg-fixed створює ефект прозорості крізь літери -->
             <h2 class="text-4xl md:text-7xl font-[Russo_One] mb-5 text-center leading-none tracking-tighter uppercase 

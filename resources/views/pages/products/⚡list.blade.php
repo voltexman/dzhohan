@@ -1,19 +1,19 @@
 <?php
 
-use App\Models\AttributeValue;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Collection;
 use App\Enums\ProductCategory;
 use App\Enums\CurrencyType;
-use Livewire\Attributes\Title;
 use App\Enums\KnifeCollection;
-use Illuminate\Support\Facades\Cookie;
-use Livewire\Component;
+use App\Models\AttributeValue;
 use App\Models\Attribute;
-use Livewire\WithPagination;
+use App\Models\Product;
 use Livewire\Attributes\Url;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Session;
 use Livewire\Attributes\Computed;
-use App\Models\Product;
+use Livewire\WithPagination;
+use Livewire\Component;
 
 new class extends Component {
     use WithPagination;
@@ -73,14 +73,12 @@ new class extends Component {
 
     public int $perPage = 12;
 
-    // ====================== MOUNT ======================
     public function mount()
     {
         // Ціна - спочатку рахуємо мінімум і максимум
         $this->minLimit = (int) Product::where('category', ProductCategory::KNIFE)->min('price') ?: 0;
         $this->maxLimit = (int) Product::where('category', ProductCategory::KNIFE)->max('price') ?: 5000;
 
-        // Важливо: встановлюємо тільки якщо значення ще не прийшли з URL
         if ($this->price_from === 0 || $this->price_from === null) {
             $this->price_from = $this->minLimit;
         }
@@ -88,21 +86,18 @@ new class extends Component {
             $this->price_to = $this->maxLimit;
         }
 
-        // Довжина клинка
         $this->minBladeLen = (float) Product::where('category', ProductCategory::KNIFE)->min('blade_length') ?: 0;
         $this->maxBladeLen = (float) Product::where('category', ProductCategory::KNIFE)->max('blade_length') ?: 300;
 
         $this->blade_length_from = $this->blade_length_from ?? $this->minBladeLen;
         $this->blade_length_to = $this->blade_length_to ?? $this->maxBladeLen;
 
-        // Товщина обуху
         $this->minThickness = (float) Product::where('category', ProductCategory::KNIFE)->min('blade_thickness') ?: 0;
         $this->maxThickness = (float) Product::where('category', ProductCategory::KNIFE)->max('blade_thickness') ?: 10;
 
         $this->blade_thickness_from = $this->blade_thickness_from ?? $this->minThickness;
         $this->blade_thickness_to = $this->blade_thickness_to ?? $this->maxThickness;
 
-        // Валюта
         if (empty($this->currency)) {
             $this->currency = CurrencyType::values();
         }
@@ -139,7 +134,6 @@ new class extends Component {
     {
         $active = [];
 
-        // 1. Пошук
         if ($this->search) {
             $active[] = [
                 'type' => 'search',
@@ -148,7 +142,6 @@ new class extends Component {
             ];
         }
 
-        // 2. Статус
         if ($this->status !== 'all') {
             $active[] = [
                 'type' => 'status',
@@ -157,7 +150,6 @@ new class extends Component {
             ];
         }
 
-        // 3. Ціна
         if ($this->price_from > $this->minLimit || $this->price_to < $this->maxLimit) {
             $active[] = [
                 'type' => 'price',
@@ -166,7 +158,6 @@ new class extends Component {
             ];
         }
 
-        // 4. Довжина клинка
         if ($this->blade_length_from > $this->minBladeLen || $this->blade_length_to < $this->maxBladeLen) {
             $active[] = [
                 'type' => 'blade_length',
@@ -175,7 +166,6 @@ new class extends Component {
             ];
         }
 
-        // 5. Товщина обуху
         if ($this->blade_thickness_from > $this->minThickness || $this->blade_thickness_to < $this->maxThickness) {
             $active[] = [
                 'type' => 'blade_thickness',
@@ -184,7 +174,6 @@ new class extends Component {
             ];
         }
 
-        // 6. Колекції
         foreach ($this->collections as $slug) {
             if (request()->routeIs('products.collection') && $slug === $this->collection) {
                 continue;
@@ -198,7 +187,6 @@ new class extends Component {
             }
         }
 
-        // 7. Динамічні атрибути
         if (!empty($this->filters)) {
             $attributes = Attribute::whereIn('slug', array_keys($this->filters))
                 ->with('values')
@@ -225,7 +213,7 @@ new class extends Component {
                         'type' => 'attribute',
                         'label' => "{$attribute->name}: {$value->value}",
                         'slug' => $slug,
-                        'valueId' => $valueId, // ← важливо для видалення одного значення
+                        'valueId' => $valueId,
                     ];
                 }
             }
@@ -273,14 +261,12 @@ new class extends Component {
         }
 
         if ($valueId !== null && is_numeric($valueId)) {
-            // Видаляємо тільки одне конкретне значення
             $this->filters[$slug] = array_diff($this->filters[$slug], [(int) $valueId]);
 
             if (empty($this->filters[$slug])) {
                 unset($this->filters[$slug]);
             }
         } else {
-            // Якщо valueId не передано — видаляємо весь атрибут
             unset($this->filters[$slug]);
         }
     }
@@ -350,7 +336,6 @@ new class extends Component {
             ->get();
     }
 
-    // ====================== ДОП. МЕТОДИ ======================
     public function toggleFilter(string $slug, int $valueId)
     {
         if (!isset($this->filters[$slug])) {

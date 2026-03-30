@@ -1,9 +1,9 @@
 @props(['title', 'description', 'image'])
 
-<header class="relative top-0 h-[35vh] bg-cover bg-center bg-no-repeat bg-fixed"
+<header {{ $attributes->class('relative top-0 h-[35vh] bg-cover bg-center bg-no-repeat bg-fixed') }}
     style="background-image: url('{{ $image }}')">
 
-    <div class="absolute inset-0 bg-black/50 z-0"></div>
+    <div class="absolute inset-0 bg-black/50 z-0 backdrop-blur-sm"></div>
 
     <div class="relative z-10 size-full">
         <div class="flex flex-col items-center justify-center size-full px-6 lg:px-0 text-center">

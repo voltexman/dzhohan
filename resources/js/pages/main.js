@@ -1,26 +1,23 @@
-import { createTimeline, splitText, onScroll, stagger } from "animejs";
+import { createTimeline, splitText, onScroll, stagger, animate } from "animejs";
 
 const initHeaderAnimation = () => {
-    // Перевіряємо, чи існують потрібні елементи
     const titleEl = document.querySelector(".main-header-title");
     const collectionsEl = document.querySelector(".main-header-collections");
     const logoEl = document.querySelector(".main-header-logo");
 
     if (!titleEl && !collectionsEl && !logoEl) {
-        console.warn("Header animation elements not found. Skipping...");
         return;
     }
 
-    // Видаляємо попередні спліти (щоб не накопичувалися дублювання)
     document
         .querySelectorAll('.split-word, .split-line, [class*="split-"]')
         .forEach((el) => {
             if (el.parentNode)
-                el.parentNode.replaceChild(el.cloneNode(true), el); // простий revert
+                el.parentNode.replaceChild(el.cloneNode(true), el);
         });
 
     const tl = createTimeline({
-        autoplay: onScroll({ target: "header" }), // або document.body, якщо потрібно
+        autoplay: onScroll({ target: "header" }),
         defaults: {
             duration: 1500,
             ease: "out(4)",
@@ -80,13 +77,25 @@ const initHeaderAnimation = () => {
     tl.init();
 };
 
-// Запуск при повному завантаженні сторінки
-document.addEventListener("DOMContentLoaded", initHeaderAnimation);
+const initProductCollectionAnimation = () => {
+    animate(".product-collection", {
+        autoplay: onScroll({ target: ".product-collection" }),
+        opacity: [0, 1],
+        scale: [0.5, 1],
+        duration: 500,
+        easing: "out(4)",
+        delay: stagger(200),
+    });
+};
 
-// Запуск після кожної Livewire навігації
+document.addEventListener("DOMContentLoaded", () => {
+    initHeaderAnimation();
+    initProductCollectionAnimation();
+});
+
 document.addEventListener("livewire:navigated", () => {
-    // Невелика затримка — дає Livewire завершити заміну DOM
     setTimeout(() => {
         initHeaderAnimation();
-    }, 100); // 50–150мс зазвичай вистачає
+        initProductCollectionAnimation();
+    }, 100);
 });
