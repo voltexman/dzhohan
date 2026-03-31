@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Materials\Tables;
 
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -29,7 +30,7 @@ class MaterialsTable
                 TextColumn::make('name')
                     ->searchable()
                     ->weight(FontWeight::SemiBold)
-                    ->description(fn ($record) => $record->sku)
+                    ->description(fn($record) => $record->sku)
                     ->label('Товар'),
 
                 TextColumn::make('price')
@@ -66,6 +67,15 @@ class MaterialsTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
+            ])
+            ->emptyStateHeading('Матеріали не знайдено')
+            ->emptyStateDescription('Спочатку необхідно додати новий матеріал')
+            ->emptyStateActions([
+                Action::make('create')
+                    ->label('Додати матеріал')
+                    ->url(route('filament.admin.resources.products.create'))
+                    ->icon('heroicon-m-plus')
+                    ->button(),
             ]);
     }
 }
