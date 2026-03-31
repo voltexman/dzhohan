@@ -22,6 +22,8 @@ return new class extends Migration
             $table->enum('currency', CurrencyType::cases())->default(CurrencyType::UAH);
             $table->unsignedInteger('quantity')->default(1);
             $table->boolean('is_active')->default(true);
+            $table->string('youtube_video_id')->nullable();
+            $table->json('additional_attributes')->nullable();
 
             $table->enum('category', ProductCategory::values())->index();
             $table->enum('collection', KnifeCollection::values())->nullable()->index();

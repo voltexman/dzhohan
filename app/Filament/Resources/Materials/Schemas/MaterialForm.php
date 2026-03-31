@@ -192,7 +192,6 @@ class MaterialForm
                                     ->schema([
                                         Select::make('attribute_id')
                                             ->label('Параметр')
-                                            // Фільтруємо за групою
                                             ->options(Attribute::where('group', ProductCategory::MATERIAL)->pluck('name', 'id'))
                                             ->required()
                                             ->searchable()
@@ -209,28 +208,25 @@ class MaterialForm
                                                     ->required(),
                                             ])
                                             ->createOptionUsing(function (array $data) {
-                                                $name = $data['name'];
-                                                $group = 'material'; // або ProductCategory::MATERIAL
-                                                $slug = \Illuminate\Support\Str::slug($name);
-
-                                                // Спершу шукаємо, чи є такий атрибут саме в цій групі
-                                                // Це захистить від помилки Duplicate Entry
-                                                $attribute = Attribute::where('group', $group)
-                                                    ->where('name', $name)
+                                                $slug = Str::slug($data['name']);
+                                                $group = ProductCategory::MATERIAL;
+                                                $existing = Attribute::where('group', $group)
+                                                    ->where(function ($query) use ($data, $slug) {
+                                                        $query->where('name', $data['name'])
+                                                            ->orWhere('slug', $slug);
+                                                    })
                                                     ->first();
 
-                                                if ($attribute) {
-                                                    return $attribute->id;
+                                                if ($existing) {
+                                                    return $existing->id;
                                                 }
 
-                                                // Якщо немає — створюємо з усіма потрібними полями
                                                 return Attribute::create([
-                                                    'name' => $name,
-                                                    'slug' => $slug, // ОБОВ'ЯЗКОВО додаємо slug
+                                                    'name' => $data['name'],
+                                                    'slug' => $slug,
                                                     'group' => $group,
                                                 ])->id;
                                             })
-                                            // Додаємо це, щоб відображалася назва, а не id
                                             ->getOptionLabelUsing(fn($value) => Attribute::find($value)?->name),
 
                                         Select::make('attribute_value_id')

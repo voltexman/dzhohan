@@ -145,10 +145,7 @@ class ProductForm
                                     ->preload()
                                     ->rule(['min:1', 'max:6'])
                                     ->label('Теги')
-                                    // 🔥 Повідомлення, якщо пошук не дав результатів
                                     ->noSearchResultsMessage('Теги не знайдено. Спробуйте інший запит або створіть новий.')
-
-                                    // 🔥 Повідомлення, якщо список значень взагалі порожній (наприклад, для нового атрибута)
                                     ->noOptionsMessage('Теги відсутні. Створіть новий')
                                     ->createOptionForm([
                                         TextInput::make('name')
@@ -161,6 +158,19 @@ class ProductForm
                                         'min' => 'Необхідно мінімум 1 теги',
                                         'max' => 'Не більше 6 тегів',
                                     ]),
+
+                                TextInput::make('youtube_video_id')
+                                    ->label('YouTube Відео')
+                                    ->placeholder('Посилання або ID відео')
+                                    ->afterStateUpdated(function ($state, callable $set) {
+                                        if (!$state) return;
+                                        $regex = "/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/";
+
+                                        if (preg_match($regex, $state, $matches)) {
+                                            $set('youtube_video_id', $matches[1]);
+                                        }
+                                    })
+                                    ->lazy(),
 
                                 Toggle::make('is_active')
                                     ->label('Публікація')
@@ -256,8 +266,7 @@ class ProductForm
                                     ->schema([
                                         Select::make('attribute_id')
                                             ->label('Параметр')
-                                            // Фільтруємо за групою
-                                            ->options(Attribute::where('group', 'knife')->pluck('name', 'id'))
+                                            ->options(Attribute::where('group', ProductCategory::KNIFE)->pluck('name', 'id'))
                                             ->required()
                                             ->searchable()
                                             ->preload()
@@ -273,11 +282,8 @@ class ProductForm
                                                     ->required(),
                                             ])
                                             ->createOptionUsing(function (array $data) {
-                                                // Генеруємо slug з назви
-                                                $slug = \Illuminate\Support\Str::slug($data['name']);
-                                                $group = 'knife'; // Тут вказуємо групу, для якої створюємо
-
-                                                // Перевіряємо, чи такий атрибут уже існує саме в ЦІЙ групі
+                                                $slug = Str::slug($data['name']);
+                                                $group = ProductCategory::KNIFE;
                                                 $existing = Attribute::where('group', $group)
                                                     ->where(function ($query) use ($data, $slug) {
                                                         $query->where('name', $data['name'])
@@ -294,7 +300,8 @@ class ProductForm
                                                     'slug' => $slug,
                                                     'group' => $group,
                                                 ])->id;
-                                            }),
+                                            })
+                                            ->getOptionLabelUsing(fn($value) => Attribute::find($value)?->name),
 
                                         Select::make('attribute_value_id')
                                             ->label('Значення')

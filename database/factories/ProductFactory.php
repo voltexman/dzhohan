@@ -21,8 +21,12 @@ class ProductFactory extends Factory
             'slug' => fake()->unique()->slug(),
             'sku' => fake()->unique()->bothify('??-####'),
             'description' => fake()->paragraph(3),
-            'price' => fake()->randomFloat(2, 1500, 12000),
+            'price' => fake()->randomFloat(1500, 12000),
             'is_active' => fake()->boolean(90),
+            'youtube_video_id' => fake()->optional()->passthrough(function () {
+                $videos = ['k32Cc4koohY', 't2aHPnXP6Og', 'FfvZsRZ0_-E'];
+                return fake()->randomElement($videos);
+            }),
 
             'category' => $category,
 
@@ -57,7 +61,7 @@ class ProductFactory extends Factory
     {
         return $this->afterCreating(function (Product $product) {
             collect(range(1, rand(2, 6)))->each(function () use ($product) {
-                $path = database_path('seeders/images/product-test-'.rand(1, 12).'.jpg');
+                $path = database_path('seeders/images/product-test-' . rand(1, 12) . '.jpg');
 
                 if (file_exists($path)) {
                     $product->addMedia($path)

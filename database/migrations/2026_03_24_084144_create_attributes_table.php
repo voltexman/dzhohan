@@ -37,11 +37,7 @@ return new class extends Migration
 
             $table->foreignId('attribute_value_id')->constrained()->cascadeOnDelete();
 
-            // $table->unique(['product_id', 'attribute_id', 'attribute_value_id']);
-            $table->unique(
-                ['product_id', 'attribute_id', 'attribute_value_id'],
-                'pav_unique'
-            );
+            $table->unique(['product_id', 'attribute_id', 'attribute_value_id'], 'pav_unique');
             $table->integer('sort')->default(0);
         });
     }

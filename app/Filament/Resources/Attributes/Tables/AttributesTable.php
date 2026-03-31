@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Attributes\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
@@ -39,7 +40,9 @@ class AttributesTable
                 EditAction::make()
                     ->slideOver()
                     ->modalWidth('xl')
-                    ->modalHeading(fn ($record) => "Редагування: {$record->name}"),
+                    ->modalHeading(fn($record) => "Редагування: {$record->name}"),
+
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources\Attributes\Schemas;
 
+use App\Enums\ProductCategory;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
-use Illuminate\Support\Str;
 
 class AttributeForm
 {
@@ -15,11 +16,15 @@ class AttributeForm
             ->components([
                 TextInput::make('name')
                     ->label('Назва параметра')
-                    ->required()
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(fn ($set, $state) => $set('slug', Str::slug($state))),
+                    ->required(),
 
-                TextInput::make('slug')->required(),
+                Select::make('group')
+                    ->label('Група параметра')
+                    ->required()
+                    ->native(false)
+                    ->selectablePlaceholder(false)
+                    ->options(ProductCategory::class)
+                    ->default(ProductCategory::KNIFE),
 
                 Repeater::make('values')
                     ->relationship('values')
@@ -28,13 +33,15 @@ class AttributeForm
                         TextInput::make('value')
                             ->label('Значення')
                             ->required()
-                            ->placeholder('напр. M390 або Чорний'),
+                            ->lazy(),
                     ])
                     ->defaultItems(0)
+                    ->itemLabel(fn(array $state): ?string => $state['value'] ?? 'Нове значення')
                     ->addActionLabel('Додати нове значення')
                     ->columns(1)
                     ->grid(1)
                     ->collapsible()
+                    ->collapsed()
                     ->columnSpanFull(),
             ]);
     }

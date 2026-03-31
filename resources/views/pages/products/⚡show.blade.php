@@ -213,6 +213,15 @@ new #[Layout('layouts::cart')] class extends Component {
         @each('partials.product.show.tags', $product->tags, 'tag')
     </div>
 
+    @isset($product->youtube_video_id)
+        <div class="px-5 lg:px-10 mt-5 max-w-2xl">
+            <iframe width="100%" height="380" src="https://www.youtube.com/embed/{{ $product->youtube_video_id }}"
+                title="YouTube video player" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    @endisset
+
     @if ($product->isSold())
         <livewire:review :$product />
     @endif

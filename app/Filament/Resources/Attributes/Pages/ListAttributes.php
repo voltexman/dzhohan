@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Attributes\Pages;
 
+use App\Enums\ProductCategory;
 use App\Filament\Resources\Attributes\AttributeResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
@@ -20,19 +21,15 @@ class ListAttributes extends ListRecords
 
     public function getTabs(): array
     {
-        $model = static::getResource()::getModel();
-
         return [
-            'knife' => Tab::make('Для ножів')
-                ->label('Параметри ножа')
-                ->modifyQueryUsing(fn($query) => $query->where('group', 'knife'))
-                ->badge($model::where('group', 'knife')->count())
+            'knife' => Tab::make('Ножі')
+                ->label('Для ножів')
+                ->modifyQueryUsing(fn($query) => $query->where('group', ProductCategory::KNIFE))
                 ->badgeColor('primary'),
 
             'material' => Tab::make('Матеріали')
                 ->label('Для матеріалів')
-                ->modifyQueryUsing(fn($query) => $query->where('group', 'material'))
-                ->badge($model::where('group', 'material')->count())
+                ->modifyQueryUsing(fn($query) => $query->where('group', ProductCategory::MATERIAL))
                 ->badgeColor('warning'),
         ];
     }

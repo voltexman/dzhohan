@@ -32,6 +32,8 @@ class Product extends Model implements HasMedia
         'category',
         'collection',
         'currency',
+        'youtube_video_id',
+        'additional_attributes',
 
         'total_length',    // Загальна довжина
         'blade_length',    // Довжина леза
@@ -50,6 +52,8 @@ class Product extends Model implements HasMedia
         'blade_thickness' => 'decimal:2',
         'price' => 'decimal:2',
         'is_active' => 'boolean',
+
+        'additional_attributes' => 'array',
     ];
 
     public function getStockAttribute()
