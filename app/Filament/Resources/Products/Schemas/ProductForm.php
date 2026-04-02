@@ -159,15 +159,29 @@ class ProductForm
                                         'max' => 'Не більше 6 тегів',
                                     ]),
 
-                                TextInput::make('youtube_video_id')
-                                    ->label('YouTube Відео')
+                                TextInput::make('short_youtube_video_id')
+                                    ->label('YouTube Shorts')
+                                    ->placeholder('Посилання на Shorts або ID відео')
+                                    ->afterStateUpdated(function ($state, callable $set) {
+                                        if (!$state) return;
+
+                                        $regex = "/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/";
+
+                                        if (preg_match($regex, $state, $matches)) {
+                                            $set('short_youtube_video_id', $matches[1]);
+                                        }
+                                    })
+                                    ->lazy(),
+
+                                TextInput::make('full_youtube_video_id')
+                                    ->label('YouTube повне відео')
                                     ->placeholder('Посилання або ID відео')
                                     ->afterStateUpdated(function ($state, callable $set) {
                                         if (!$state) return;
                                         $regex = "/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/";
 
                                         if (preg_match($regex, $state, $matches)) {
-                                            $set('youtube_video_id', $matches[1]);
+                                            $set('full_youtube_video_id', $matches[1]);
                                         }
                                     })
                                     ->lazy(),

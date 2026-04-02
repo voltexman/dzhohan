@@ -204,6 +204,17 @@ new #[Layout('layouts::cart')] class extends Component {
         </div>
     @endif
 
+    @isset($product->short_youtube_video_id)
+        <div class="px-5 lg:px-10 mt-5">
+            <a href="https://www.youtube.com/shorts/{{ $product->short_youtube_video_id }}"
+                class="py-3.5 px-6 text-sm bg-zinc-900 hover:bg-black text-white rounded-md inline-flex items-center gap-2 transition-colors"
+                target="_blank" rel="noopener noreferrer">
+                <x-lucide-play class="size-4 shrink-0" />
+                Подивитись огляд ножа
+            </a>
+        </div>
+    @endisset
+
     <div class="max-w-3xl mt-10 space-y-2.5 px-5 lg:px-10">
         <h3 class="text-lg font-semibold font-[SN_Pro]">Огляд та особливості</h3>
         <p class="text-gray-700 font-[Inter]">{!! $product->description !!}</p>
@@ -213,12 +224,15 @@ new #[Layout('layouts::cart')] class extends Component {
         @each('partials.product.show.tags', $product->tags, 'tag')
     </div>
 
-    @isset($product->youtube_video_id)
+    @isset($product->full_youtube_video_id)
         <div class="px-5 lg:px-10 mt-5 max-w-2xl">
-            <iframe width="100%" height="380" src="https://www.youtube.com/embed/{{ $product->youtube_video_id }}"
-                title="YouTube video player" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <div class="relative w-full aspect-video">
+                <iframe class="absolute top-0 left-0 w-full h-full"
+                    src="https://www.youtube.com/embed/{{ $product->full_youtube_video_id }}" title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" frameborder="0" allowfullscreen>
+                </iframe>
+            </div>
         </div>
     @endisset
 
