@@ -40,6 +40,7 @@ class AttributesTable
                 EditAction::make()
                     ->slideOver()
                     ->modalWidth('xl')
+                    ->closeModalByClickingAway(false)
                     ->modalHeading(fn($record) => "Редагування: {$record->name}"),
 
                 DeleteAction::make(),

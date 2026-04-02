@@ -117,6 +117,7 @@ class MaterialForm
                                         ['blockquote', 'bulletList', 'orderedList'],
                                         ['undo', 'redo'],
                                     ])
+                                    ->label('Опис матеріалу')
                                     ->columnSpanFull(),
 
                                 Select::make('tags')
@@ -127,10 +128,7 @@ class MaterialForm
                                     ->preload()
                                     ->rule(['min:1', 'max:6'])
                                     ->label('Теги')
-                                    // 🔥 Повідомлення, якщо пошук не дав результатів
                                     ->noSearchResultsMessage('Теги не знайдено. Спробуйте інший запит або створіть новий.')
-
-                                    // 🔥 Повідомлення, якщо список значень взагалі порожній (наприклад, для нового атрибута)
                                     ->noOptionsMessage('Теги відсутні. Створіть новий')
                                     ->createOptionForm([
                                         TextInput::make('name')
@@ -143,6 +141,37 @@ class MaterialForm
                                         'min' => 'Необхідно мінімум 1 теги',
                                         'max' => 'Не більше 6 тегів',
                                     ]),
+
+                                Grid::make(2)
+                                    ->schema([
+                                        TextInput::make('short_youtube_video_id')
+                                            ->label('YouTube Shorts')
+                                            ->placeholder('Посилання на Shorts або ID відео')
+                                            ->afterStateUpdated(function ($state, callable $set) {
+                                                if (!$state) return;
+                                                $regex = "/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/";
+                                                if (preg_match($regex, $state, $matches)) {
+                                                    $set('short_youtube_video_id', $matches[1]);
+                                                }
+                                            })
+                                            ->lazy()
+                                            ->prefixIcon('heroicon-m-play')
+                                            ->columnSpan(1),
+
+                                        TextInput::make('full_youtube_video_id')
+                                            ->label('YouTube повне відео')
+                                            ->placeholder('Посилання або ID відео')
+                                            ->afterStateUpdated(function ($state, callable $set) {
+                                                if (!$state) return;
+                                                $regex = "/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/";
+                                                if (preg_match($regex, $state, $matches)) {
+                                                    $set('full_youtube_video_id', $matches[1]);
+                                                }
+                                            })
+                                            ->lazy()
+                                            ->prefixIcon('heroicon-m-play')
+                                            ->columnSpan(1),
+                                    ])->columnSpanFull(),
 
                                 Toggle::make('is_active')
                                     ->label('Публікація')

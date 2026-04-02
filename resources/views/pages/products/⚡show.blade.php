@@ -69,7 +69,6 @@ new #[Layout('layouts::cart')] class extends Component {
     <div class="flex justify-between px-5 lg:px-10">
         <a href="{{ $product->category === ProductCategory::KNIFE ? $product->collection->url() : route('materials') }}"
             class="flex items-center gap-1.5 text-zinc-700 hover:text-zinc-800" wire:navigate>
-
             <x-lucide-chevron-left class="size-6 shrink-0" />
             <span class="text-xs font-semibold tracking-wide">
                 {{ $product->category === ProductCategory::KNIFE ? 'До колекції' : 'До магазину' }}
@@ -142,7 +141,7 @@ new #[Layout('layouts::cart')] class extends Component {
         <x-table.row>
             <x-table.cell class="font-semibold text-black text-nowrap">Наявність</x-table.cell>
             <x-table.cell>
-                @if ($product->category === \App\Enums\ProductCategory::KNIFE)
+                @if ($product->category === ProductCategory::KNIFE)
                     @if ($product->hasStock())
                         <x-lucide-check-circle class="size-5 stroke-green-500 inline-flex mr-1" />
                         <span class="text-green-500 text-sm font-medium">В наявності</span>

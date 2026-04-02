@@ -133,10 +133,9 @@ class ProductForm
                                     ->native(false)
                                     ->label('Колекція')
                                     ->required()
+                                    ->selectablePlaceholder(false)
                                     ->rule(['required'])
-                                    ->validationMessages([
-                                        'required' => 'Вкажіть колекцію до якої належить ніж',
-                                    ]),
+                                    ->validationMessages(['required' => 'Вкажіть колекцію до якої належить ніж']),
 
                                 Select::make('tags')
                                     ->relationship('tags', 'name')
@@ -165,13 +164,12 @@ class ProductForm
                                     ->placeholder('Посилання на Shorts або ID відео')
                                     ->afterStateUpdated(function ($state, callable $set) {
                                         if (!$state) return;
-
                                         $regex = "/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/";
-
                                         if (preg_match($regex, $state, $matches)) {
                                             $set('short_youtube_video_id', $matches[1]);
                                         }
                                     })
+                                    ->prefixIcon('heroicon-m-play')
                                     ->lazy(),
 
                                 TextInput::make('full_youtube_video_id')
@@ -180,11 +178,11 @@ class ProductForm
                                     ->afterStateUpdated(function ($state, callable $set) {
                                         if (!$state) return;
                                         $regex = "/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/";
-
                                         if (preg_match($regex, $state, $matches)) {
                                             $set('full_youtube_video_id', $matches[1]);
                                         }
                                     })
+                                    ->prefixIcon('heroicon-m-play')
                                     ->lazy(),
 
                                 Toggle::make('is_active')
@@ -211,9 +209,7 @@ class ProductForm
                                     ->image()
                                     ->minFiles(1)
                                     ->maxFiles(20)
-                                    ->acceptedFileTypes([
-                                        'image/*',
-                                    ])
+                                    ->acceptedFileTypes(['image/*'])
                                     ->validationMessages([
                                         'required' => 'Зображення обов`язкові',
                                         'min' => 'Не має бути менше 1 зображення',

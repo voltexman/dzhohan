@@ -73,7 +73,7 @@ class MaterialsTable
             ->emptyStateActions([
                 Action::make('create')
                     ->label('Додати матеріал')
-                    ->url(route('filament.admin.resources.products.create'))
+                    ->url(route('filament.admin.resources.materials.create'))
                     ->icon('heroicon-m-plus')
                     ->button(),
             ]);
