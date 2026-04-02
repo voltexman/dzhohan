@@ -65,7 +65,11 @@ class MaterialForm
                                             ]),
                                     ]),
 
-                                Grid::make(3)
+                                Grid::make([
+                                    'default' => 2,
+                                    'sm'      => 2,
+                                    'lg'      => 3,
+                                ])
                                     ->schema([
                                         TextInput::make('price')
                                             ->label('Ціна')
@@ -106,7 +110,11 @@ class MaterialForm
                                                 Action::make('generateSku')
                                                     ->icon('heroicon-m-arrow-path')
                                                     ->action(fn($set) => $set('sku', 'KN-' . strtoupper(Str::random(6))))
-                                            ),
+                                            )
+                                            ->columnSpan([
+                                                'sm' => 2,
+                                                'lg' => 1,
+                                            ]),
 
                                     ])->columnSpanFull(),
 

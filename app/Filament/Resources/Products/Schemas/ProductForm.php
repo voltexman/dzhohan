@@ -65,7 +65,11 @@ class ProductForm
                                         'unique' => 'Url адреса має бути унікальною',
                                     ]),
 
-                                Grid::make(4)
+                                Grid::make([
+                                    'default' => 2,
+                                    'sm'      => 4,
+                                    'lg'      => 4,
+                                ])
                                     ->schema([
                                         TextInput::make('price')
                                             ->label('Ціна')
@@ -82,14 +86,6 @@ class ProductForm
                                                 'max' => 'Не має бути більше 500000',
                                             ]),
 
-                                        Select::make('currency')
-                                            ->label('Валюта')
-                                            ->options(CurrencyType::class)
-                                            ->default(CurrencyType::UAH->value)
-                                            ->native(false)
-                                            ->selectablePlaceholder(false)
-                                            ->prefixIcon('heroicon-m-banknotes'),
-
                                         TextInput::make('quantity')
                                             ->label('Кількість')
                                             ->numeric()
@@ -104,6 +100,18 @@ class ProductForm
                                                 'max' => 'Не має бути більше 100',
                                             ]),
 
+                                        Select::make('currency')
+                                            ->label('Валюта')
+                                            ->options(CurrencyType::class)
+                                            ->default(CurrencyType::UAH->value)
+                                            ->native(false)
+                                            ->selectablePlaceholder(false)
+                                            ->prefixIcon('heroicon-m-banknotes')
+                                            ->columnSpan([
+                                                'sm' => 1,
+                                                'lg' => 1,
+                                            ]),
+
                                         TextInput::make('sku')
                                             ->label('Артикул (SKU)')
                                             ->default(fn() => 'KN-' . strtoupper(Str::random(6)))
@@ -114,7 +122,11 @@ class ProductForm
                                                 Action::make('generateSku')
                                                     ->icon('heroicon-m-arrow-path')
                                                     ->action(fn($set) => $set('sku', 'KN-' . strtoupper(Str::random(6))))
-                                            ),
+                                            )
+                                            ->columnSpan([
+                                                'sm' => 1,
+                                                'lg' => 1,
+                                            ]),
 
                                     ])->columnSpanFull(),
 
