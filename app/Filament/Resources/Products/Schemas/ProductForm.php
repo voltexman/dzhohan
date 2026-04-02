@@ -125,6 +125,7 @@ class ProductForm
                                         ['blockquote', 'bulletList', 'orderedList'],
                                         ['undo', 'redo'],
                                     ])
+                                    ->label('Опис ножа')
                                     ->columnSpanFull(),
 
                                 Select::make('collection')

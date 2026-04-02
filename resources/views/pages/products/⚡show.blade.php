@@ -215,10 +215,12 @@ new #[Layout('layouts::cart')] class extends Component {
         </div>
     @endisset
 
-    <div class="max-w-3xl mt-10 space-y-2.5 px-5 lg:px-10">
-        <h3 class="text-lg font-semibold font-[SN_Pro]">Огляд та особливості</h3>
-        <p class="text-gray-700 font-[Inter]">{!! $product->description !!}</p>
-    </div>
+    @if (filled(trim(strip_tags($product->description))))
+        <div class="max-w-3xl mt-10 space-y-2.5 px-5 lg:px-10">
+            <h3 class="text-lg font-semibold font-[SN_Pro]">Огляд та особливості</h3>
+            <p class="text-gray-700 font-[Inter]">{!! $product->description !!}</p>
+        </div>
+    @endif
 
     <div class="px-5 lg:px-10 mt-5 flex flex-wrap gap-2.5">
         @each('partials.product.show.tags', $product->tags, 'tag')
