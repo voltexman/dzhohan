@@ -170,6 +170,14 @@ class ProductForm
                                         }
                                     })
                                     ->prefixIcon('heroicon-m-play')
+                                    ->suffixAction(
+                                        Action::make('clear')
+                                            ->icon('heroicon-m-x-mark')
+                                            ->color('gray')
+                                            ->tooltip('Очистити поле')
+                                            ->action(fn(callable $set) => $set('short_youtube_video_id', null))
+                                            ->visible(fn($state) => filled($state))
+                                    )
                                     ->lazy(),
 
                                 TextInput::make('full_youtube_video_id')
@@ -183,6 +191,14 @@ class ProductForm
                                         }
                                     })
                                     ->prefixIcon('heroicon-m-play')
+                                    ->suffixAction(
+                                        Action::make('clear')
+                                            ->icon('heroicon-m-x-mark')
+                                            ->color('gray')
+                                            ->tooltip('Очистити поле')
+                                            ->action(fn(callable $set) => $set('full_youtube_video_id', null))
+                                            ->visible(fn($state) => filled($state))
+                                    )
                                     ->lazy(),
 
                                 Toggle::make('is_active')

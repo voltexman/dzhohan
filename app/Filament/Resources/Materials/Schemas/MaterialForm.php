@@ -156,6 +156,14 @@ class MaterialForm
                                             })
                                             ->lazy()
                                             ->prefixIcon('heroicon-m-play')
+                                            ->suffixAction(
+                                                Action::make('clear')
+                                                    ->icon('heroicon-m-x-mark')
+                                                    ->color('gray')
+                                                    ->tooltip('Очистити поле')
+                                                    ->action(fn(callable $set) => $set('short_youtube_video_id', null))
+                                                    ->visible(fn($state) => filled($state))
+                                            )
                                             ->columnSpan(1),
 
                                         TextInput::make('full_youtube_video_id')
@@ -170,6 +178,14 @@ class MaterialForm
                                             })
                                             ->lazy()
                                             ->prefixIcon('heroicon-m-play')
+                                            ->suffixAction(
+                                                Action::make('clear')
+                                                    ->icon('heroicon-m-x-mark')
+                                                    ->color('gray')
+                                                    ->tooltip('Очистити поле')
+                                                    ->action(fn(callable $set) => $set('full_youtube_video_id', null))
+                                                    ->visible(fn($state) => filled($state))
+                                            )
                                             ->columnSpan(1),
                                     ])->columnSpanFull(),
 
