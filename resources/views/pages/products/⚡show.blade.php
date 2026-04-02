@@ -210,7 +210,7 @@ new #[Layout('layouts::cart')] class extends Component {
                 class="py-3.5 px-6 text-sm bg-zinc-900 hover:bg-black text-white rounded-md inline-flex items-center gap-2 transition-colors"
                 target="_blank" rel="noopener noreferrer">
                 <x-lucide-play class="size-4 shrink-0" />
-                Подивитись огляд ножа
+                Короткий огляд ножа
             </a>
         </div>
     @endisset
