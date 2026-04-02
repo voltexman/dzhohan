@@ -65,7 +65,7 @@ new #[Layout('layouts::cart')] class extends Component {
     </div>
 @endsection
 
-<section x-data="{ show: false }" class="bg-white min-h-screen pt-10 relative mt-[70vh] lg:mt-0">
+<section x-data="{ show: false }" class="bg-white min-h-screen pt-8 relative mt-[70vh] lg:mt-0">
     <div class="flex justify-between px-5 lg:px-10">
         <a href="{{ $product->category === ProductCategory::KNIFE ? $product->collection->url() : route('materials') }}"
             class="flex items-center gap-1.5 text-zinc-700 hover:text-zinc-800" wire:navigate>
