@@ -215,7 +215,11 @@
             <span class="text-xs text-gray-400">&copy;</span>
             <span class="text-xs text-gray-400">{{ now()->format('Y') }}&nbsp;</span>
             <span class="text-xs text-gray-500">{{ env('APP_NAME') }}.&nbsp;</span>
-            <span class="text-xs text-gray-400">Всі права застережено</span>
+            <span class="text-xs text-gray-400">Всі права застережено.&nbsp;</span><br>
+            <span class="text-xs text-gray-400">
+                Розробка <a href="https://portolio-beta-rose.vercel.app/" class="text-orange-400"
+                    target="_blank">LEV</a>
+            </span>
         </div>
     </footer>
 

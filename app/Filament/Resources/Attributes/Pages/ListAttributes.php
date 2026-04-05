@@ -19,7 +19,7 @@ class ListAttributes extends ListRecords
                 ->slideOver()
                 ->modalWidth('xl')
                 ->closeModalByClickingAway(false)
-                ->modalHeading(fn() => "Створення нового параметра"),
+                ->modalHeading(fn () => 'Створення нового параметра'),
         ];
     }
 
@@ -28,12 +28,12 @@ class ListAttributes extends ListRecords
         return [
             'knife' => Tab::make('Ножі')
                 ->label('Для ножів')
-                ->modifyQueryUsing(fn($query) => $query->where('group', ProductCategory::KNIFE))
+                ->modifyQueryUsing(fn ($query) => $query->where('group', ProductCategory::KNIFE))
                 ->badgeColor('primary'),
 
             'material' => Tab::make('Матеріали')
                 ->label('Для матеріалів')
-                ->modifyQueryUsing(fn($query) => $query->where('group', ProductCategory::MATERIAL))
+                ->modifyQueryUsing(fn ($query) => $query->where('group', ProductCategory::MATERIAL))
                 ->badgeColor('warning'),
         ];
     }

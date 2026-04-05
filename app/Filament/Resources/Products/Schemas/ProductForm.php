@@ -42,7 +42,7 @@ class ProductForm
                                     ->required()
                                     ->maxLength(255)
                                     ->live(onBlur: true)
-                                    ->afterStateUpdated(fn($set, $state) => $set('slug', Str::slug($state)))
+                                    ->afterStateUpdated(fn ($set, $state) => $set('slug', Str::slug($state)))
                                     ->validationMessages([
                                         'required' => 'Будь ласка, введіть назву ножа',
                                         'unique' => 'Ніж з такою назвою вже існує',
@@ -52,13 +52,13 @@ class ProductForm
                                     ->label('URL адреса (slug)')
                                     ->required()
                                     ->unique(ignoreRecord: true)
-                                    ->disabled(fn($get) => ! $get('is_slug_editable'))
+                                    ->disabled(fn ($get) => ! $get('is_slug_editable'))
                                     ->dehydrated()
                                     ->suffixAction(
                                         Action::make('toggleSlugEditable')
                                             ->icon('heroicon-m-lock-closed')
                                             ->color('gray')
-                                            ->action(fn($set, $get) => $set('is_slug_editable', ! $get('is_slug_editable')))
+                                            ->action(fn ($set, $get) => $set('is_slug_editable', ! $get('is_slug_editable')))
                                     )
                                     ->validationMessages([
                                         'required' => 'Будь ласка, вкажіть url адресу',
@@ -67,8 +67,8 @@ class ProductForm
 
                                 Grid::make([
                                     'default' => 2,
-                                    'sm'      => 4,
-                                    'lg'      => 4,
+                                    'sm' => 4,
+                                    'lg' => 4,
                                 ])
                                     ->schema([
                                         TextInput::make('price')
@@ -114,14 +114,14 @@ class ProductForm
 
                                         TextInput::make('sku')
                                             ->label('Артикул (SKU)')
-                                            ->default(fn() => 'KN-' . strtoupper(Str::random(6)))
+                                            ->default(fn () => 'KN-'.strtoupper(Str::random(6)))
                                             ->unique(ignoreRecord: true)
                                             ->required()
                                             ->readOnly()
                                             ->suffixAction(
                                                 Action::make('generateSku')
                                                     ->icon('heroicon-m-arrow-path')
-                                                    ->action(fn($set) => $set('sku', 'KN-' . strtoupper(Str::random(6))))
+                                                    ->action(fn ($set) => $set('sku', 'KN-'.strtoupper(Str::random(6))))
                                             )
                                             ->columnSpan([
                                                 'sm' => 1,
@@ -175,7 +175,9 @@ class ProductForm
                                     ->label('YouTube Shorts')
                                     ->placeholder('Посилання на Shorts або ID відео')
                                     ->afterStateUpdated(function ($state, callable $set) {
-                                        if (!$state) return;
+                                        if (! $state) {
+                                            return;
+                                        }
                                         $regex = "/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/";
                                         if (preg_match($regex, $state, $matches)) {
                                             $set('short_youtube_video_id', $matches[1]);
@@ -187,8 +189,8 @@ class ProductForm
                                             ->icon('heroicon-m-x-mark')
                                             ->color('gray')
                                             ->tooltip('Очистити поле')
-                                            ->action(fn(callable $set) => $set('short_youtube_video_id', null))
-                                            ->visible(fn($state) => filled($state))
+                                            ->action(fn (callable $set) => $set('short_youtube_video_id', null))
+                                            ->visible(fn ($state) => filled($state))
                                     )
                                     ->lazy(),
 
@@ -196,7 +198,9 @@ class ProductForm
                                     ->label('YouTube повне відео')
                                     ->placeholder('Посилання або ID відео')
                                     ->afterStateUpdated(function ($state, callable $set) {
-                                        if (!$state) return;
+                                        if (! $state) {
+                                            return;
+                                        }
                                         $regex = "/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/";
                                         if (preg_match($regex, $state, $matches)) {
                                             $set('full_youtube_video_id', $matches[1]);
@@ -208,8 +212,8 @@ class ProductForm
                                             ->icon('heroicon-m-x-mark')
                                             ->color('gray')
                                             ->tooltip('Очистити поле')
-                                            ->action(fn(callable $set) => $set('full_youtube_video_id', null))
-                                            ->visible(fn($state) => filled($state))
+                                            ->action(fn (callable $set) => $set('full_youtube_video_id', null))
+                                            ->visible(fn ($state) => filled($state))
                                     )
                                     ->lazy(),
 
@@ -314,7 +318,7 @@ class ProductForm
                                             ->noSearchResultsMessage('Параметрів не знайдено.')
                                             ->noOptionsMessage('Параметри для ножів відсутні.')
                                             ->disableOptionsWhenSelectedInSiblingRepeaterItems()
-                                            ->afterStateUpdated(fn($set) => $set('attribute_value_id', null))
+                                            ->afterStateUpdated(fn ($set) => $set('attribute_value_id', null))
                                             ->createOptionForm([
                                                 TextInput::make('name')
                                                     ->label('Назва параметра')
@@ -340,7 +344,7 @@ class ProductForm
                                                     'group' => $group,
                                                 ])->id;
                                             })
-                                            ->getOptionLabelUsing(fn($value) => Attribute::find($value)?->name),
+                                            ->getOptionLabelUsing(fn ($value) => Attribute::find($value)?->name),
 
                                         Select::make('attribute_value_id')
                                             ->label('Значення')
@@ -349,8 +353,8 @@ class ProductForm
                                             ->preload()
                                             ->noSearchResultsMessage('Значень не знайдено. Спробуйте інший запит або створіть нове.')
                                             ->noOptionsMessage('Для цього параметра ще не створено жодного значення.')
-                                            ->options(fn($get) => AttributeValue::where('attribute_id', $get('attribute_id'))->pluck('value', 'id'))
-                                            ->disabled(fn($get) => ! $get('attribute_id'))
+                                            ->options(fn ($get) => AttributeValue::where('attribute_id', $get('attribute_id'))->pluck('value', 'id'))
+                                            ->disabled(fn ($get) => ! $get('attribute_id'))
                                             ->createOptionForm([
                                                 TextInput::make('value')
                                                     ->label('Нове значення')
@@ -371,7 +375,7 @@ class ProductForm
                                     ->defaultItems(0)
                                     ->addActionLabel('Додати характеристику')
                                     ->itemLabel(
-                                        fn(array $state): ?string => Attribute::find($state['attribute_id'] ?? null)?->name ?? 'Нова характеристика'
+                                        fn (array $state): ?string => Attribute::find($state['attribute_id'] ?? null)?->name ?? 'Нова характеристика'
                                     )->label('Характеристики ножа'),
                             ]),
                     ]),

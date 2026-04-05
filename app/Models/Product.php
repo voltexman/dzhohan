@@ -83,15 +83,15 @@ class Product extends Model implements HasMedia
                         ->orWhere('description', 'like', "%{$search}%");
                 });
             })
-            ->when($filters['collections'] ?? null, fn($q, $v) => $q->whereIn('collection', (array) $v))
-            ->when(($filters['status'] ?? null) === 'in_stock', fn($q) => $q->where('quantity', '>', 0))
-            ->when(($filters['status'] ?? null) === 'sold', fn($q) => $q->where('quantity', 0))
-            ->when($filters['price_from'] ?? null, fn($q, $v) => $q->where('price', '>=', $v))
-            ->when($filters['price_to'] ?? null, fn($q, $v) => $q->where('price', '<=', $v))
-            ->when($filters['blade_length_from'] ?? null, fn($q, $v) => $q->where('blade_length', '>=', $v))
-            ->when($filters['blade_length_to'] ?? null, fn($q, $v) => $q->where('blade_length', '<=', $v))
-            ->when($filters['blade_thickness_from'] ?? null, fn($q, $v) => $q->where('blade_thickness', '>=', $v))
-            ->when($filters['blade_thickness_to'] ?? null, fn($q, $v) => $q->where('blade_thickness', '<=', $v))
+            ->when($filters['collections'] ?? null, fn ($q, $v) => $q->whereIn('collection', (array) $v))
+            ->when(($filters['status'] ?? null) === 'in_stock', fn ($q) => $q->where('quantity', '>', 0))
+            ->when(($filters['status'] ?? null) === 'sold', fn ($q) => $q->where('quantity', 0))
+            ->when($filters['price_from'] ?? null, fn ($q, $v) => $q->where('price', '>=', $v))
+            ->when($filters['price_to'] ?? null, fn ($q, $v) => $q->where('price', '<=', $v))
+            ->when($filters['blade_length_from'] ?? null, fn ($q, $v) => $q->where('blade_length', '>=', $v))
+            ->when($filters['blade_length_to'] ?? null, fn ($q, $v) => $q->where('blade_length', '<=', $v))
+            ->when($filters['blade_thickness_from'] ?? null, fn ($q, $v) => $q->where('blade_thickness', '>=', $v))
+            ->when($filters['blade_thickness_to'] ?? null, fn ($q, $v) => $q->where('blade_thickness', '<=', $v))
 
             // 🔥 ДИНАМІЧНІ АТРИБУТИ
             ->when($filters['attributes'] ?? null, function ($q, $attributes) {
@@ -103,7 +103,7 @@ class Product extends Model implements HasMedia
 
                     $q->whereHas('attributeValues', function ($q2) use ($slug, $values) {
                         $q2->whereIn('attribute_values.id', $values)
-                            ->whereHas('attribute', fn($q3) => $q3->where('slug', $slug));
+                            ->whereHas('attribute', fn ($q3) => $q3->where('slug', $slug));
                     });
                 }
             });
@@ -122,14 +122,14 @@ class Product extends Model implements HasMedia
     public function knifeAttributes()
     {
         return $this->hasMany(ProductAttributeValue::class)
-            ->whereHas('attribute', fn($q) => $q->where('group', 'knife'))
+            ->whereHas('attribute', fn ($q) => $q->where('group', 'knife'))
             ->orderBy('sort');
     }
 
     public function materialAttributes()
     {
         return $this->hasMany(ProductAttributeValue::class)
-            ->whereHas('attribute', fn($q) => $q->where('group', 'material'))
+            ->whereHas('attribute', fn ($q) => $q->where('group', 'material'))
             ->orderBy('sort');
     }
 

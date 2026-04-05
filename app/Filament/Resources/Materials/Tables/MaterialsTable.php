@@ -30,7 +30,7 @@ class MaterialsTable
                 TextColumn::make('name')
                     ->searchable()
                     ->weight(FontWeight::SemiBold)
-                    ->description(fn($record) => $record->sku)
+                    ->description(fn ($record) => $record->sku)
                     ->label('Товар'),
 
                 TextColumn::make('price')

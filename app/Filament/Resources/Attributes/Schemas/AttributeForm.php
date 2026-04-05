@@ -36,7 +36,7 @@ class AttributeForm
                             ->lazy(),
                     ])
                     ->defaultItems(0)
-                    ->itemLabel(fn(array $state): ?string => $state['value'] ?? 'Нове значення')
+                    ->itemLabel(fn (array $state): ?string => $state['value'] ?? 'Нове значення')
                     ->addActionLabel('Додати нове значення')
                     ->columns(1)
                     ->grid(1)
