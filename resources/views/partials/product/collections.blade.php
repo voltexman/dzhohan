@@ -1,10 +1,8 @@
+@use('App\Enums\ProductCategory')
+
 <div class="hidden lg:grid lg:grid-cols-2 gap-2.5">
     @foreach ($collections as $collection)
-        @php
-            $count = $this->categoryCounts[$collection->value] ?? 0;
-        @endphp
-
-        <a href="{{ App\Enums\ProductCategory::KNIFE->url($collection->value) }}"
+        <a href="{{ ProductCategory::KNIFE->url($collection->value) }}"
             class="first:col-span-full rounded-sm flex-none relative block overflow-hidden aspect-video group transition-all duration-700"
             wire:navigate>
 
@@ -20,9 +18,9 @@
             <!-- Лічильник товарів -->
             <div class="absolute top-8 left-8">
                 <span class="text-2xl font-[Oswald] text-neutral-100/70 font-black">
-                    {{ $count }}
+                    {{ $this->collectionCounts[$collection->value] ?? 0 }}
                     <span class="text-base">
-                        {{ trans_choice('товар|товари|товарів', $count, [], 'uk') }}
+                        {{ trans_choice('товар|товари|товарів', $this->collectionCounts[$collection->value] ?? 0, [], 'uk') }}
                     </span>
                 </span>
             </div>

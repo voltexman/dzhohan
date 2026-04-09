@@ -269,6 +269,12 @@ new class extends Component {
         } else {
             unset($this->filters[$slug]);
         }
+    } // Livewire v3 — дуже рекомендується
+
+    #[Computed]
+    public function collectionCounts()
+    {
+        return Product::where('category', ProductCategory::KNIFE)->where('is_active', true)->select('collection')->selectRaw('COUNT(*) as total')->groupBy('collection')->pluck('total', 'collection')->all();
     }
 
     #[Computed]
