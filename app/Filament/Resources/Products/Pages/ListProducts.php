@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Products\Pages;
 
+use App\Enums\ProductCategory;
 use App\Filament\Resources\Products\ProductResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
@@ -26,19 +27,19 @@ class ListProducts extends ListRecords
 
         return [
             'all' => Tab::make('Всі')
-                ->badge($model::count())
+                ->badge($model::where('category', ProductCategory::KNIFE)->count())
                 ->label('Всі'),
 
             'in_stock' => Tab::make('В наявності')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('quantity', '>', 0))
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('category', ProductCategory::KNIFE)->where('quantity', '>', 0))
                 ->icon('heroicon-m-check-circle')
-                ->badge($model::where('quantity', '>', 0)->count())
+                ->badge($model::where('category', ProductCategory::KNIFE)->where('quantity', '>', 0)->count())
                 ->badgeColor('success'),
 
             'out_of_stock' => Tab::make('Продані')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('quantity', '<=', 0))
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('category', ProductCategory::KNIFE)->where('quantity', '<=', 0))
                 ->icon('heroicon-m-x-circle')
-                ->badge($model::where('quantity', '<=', 0)->count())
+                ->badge($model::where('category', ProductCategory::KNIFE)->where('quantity', '<=', 0)->count())
                 ->badgeColor('gray'),
         ];
     }
