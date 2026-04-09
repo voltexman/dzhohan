@@ -57,9 +57,13 @@
     "file": "assets/header-knife-BY7sFvGz.svg",
     "src": "resources/images/header-knife.svg"
   },
-  "resources/images/header.png": {
-    "file": "assets/header-Ct2RMPZ6.png",
-    "src": "resources/images/header.png"
+  "resources/images/header.jpg": {
+    "file": "assets/header-85v-TpBZ.jpg",
+    "src": "resources/images/header.jpg"
+  },
+  "resources/images/header_old.png": {
+    "file": "assets/header_old-Ct2RMPZ6.png",
+    "src": "resources/images/header_old.png"
   },
   "resources/images/hunting-category-bg.png": {
     "file": "assets/hunting-category-bg-BtTo70ph.png",

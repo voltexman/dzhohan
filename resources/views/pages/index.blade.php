@@ -15,7 +15,7 @@ name('home');
 
 @section('header')
     <header class="relative h-screen w-full bg-cover bg-center bg-no-repeat animate-ricochet lg:animate-none overflow-hidden"
-        style="background-image: url('{{ Vite::asset('resources/images/header.png') }}')">
+        style="background-image: url('{{ Vite::asset('resources/images/header.jpg') }}')">
         <div class="absolute inset-0 bg-black/40"></div>
         <div class="relative z-10 flex flex-col items-center justify-center h-full">
             <img src="{{ Vite::asset('resources/images/logo_light.svg') }}"
