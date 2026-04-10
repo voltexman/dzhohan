@@ -396,7 +396,8 @@ new class extends Component {
 
 @section('header')
     <x-header :image="Vite::asset(
-        'resources/images/' . (KnifeCollection::tryFrom((string) $this->collection)?->images() ?? 'header.png'),
+        'resources/images/' .
+            (KnifeCollection::tryFrom((string) $this->collection)?->images() ?? 'header.jpg           '),
     )">
         <x-slot:title>
             {{ KnifeCollection::tryFrom((string) $this->collection)?->getLabel() ?? 'Каталог ножів' }}
