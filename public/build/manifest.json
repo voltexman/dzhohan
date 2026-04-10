@@ -1,17 +1,17 @@
 {
-  "_scroll-Dl_O9r_e.js": {
-    "file": "assets/scroll-Dl_O9r_e.js",
+  "_scroll-CPZymDuY.js": {
+    "file": "assets/scroll-CPZymDuY.js",
     "name": "scroll"
   },
-  "_timeline-c76BhkvO.js": {
-    "file": "assets/timeline-c76BhkvO.js",
+  "_timeline-CEyUZdUD.js": {
+    "file": "assets/timeline-CEyUZdUD.js",
     "name": "timeline",
     "imports": [
-      "_scroll-Dl_O9r_e.js"
+      "_scroll-CPZymDuY.js"
     ]
   },
   "node_modules/photoswipe/dist/photoswipe.esm.js": {
-    "file": "assets/photoswipe.esm-Dg1DCDX5.js",
+    "file": "assets/photoswipe.esm-CNbi_jDX.js",
     "name": "photoswipe.esm",
     "src": "node_modules/photoswipe/dist/photoswipe.esm.js",
     "isDynamicEntry": true
@@ -234,38 +234,32 @@
     "src": "resources/images/tactical-icon.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app-B535_tBt.js",
+    "file": "assets/app-CiOVSe9w.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "imports": [
-      "_scroll-Dl_O9r_e.js",
-      "_timeline-c76BhkvO.js"
+      "_scroll-CPZymDuY.js",
+      "_timeline-CEyUZdUD.js"
     ]
   },
   "resources/js/pages/main.js": {
-    "file": "assets/main-Dnk7uS7Q.js",
+    "file": "assets/main-DJDkS46q.js",
     "name": "main",
     "src": "resources/js/pages/main.js",
     "isEntry": true,
     "imports": [
-      "_scroll-Dl_O9r_e.js",
-      "_timeline-c76BhkvO.js"
+      "_scroll-CPZymDuY.js",
+      "_timeline-CEyUZdUD.js"
     ]
   },
-  "resources/js/pages/product-list.js": {
-    "file": "assets/product-list-YZSzwotf.js",
-    "name": "product-list",
-    "src": "resources/js/pages/product-list.js",
-    "isEntry": true
-  },
   "resources/js/pages/product-show.js": {
-    "file": "assets/product-show-Do3ns9_0.js",
+    "file": "assets/product-show-CM-eumMz.js",
     "name": "product-show",
     "src": "resources/js/pages/product-show.js",
     "isEntry": true,
     "imports": [
-      "_scroll-Dl_O9r_e.js"
+      "_scroll-CPZymDuY.js"
     ],
     "dynamicImports": [
       "node_modules/photoswipe/dist/photoswipe.esm.js"

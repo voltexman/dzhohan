@@ -9,7 +9,6 @@ export default defineConfig({
                 "resources/css/app.css",
                 "resources/js/app.js",
                 "resources/js/pages/main.js",
-                "resources/js/pages/product-list.js",
                 "resources/js/pages/product-show.js",
             ],
             refresh: true,
