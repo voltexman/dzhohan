@@ -17,7 +17,7 @@
     "isDynamicEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-BkU2-6rH.css",
+    "file": "assets/app-DL4zd3mE.css",
     "name": "app",
     "names": [
       "app.css"
@@ -57,9 +57,9 @@
     "file": "assets/header-knife-BY7sFvGz.svg",
     "src": "resources/images/header-knife.svg"
   },
-  "resources/images/header.jpg": {
-    "file": "assets/header-YMCxhH7C.jpg",
-    "src": "resources/images/header.jpg"
+  "resources/images/header.png": {
+    "file": "assets/header-YMCxhH7C.png",
+    "src": "resources/images/header.png"
   },
   "resources/images/header_old.png": {
     "file": "assets/header_old-Ct2RMPZ6.png",
