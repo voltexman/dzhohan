@@ -117,10 +117,10 @@
 
             {{-- СОЦІАЛЬНІ МЕРЕЖІ --}}
             <div class="flex flex-col items-center lg:items-start order-3 lg:order-1">
-                <div class="text-2xl font-[Oswald] text-gray-800 drop-shadow-xl">
+                <div class="text-2xl font-[Oswald] text-gray-700">
                     {{ $settings->phone }}
                 </div>
-                <div class="text-xl tracking-wide font-[Oswald] text-gray-800 drop-shadow-xl">
+                <div class="text-xl tracking-wide font-[Oswald] text-gray-700">
                     {{ $settings->email }}
                 </div>
                 <div class="flex justify-center items-center mt-5 gap-1.5">
