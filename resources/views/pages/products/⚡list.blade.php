@@ -399,7 +399,7 @@ new class extends Component {
         'resources/images/' . (KnifeCollection::tryFrom((string) $this->collection)?->images() ?? 'header.jpg'),
     )">
         <x-slot:title>
-            {{ KnifeCollection::tryFrom((string) $this->collection)?->getLabel() ?? 'Каталог ножів' }}
+            {{ KnifeCollection::tryFrom((string) $this->collection)?->getLabel() ?? 'Каталог ножів ' }}
         </x-slot:title>
 
         <x-slot:description>
