@@ -396,10 +396,10 @@ new class extends Component {
 
 @section('header')
     <x-header :image="Vite::asset(
-        'resources/images/' . (KnifeCollection::tryFrom((string) $this->collection)?->images() ?? 'header.jpg'),
+        'resources/images/' . (KnifeCollection::tryFrom((string) $this->collection)?->images() ?? 'header.png'),
     )">
         <x-slot:title>
-            {{ KnifeCollection::tryFrom((string) $this->collection)?->getLabel() ?? 'Каталог ножів ' }}
+            {{ KnifeCollection::tryFrom((string) $this->collection)?->getLabel() ?? 'Каталог ножів' }}
         </x-slot:title>
 
         <x-slot:description>
