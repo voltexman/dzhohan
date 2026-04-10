@@ -288,4 +288,6 @@ new #[Layout('layouts::cart')] class extends Component {
     </div>
 </section>
 
-@vite('resources/js/pages/product-show.js')
+@push('scripts')
+    @vite('resources/js/pages/product-show.js')
+@endpush
