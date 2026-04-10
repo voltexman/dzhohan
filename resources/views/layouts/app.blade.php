@@ -41,14 +41,14 @@
     <meta property="og:title" content="{{ $title ?? config('app.name') }}">
     <meta property="og:description" content="{{ $description ?? '' }}">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:image" content="{{ $og_image ?? Vite::asset('resources/images/header.jpg') }}">
+    <meta property="og:image" content="{{ $og_image ?? Vite::asset('resources/images/header.png') }}">
     <meta property="og:site_name" content="{{ config('app.name') }}">
 
     {{-- Twitter --}}
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $title ?? config('app.name') }}">
     <meta name="twitter:description" content="{{ $description ?? '' }}">
-    <meta name="twitter:image" content="{{ $og_image ?? Vite::asset('resources/images/header.jpg') }}">
+    <meta name="twitter:image" content="{{ $og_image ?? Vite::asset('resources/images/header.png') }}">
 
     {{-- Favicon --}}
     <link rel="icon" href="/favicons/favicon.ico" sizes="any">
