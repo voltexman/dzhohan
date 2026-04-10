@@ -135,10 +135,10 @@ new #[Layout('layouts::cart')] class extends Component {
 
         @foreach ($product->productAttributeValues as $item)
             <x-table.row>
-                <x-table.cell class="font-semibold text-black text-nowrap">
+                <x-table.cell class="font-semibold text-black text-nowrap capitalize">
                     {{ $item->attribute->name }}
                 </x-table.cell>
-                <x-table.cell class="text-gray-700">
+                <x-table.cell class="text-gray-700 capitalize">
                     {{ $item->value->value }}
                 </x-table.cell>
             </x-table.row>
