@@ -1,4 +1,4 @@
-@use(App\Enums\Order\DeliveryMethod)
+@use('App\Enums\Order\DeliveryMethod')
 
 <form class="lg:col-span-7 space-y-10" novalidate>
 
@@ -23,18 +23,21 @@
         </h2>
 
         <!-- Кнопки вибору способу доставки -->
-        <div class="w-full lg:max-w-lg grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+        <div class="inline-flex w-full overflow-hidden border rounded-lg border-zinc-200 max-w-sm">
             @foreach (DeliveryMethod::cases() as $method)
                 <button type="button" @click="delivery_method = '{{ $method->value }}'"
                     wire:key="delivery-{{ $method->value }}"
                     :class="delivery_method === '{{ $method->value }}' ?
-                        'border-orange-500/50 ring-1 ring-orange-500/50 bg-orange-50 text-orange-700' :
-                        'border-zinc-200 bg-zinc-100 hover:border-zinc-300 text-zinc-600'"
-                    class="relative flex flex-col items-center justify-center px-2.5 py-5 border rounded-md transition-all duration-300 group cursor-pointer">
+                        'bg-zinc-100 text-orange-700 z-10' :
+                        'bg-white hover:bg-zinc-50 text-zinc-600'"
+                    class="relative flex-1 flex flex-col items-center justify-center px-2.5 py-4 transition-all duration-200 border-r last:border-r-0 border-zinc-200 group cursor-pointer focus:outline-none">
+
                     <span class="text-sm font-semibold">{{ $method->getLabel() }}</span>
-                    <div wire:show="delivery_method === '{{ $method->value }}'" x-transition.scale
-                        class="absolute top-1.5 right-1.5">
-                        <x-lucide-check-circle-2 class="size-4 fill-orange-50 stroke-orange-600" />
+
+                    <!-- Індикатор (опціонально можна лишити або прибрати для мінімалізму) -->
+                    <div x-show="delivery_method === '{{ $method->value }}'" x-transition.scale
+                        class="absolute bottom-1.5">
+                        <div class="h-1 w-8 bg-orange-500 rounded-full"></div>
                     </div>
                 </button>
             @endforeach
@@ -66,7 +69,8 @@
 
                 <x-form.group>
                     <x-form.label>Адреса або відділення</x-form.label>
-                    <x-form.input wire:model.trim.live.blur="form.address" placeholder="Відділення/поштомат" required />
+                    <x-form.input wire:model.trim.live.blur="form.address" placeholder="№ Відділення/поштомат"
+                        required />
                 </x-form.group>
             </div>
         </div>
