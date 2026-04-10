@@ -35,8 +35,14 @@ new #[Layout('layouts::cart')] class extends Component {
                 <div class="embla__container mx-0! flex h-full w-full">
                     @foreach ($product->getMedia('products') as $media)
                         @php
-                            // Отримуємо реальні розміри зображення для PhotoSwipe
-                            [$width, $height] = getimagesize($media->getPath());
+                            $path = $media->getPath();
+                            [$width, $height] = getimagesize($path);
+
+                            $exif = @exif_read_data($path);
+
+                            if (!empty($exif['Orientation']) && in_array($exif['Orientation'], [6, 8])) {
+                                [$width, $height] = [$height, $width];
+                            }
                         @endphp
                         <a class="block embla__slide min-w-0 relative flex-[0_0_100%]! h-full pointer-eventsnone cursor-pointer"
                             wire:key="main-{{ $media->id }}" data-pswp-src="{{ $media->getFullUrl() }}"
