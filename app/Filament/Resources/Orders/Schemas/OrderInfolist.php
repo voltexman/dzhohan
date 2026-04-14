@@ -43,23 +43,20 @@ class OrderInfolist
                                     return null;
                                 }
 
-                                // Групуємо товари за валютою
                                 $totals = $record->products->groupBy('currency');
 
-                                // Якщо в замовленні лише одна валюта
                                 if ($totals->count() === 1) {
                                     $group = $totals->first();
                                     $currency = $group->first()->currency;
-                                    $sum = $group->sum(fn ($i) => $i->qty * $i->price);
+                                    $sum = $group->sum(fn($i) => $i->qty * $i->price);
 
                                     return $currency->format($sum);
                                 }
 
-                                // Якщо валют декілька
                                 return 'Мультивалютна';
                             })
                             ->placeholder('Договірна')
-                            ->color(fn ($state) => $state === 'Мультивалютна' ? 'warning' : 'success')
+                            ->color(fn($state) => $state === 'Мультивалютна' ? 'warning' : 'success')
                             ->weight(FontWeight::Bold)
                             ->size(TextSize::Large),
 
@@ -71,51 +68,101 @@ class OrderInfolist
                     ->columns(5)
                     ->columnSpanFull(),
 
-                Section::make('Параметри виготовлення')
+                // === НОВА СЕКЦІЯ ДЛЯ ІНДИВІДУАЛЬНОГО ВИГОТОВЛЕННЯ ===
+                Section::make('Параметри виготовлення ножа')
                     ->icon('heroicon-o-wrench-screwdriver')
                     ->description('Деталі індивідуального замовлення')
-                    ->visible(fn ($record) => $record->type->value === 'manufacturing')
+                    ->visible(fn($record) => $record->type->value === 'manufacturing')
                     ->schema([
-                        Grid::make(3)
-                            ->schema([
-                                Group::make([
-                                    TextEntry::make('custom_options.blade.shape')->label('Форма клинка')->placeholder('не вказано'),
-                                    TextEntry::make('custom_options.blade.steel')->label('Марка сталі')->placeholder('не вказано'),
-                                    TextEntry::make('custom_options.blade.length')->label('Довжина (мм)')->placeholder('не вказано'),
-                                ])->columnSpan(1),
+                        TextEntry::make('manufacture.knife_type')
+                            ->label('Тип ножа')
+                            ->placeholder('не вказано')
+                            ->columnSpanFull(),
 
-                                Group::make([
-                                    TextEntry::make('custom_options.handle.material')->label('Матеріал руків\'я')->placeholder('не вказано'),
-                                    TextEntry::make('custom_options.handle.color')->label('Колір')->placeholder('не вказано'),
-                                ])->columnSpan(1),
+                        Grid::make(3)->schema([
+                            // Клинок
+                            Group::make([
+                                TextEntry::make('manufacture.blade_shape')
+                                    ->label('Форма клинка')
+                                    ->placeholder('не вказано'),
 
-                                Group::make([
-                                    TextEntry::make('custom_options.sheath.type')->label('Тип піхов')->placeholder('не вказано'),
-                                    TextEntry::make('custom_options.sheath.carry')->label('Спосіб носіння')->placeholder('не вказано'),
-                                ])->columnSpan(1),
-                            ]),
+                                TextEntry::make('manufacture.blade_steel')
+                                    ->label('Марка сталі')
+                                    ->placeholder('не вказано'),
+
+                                TextEntry::make('manufacture.blade_length')
+                                    ->label('Довжина клинка (мм)')
+                                    ->placeholder('не вказано'),
+
+                                TextEntry::make('manufacture.blade_thickness')
+                                    ->label('Товщина клинка (мм)')
+                                    ->placeholder('не вказано'),
+
+                                TextEntry::make('manufacture.blade_grind')
+                                    ->label('Заточка')
+                                    ->placeholder('не вказано'),
+
+                                TextEntry::make('manufacture.blade_finish')
+                                    ->label('Фініш')
+                                    ->placeholder('не вказано'),
+                            ])->columnSpan(1),
+
+                            // Руків’я
+                            Group::make([
+                                TextEntry::make('manufacture.handle_material')
+                                    ->label('Матеріал руків’я')
+                                    ->placeholder('не вказано'),
+
+                                TextEntry::make('manufacture.handle_color')
+                                    ->label('Колір руків’я')
+                                    ->placeholder('не вказано'),
+                            ])->columnSpan(1),
+
+                            // Піхви + Гравіювання
+                            Group::make([
+                                TextEntry::make('manufacture.sheath')
+                                    ->formatStateUsing(fn(bool $state) => $state ? 'Так' : 'Ні')
+                                    ->color(fn(bool $state) => $state ? 'success' : 'gray')
+                                    ->label('Піхви')
+                                    ->badge(),
+
+                                TextEntry::make('manufacture.engraving')
+                                    ->formatStateUsing(fn($state) => $state ? 'Так' : 'Ні')
+                                    ->color(fn($state) => $state ? 'success' : 'gray')
+                                    ->label('Гравіювання')
+                                    ->badge(),
+
+                                TextEntry::make('manufacture.engraving_text')
+                                    ->label('Текст гравіювання')
+                                    ->placeholder('не вказано')
+                                    ->columnSpanFull(),
+                            ])->columnSpan(1),
+                        ]),
+
+                        TextEntry::make('manufacture.notes')
+                            ->label('Додаткові зауваження')
+                            ->placeholder('немає')
+                            ->columnSpanFull(),
                     ])
                     ->columnSpanFull()
                     ->collapsible(),
 
+                // Решта секцій залишаються без змін
                 Group::make([
                     Section::make('Клієнт')
                         ->icon('heroicon-o-user')
                         ->schema([
                             TextEntry::make('first_name')
                                 ->label('Замовник')
-                                ->icon('heroicon-o-user')
-                                ->formatStateUsing(fn ($record) => "{$record->first_name} {$record?->last_name}"),
+                                ->formatStateUsing(fn($record) => "{$record->first_name} {$record?->last_name}"),
 
                             TextEntry::make('phone')
                                 ->label('Телефон')
-                                ->icon('heroicon-o-phone')
                                 ->copyable(),
 
                             TextEntry::make('email')
                                 ->label('Email')
-                                ->icon('heroicon-o-envelope')
-                                ->hidden(fn ($state) => blank($state))
+                                ->hidden(fn($state) => blank($state))
                                 ->copyable()
                                 ->columnSpanFull(),
                         ])->columns(2),
@@ -128,25 +175,23 @@ class OrderInfolist
 
                             TextEntry::make('city')
                                 ->label('Місто')
-                                ->icon('heroicon-o-map-pin')
-                                ->hidden(fn ($state) => blank($state)),
+                                ->hidden(fn($state) => blank($state)),
 
                             TextEntry::make('address')
                                 ->label('Адреса / Відділення')
-                                ->hidden(fn ($state) => blank($state))
+                                ->hidden(fn($state) => blank($state))
                                 ->columnSpanFull(),
                         ])->columns(2),
                 ])->columns(2)->columnSpanFull(),
 
-                Group::make([
-                    Section::make('Коментар клієнта')
-                        ->icon('heroicon-o-chat-bubble-bottom-center-text')
-                        ->schema([
-                            TextEntry::make('comment')
-                                ->hiddenLabel()
-                                ->placeholder('не вказано'),
-                        ]),
-                ])->columnSpanFull(),
+                Section::make('Коментар клієнта')
+                    ->icon('heroicon-o-chat-bubble-bottom-center-text')
+                    ->schema([
+                        TextEntry::make('comment')
+                            ->hiddenLabel()
+                            ->placeholder('не вказано'),
+                    ])
+                    ->columnSpanFull(),
             ]);
     }
 }

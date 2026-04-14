@@ -20,8 +20,7 @@ class OrderManufacture extends Model
         'handle_material',
         'handle_color',
 
-        'sheath_type',
-        'sheath_carry',
+        'sheath',
 
         'engraving',
         'engraving_text',
@@ -33,6 +32,7 @@ class OrderManufacture extends Model
         'blade_length' => 'integer',
         'blade_thickness' => 'integer',
 
+        'sheath' => 'boolean',
         'engraving' => 'boolean',
         'subscribe' => 'boolean',
     ];
