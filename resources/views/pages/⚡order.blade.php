@@ -104,8 +104,6 @@ new #[Title('Замовлення ножів ручної роботи')] class 
 
     public function send(): void
     {
-        // dd($this);
-
         $this->validateStep();
 
         $order = Order::create($this->form->all() + ['type' => OrderType::Manufacturing]);
@@ -134,11 +132,6 @@ new #[Title('Замовлення ножів ручної роботи')] class 
         ])->notify(new OrderManufactureSubmitted($order));
 
         session()->flash('success-order', $order->number);
-    }
-
-    public function mount()
-    {
-        session()->flash('success-order', 5);
     }
 };
 ?>
@@ -189,11 +182,6 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                 </a>
             </p>
         </div>
-
-        <x-button href="{{ route('home') }}" variant="secondary" class="mt-10">
-            <x-lucide-arrow-left class="size-4" />
-            На головну
-        </x-button>
     </div>
 @else
     <x-section sidebar-position="right" x-data="knifeOrderForm($wire)">
