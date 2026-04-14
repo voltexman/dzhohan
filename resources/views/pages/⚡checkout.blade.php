@@ -102,8 +102,8 @@ new class extends Component {
                 </div>
 
                 <div class="flex justify-between items-center pt-5 border-t-2 border-zinc-200">
-                    <span class="text-lg text-gray-600">Разом до сплати:</span>
-                    <div class="flex flex-col items-end gap-1">
+                    <span class="text-lg/6 text-gray-600">Разом до сплати:</span>
+                    <div class="flex flex-col items-end gap-1 text-nowrap">
                         @foreach ($this->getTotalsByCurrency() as $code => $sum)
                             <span class="text-3xl font-black text-black tracking-tighter">
                                 {{ CurrencyType::tryFrom($code)?->format($sum) }}

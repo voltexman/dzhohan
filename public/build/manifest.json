@@ -1,13 +1,13 @@
 {
-  "_scroll-CPZymDuY.js": {
-    "file": "assets/scroll-CPZymDuY.js",
+  "_scroll-CSrXAD8k.js": {
+    "file": "assets/scroll-CSrXAD8k.js",
     "name": "scroll"
   },
-  "_timeline-CEyUZdUD.js": {
-    "file": "assets/timeline-CEyUZdUD.js",
+  "_timeline-yvWxrf8d.js": {
+    "file": "assets/timeline-yvWxrf8d.js",
     "name": "timeline",
     "imports": [
-      "_scroll-CPZymDuY.js"
+      "_scroll-CSrXAD8k.js"
     ]
   },
   "node_modules/photoswipe/dist/photoswipe.esm.js": {
@@ -17,7 +17,7 @@
     "isDynamicEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-Cya9mLPJ.css",
+    "file": "assets/app-g69CsUjZ.css",
     "name": "app",
     "names": [
       "app.css"
@@ -186,11 +186,11 @@
     "src": "resources/images/kitchen-icon.png"
   },
   "resources/images/knive-2-bg-light.svg": {
-    "file": "assets/knive-2-bg-light-DvJiGCMt.svg",
+    "file": "assets/knive-2-bg-light-DR_J6beI.svg",
     "src": "resources/images/knive-2-bg-light.svg"
   },
   "resources/images/knives-bg.svg": {
-    "file": "assets/knives-bg-CFhf7XuF.svg",
+    "file": "assets/knives-bg-Br4SLj5l.svg",
     "src": "resources/images/knives-bg.svg"
   },
   "resources/images/logo_dark.svg": {
@@ -234,32 +234,32 @@
     "src": "resources/images/tactical-icon.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app-CiOVSe9w.js",
+    "file": "assets/app-D-JJ2l8d.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "imports": [
-      "_scroll-CPZymDuY.js",
-      "_timeline-CEyUZdUD.js"
+      "_scroll-CSrXAD8k.js",
+      "_timeline-yvWxrf8d.js"
     ]
   },
   "resources/js/pages/main.js": {
-    "file": "assets/main-DJDkS46q.js",
+    "file": "assets/main-AavHxWYj.js",
     "name": "main",
     "src": "resources/js/pages/main.js",
     "isEntry": true,
     "imports": [
-      "_scroll-CPZymDuY.js",
-      "_timeline-CEyUZdUD.js"
+      "_scroll-CSrXAD8k.js",
+      "_timeline-yvWxrf8d.js"
     ]
   },
   "resources/js/pages/product-show.js": {
-    "file": "assets/product-show-CM-eumMz.js",
+    "file": "assets/product-show-DcwUZ8vw.js",
     "name": "product-show",
     "src": "resources/js/pages/product-show.js",
     "isEntry": true,
     "imports": [
-      "_scroll-CPZymDuY.js"
+      "_scroll-CSrXAD8k.js"
     ],
     "dynamicImports": [
       "node_modules/photoswipe/dist/photoswipe.esm.js"

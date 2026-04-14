@@ -35,7 +35,7 @@ new class extends Component {
 @endsection
 
 <section class="px-5 py-20">
-    <div class="max-w-6xl mx-auto">
+    <div class="max-w-5xl mx-auto">
         <img src="{{ Vite::asset('resources/images/header.png') }}"
             class="w-full h-auto object-cover -mt-50 lg:-mt-80 relative z-10 shadow-lg rounded-md"
             alt="{{ $post->name }}" />
@@ -52,7 +52,7 @@ new class extends Component {
             {{ $post->text }}
         </div>
 
-        <div class="flex gap-1.5 mt-10">
+        {{-- <div class="flex gap-1.5 mt-10">
             @foreach ($post->tags as $tag)
                 <span
                     class="text-xs px-1.5 py-0.5 bg-neutral-200 rounded-md font-medium border border-neutral-100 text-neutral-600">
@@ -60,9 +60,9 @@ new class extends Component {
                     {{ $tag->name }}
                 </span>
             @endforeach
-        </div>
+        </div> --}}
 
-        <div class="max-w-xl mt-10 scroll-mt-20 lg:scroll-mt-8 px-5 lg:px-0" id="comments-section">
+        <div class="max-w-xl mt-10 scroll-mt-20 lg:scroll-mt-8" id="comments-section">
             <livewire:comments :model="$post" />
         </div>
 </section>

@@ -23,7 +23,7 @@ class ProductFactory extends Factory
             'description' => fake()->paragraph(3),
             'price' => fake()->randomFloat(1500, 12000),
             'is_active' => fake()->boolean(90),
-            'youtube_video_id' => fake()->optional()->passthrough(function () {
+            'short_youtube_video_id' => fake()->optional()->passthrough(function () {
                 $videos = ['k32Cc4koohY', 't2aHPnXP6Og', 'FfvZsRZ0_-E'];
 
                 return fake()->randomElement($videos);

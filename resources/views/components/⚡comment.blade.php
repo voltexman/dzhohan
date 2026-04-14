@@ -104,19 +104,19 @@ new class extends Component {
                     {{-- Адмін --}}
                     <div class="size-7 shrink-0 rounded-full overflow-hidden border border-zinc-600">
                         <img src="{{ Storage::disk('public')->url($comment->user->avatar_url) }}" alt="Admin"
-                            class="w-full h-full object-cover" />
+                            class="w-full h-full object-cover shrink-0" />
                     </div>
                 @elseif ($comment->user->avatar_url)
                     {{-- Звичайний користувач --}}
                     <div class="size-7 shrink-0 rounded-full overflow-hidden border border-zinc-200">
                         <img src="{{ Storage::disk('public')->url($comment->user->avatar_url) }}" alt="User"
-                            class="w-full h-full object-cover" />
+                            class="w-full h-full object-cover shrink-0" />
                     </div>
                 @else
                     {{-- Користувач без аватарки --}}
                     <div
                         class="size-7 shrink-0 flex justify-center items-center rounded-full bg-zinc-100 border border-zinc-200">
-                        <x-lucide-user-round class="size-3.5 stroke-zinc-800" />
+                        <x-lucide-user-round class="size-3.5 stroke-zinc-800 shrink-0" />
                     </div>
                 @endif
             @else
@@ -124,15 +124,15 @@ new class extends Component {
 
                 @if (!empty($comment->author_name))
                     {{-- ✅ ТІЛЬКИ тут генерується аватар --}}
-                    <div class="size-7 rounded-full overflow-hidden border border-zinc-100">
+                    <div class="size-7 rounded-full overflow-hidden border border-zinc-100 shrink-0">
                         <img src="{{ Avatar::create($comment->author_name)->setFont(public_path('fonts/Roboto-Bold.ttf'))->toBase64() }}"
-                            alt="{{ $comment->author_name }}" class="w-full h-full object-cover" />
+                            alt="{{ $comment->author_name }}" class="w-full h-full object-cover shrink-0" />
                     </div>
                 @else
                     {{-- ❌ Гість без імені — НІЯКИХ Avatar::create --}}
                     <div
                         class="size-7 shrink-0 flex justify-center items-center rounded-full bg-zinc-100 border border-zinc-200">
-                        <x-lucide-user-round class="size-3.5 stroke-zinc-800" />
+                        <x-lucide-user-round class="size-3.5 stroke-zinc-800 shrink-0" />
                     </div>
                 @endif
             @endif

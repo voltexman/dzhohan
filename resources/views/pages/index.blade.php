@@ -1,5 +1,4 @@
 <?php
-
 use App\Enums\KnifeCollection;
 use function Laravel\Folio\name;
 name('home');

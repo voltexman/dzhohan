@@ -56,6 +56,8 @@ class CreateAdmin extends Command
                 'telegram' => '+380 (63) 951-88-42',
                 'whatsapp' => '+380 (63) 951-88-42',
             ],
+
+            'faqs' => [],
         ]);
 
         Cache::forget('settings');
