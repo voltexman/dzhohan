@@ -229,22 +229,25 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                                 'bg-white border border-zinc-200 hover:border-orange-300' =>
                                     $knife_type !== $type->getLabel(),
                             ])>
+
                             <img src="{{ Vite::asset("resources/images/{$type->icons()}") }}"
                                 alt="{{ $type->getLabel() }}"
-                                class="absolute inset-0 size-full object-contain p-6 -rotate-[35deg] 
-                                       group-hover:scale-110 group-hover:-rotate-[40deg] 
-                                       transition-all duration-500 ease-out">
+                                class="absolute inset-0 size-full object-contain p-6 -rotate-35 group-hover:scale-110 group-hover:-rotate-40 transition-all duration-500 ease-out">
 
                             @if ($knife_type === $type->getLabel())
-                                <div class="absolute top-3 right-3 bg-orange-500 text-white p-1.5 rounded-sm">
+                                <div class="absolute top-3 right-3 bg-orange-500 text-white p-1.5 rounded-sm z-10">
                                     <x-lucide-check class="size-4" stroke-width="3" />
                                 </div>
                             @endif
 
-                            <div
-                                class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-white via-white/95 to-transparent pt-10 pb-4">
+                            <div @class([
+                                'absolute inset-x-0 bottom-0 pt-10 pb-4 transition-all duration-200',
+                                'bg-transparent' => $knife_type === $type->getLabel(),
+                                'bg-linear-to-t from-white via-white/95 to-transparent' =>
+                                    $knife_type !== $type->getLabel(),
+                            ])>
                                 <span @class([
-                                    'text-sm font-bold tracking-wide',
+                                    'text-sm font-bold tracking-wide relative z-10',
                                     'text-orange-600' => $knife_type === $type->getLabel(),
                                     'text-zinc-700 group-hover:text-zinc-900' =>
                                         $knife_type !== $type->getLabel(),
@@ -264,20 +267,24 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                             $knife_type !== 'Інший',
                     ])>
                         <img src="{{ Vite::asset('resources/images/other-icon.png') }}" alt="Інший"
-                            class="absolute inset-0 size-full object-contain p-6 -rotate-[35deg] 
-                                   group-hover:scale-110 group-hover:-rotate-[40deg] 
-                                   transition-all duration-500 ease-out">
+                            class="absolute inset-0 size-full object-contain p-6 -rotate-35 
+               group-hover:scale-110 group-hover:-rotate-40 
+               transition-all duration-500 ease-out">
 
                         @if ($knife_type === 'Інший')
-                            <div class="absolute top-3 right-3 bg-orange-500 text-white p-1.5 rounded-sm">
+                            <div class="absolute top-3 right-3 bg-orange-500 text-white p-1.5 rounded-sm z-10">
                                 <x-lucide-check class="size-4" stroke-width="3" />
                             </div>
                         @endif
 
-                        <div
-                            class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-white via-white/95 to-transparent pt-10 pb-4">
+                        <div @class([
+                            'absolute inset-x-0 bottom-0 pt-10 pb-4 transition-all duration-200',
+                            'bg-transparent' => $knife_type === 'Інший',
+                            'bg-linear-to-t from-white via-white/95 to-transparent' =>
+                                $knife_type !== 'Інший',
+                        ])>
                             <span @class([
-                                'text-sm font-bold tracking-wide',
+                                'text-sm font-bold tracking-wide relative z-10',
                                 'text-orange-600' => $knife_type === 'Інший',
                                 'text-zinc-700 group-hover:text-zinc-900' => $knife_type !== 'Інший',
                             ])>
@@ -378,8 +385,8 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                     <x-form.group>
                         <x-form.label>Товщина</x-form.label>
                         <div class="relative">
-                            <x-form.input type="number" wire:model.live="blade_thickness" placeholder="4"
-                                min="1" max="10"
+                            <x-form.input type="number" wire:model.live="blade_thickness" placeholder="4" min="1"
+                                max="10"
                                 class="w-full px-5 py-3.5 pr-14 bg-white border border-zinc-200 rounded-sm text-zinc-800 font-medium
                                        focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all" />
                             <span class="absolute right-5 top-1/2 -translate-y-1/2 text-zinc-400 font-medium">мм</span>
