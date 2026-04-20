@@ -48,7 +48,7 @@ class OrderInfolist
                                 if ($totals->count() === 1) {
                                     $group = $totals->first();
                                     $currency = $group->first()->currency;
-                                    $sum = $group->sum(fn($i) => $i->qty * $i->price);
+                                    $sum = $group->sum(fn ($i) => $i->qty * $i->price);
 
                                     return $currency->format($sum);
                                 }
@@ -56,7 +56,7 @@ class OrderInfolist
                                 return 'Мультивалютна';
                             })
                             ->placeholder('Договірна')
-                            ->color(fn($state) => $state === 'Мультивалютна' ? 'warning' : 'success')
+                            ->color(fn ($state) => $state === 'Мультивалютна' ? 'warning' : 'success')
                             ->weight(FontWeight::Bold)
                             ->size(TextSize::Large),
 
@@ -72,7 +72,7 @@ class OrderInfolist
                 Section::make('Параметри виготовлення ножа')
                     ->icon('heroicon-o-wrench-screwdriver')
                     ->description('Деталі індивідуального замовлення')
-                    ->visible(fn($record) => $record->type->value === 'manufacturing')
+                    ->visible(fn ($record) => $record->type->value === 'manufacturing')
                     ->schema([
                         TextEntry::make('manufacture.knife_type')
                             ->label('Тип ножа')
@@ -121,14 +121,14 @@ class OrderInfolist
                             // Піхви + Гравіювання
                             Group::make([
                                 TextEntry::make('manufacture.sheath')
-                                    ->formatStateUsing(fn(bool $state) => $state ? 'Так' : 'Ні')
-                                    ->color(fn(bool $state) => $state ? 'success' : 'gray')
+                                    ->formatStateUsing(fn (bool $state) => $state ? 'Так' : 'Ні')
+                                    ->color(fn (bool $state) => $state ? 'success' : 'gray')
                                     ->label('Піхви')
                                     ->badge(),
 
                                 TextEntry::make('manufacture.engraving')
-                                    ->formatStateUsing(fn($state) => $state ? 'Так' : 'Ні')
-                                    ->color(fn($state) => $state ? 'success' : 'gray')
+                                    ->formatStateUsing(fn ($state) => $state ? 'Так' : 'Ні')
+                                    ->color(fn ($state) => $state ? 'success' : 'gray')
                                     ->label('Гравіювання')
                                     ->badge(),
 
@@ -154,7 +154,7 @@ class OrderInfolist
                         ->schema([
                             TextEntry::make('first_name')
                                 ->label('Замовник')
-                                ->formatStateUsing(fn($record) => "{$record->first_name} {$record?->last_name}"),
+                                ->formatStateUsing(fn ($record) => "{$record->first_name} {$record?->last_name}"),
 
                             TextEntry::make('phone')
                                 ->label('Телефон')
@@ -162,7 +162,7 @@ class OrderInfolist
 
                             TextEntry::make('email')
                                 ->label('Email')
-                                ->hidden(fn($state) => blank($state))
+                                ->hidden(fn ($state) => blank($state))
                                 ->copyable()
                                 ->columnSpanFull(),
                         ])->columns(2),
@@ -175,11 +175,11 @@ class OrderInfolist
 
                             TextEntry::make('city')
                                 ->label('Місто')
-                                ->hidden(fn($state) => blank($state)),
+                                ->hidden(fn ($state) => blank($state)),
 
                             TextEntry::make('address')
                                 ->label('Адреса / Відділення')
-                                ->hidden(fn($state) => blank($state))
+                                ->hidden(fn ($state) => blank($state))
                                 ->columnSpanFull(),
                         ])->columns(2),
                 ])->columns(2)->columnSpanFull(),
