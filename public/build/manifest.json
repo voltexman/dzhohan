@@ -17,7 +17,7 @@
     "isDynamicEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-900fS2Vt.css",
+    "file": "assets/app-DyuLIys9.css",
     "name": "app",
     "names": [
       "app.css"
@@ -254,7 +254,7 @@
     ]
   },
   "resources/js/pages/product-show.js": {
-    "file": "assets/product-show-DcwUZ8vw.js",
+    "file": "assets/product-show-CQV9ZlGI.js",
     "name": "product-show",
     "src": "resources/js/pages/product-show.js",
     "isEntry": true,

@@ -101,26 +101,49 @@ const initCarousel = () => {
     );
 };
 
+const initLatestCarousel = () => {
+    const latestNode = document.querySelector(".embla-latest");
+    if (!latestNode) return;
+
+    const emblaLatest = EmblaCarousel(latestNode, {
+        align: "start",
+        containScroll: "trimSnaps",
+        dragFree: true,
+    });
+
+    document.addEventListener(
+        "livewire:navigating",
+        () => {
+            emblaLatest.destroy();
+        },
+        { once: true },
+    );
+};
+
 document.addEventListener("livewire:navigated", () => {
     initCarousel();
+    initLatestCarousel();
     initAnimations();
     initGallery();
 });
 
 document.addEventListener("livewire:updated", () => {
     initCarousel();
+    initLatestCarousel();
     initAnimations();
     initGallery();
 });
 
 document.addEventListener("livewire:load", () => {
     initCarousel();
+    initLatestCarousel();
     initAnimations();
     initGallery();
 });
 
 document.addEventListener("livewire:init", () => {
     initCarousel();
+    initLatestCarousel();
     initAnimations();
     initGallery();
 });

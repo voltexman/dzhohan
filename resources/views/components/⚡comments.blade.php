@@ -61,10 +61,10 @@ new class extends Component {
 ?>
 
 <div class="space-y-10 pb-10">
-    <form class="space-y-5" wire:submit="send">
+    <form class="space-y-2.5" wire:submit="send">
         <div class="flex justify-between">
             <h3 class="text-lg font-semibold font-[SN_Pro]">
-                Залишити коментар
+                Обговорення поціновувачів
                 @if ($this->comments->count() > 0)
                     <div
                         class="size-8 inline-flex justify-center items-center rounded-full bg-orange-50 border border-orange-100 text-orange-500 text-xs">
@@ -86,7 +86,7 @@ new class extends Component {
         @endguest
 
         <div>
-            <x-form.textarea id="comment-body" wire:model.trim="form.body" rows="5" placeholder="Ваш відгук..."
+            <x-form.textarea id="comment-body" wire:model.trim="form.body" rows="5" placeholder="Ваш коментар..."
                 maxlength="500" required icons />
             @error('form.body')
                 <x-form.error>{{ $message }}</x-form.error>

@@ -1,6 +1,7 @@
 <?php
 
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Computed;
 use App\Enums\ProductCategory;
 use Livewire\Component;
 use App\Models\Product;
@@ -10,6 +11,8 @@ new #[Layout('layouts::cart')] class extends Component {
 
     public bool $isLiked = false;
 
+    public string $view = 'grid';
+
     public $replyTo = null;
 
     public function mount(Product $product): void
@@ -17,6 +20,8 @@ new #[Layout('layouts::cart')] class extends Component {
         $this->product = $product;
 
         $this->isLiked = $product->isLiked();
+
+        $this->view = request()->cookie('product_view', 'cards');
     }
 
     public function like()
@@ -24,6 +29,12 @@ new #[Layout('layouts::cart')] class extends Component {
         $this->product->isLiked() ? $this->product->unlike() : $this->product->like();
 
         $this->isLiked = $this->product->isLiked();
+    }
+
+    #[Computed]
+    public function latestProducts()
+    {
+        return Product::query()->whereKeyNot($this->product->id)->where('is_active', true)->latest()->take(8)->get();
     }
 };
 ?>
@@ -251,10 +262,28 @@ new #[Layout('layouts::cart')] class extends Component {
         <livewire:comments :model="$product" />
     </div>
 
-    {{-- <div class="max-w-2xl mt-10 space-y-2 px-6 lg:px-10">
-        <h3 class="text-xl font-semibold font-[SN_Pro]">Інші товари</h3>
-        <span class="h-20 border border-zinc-100">other products</span>
-    </div> --}}
+    @if ($this->latestProducts->isNotEmpty())
+        <div class="mt-5 mb-10 space-y-2.5 overflow-hidden">
+            <h3 class="text-lg font-semibold font-[SN_Pro] px-5 lg:px-10">
+                Останні товари
+            </h3>
+
+            <div class="embla-latest overflow-hidden cursor-grab active:cursor-grabbing">
+                <div class="embla-latest__container flex gap-4 px-5 lg:px-10">
+                    @foreach ($this->latestProducts as $latestProduct)
+                        <div @class([
+                            'embla-latest__slide min-w-0',
+                            'flex-[0_0_280px]' => $this->view === 'grid',
+                            'flex-[0_0_320px]' => $this->view === 'cards',
+                            'flex-[0_0_350px]' => $this->view === 'list',
+                        ])>
+                            <x-product-card :product="$latestProduct" :view="$this->view" />
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    @endif
 
     <div x-show="show" x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 translate-y-10" x-transition:enter-end="opacity-100 translate-y-0"
