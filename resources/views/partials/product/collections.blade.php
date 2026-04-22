@@ -16,18 +16,17 @@
             </div>
 
             <!-- Лічильник товарів -->
-            <div class="absolute top-8 left-8">
-                <span class="text-2xl font-[Oswald] text-neutral-100/70 font-black">
+            <div class="absolute top-5 left-5">
+                <span
+                    class="text-2xl font-[Oswald] text-zinc-100/60 font-black group-hover:text-white transition-all duration-500">
                     {{ $this->collectionCounts[$collection->value] ?? 0 }}
-                    <span class="text-base">
-                        {{ trans_choice('товар|товари|товарів', $this->collectionCounts[$collection->value] ?? 0, [], 'uk') }}
-                    </span>
+                    {{ trans_choice('товар|товари|товарів', $this->collectionCounts[$collection->value] ?? 0, [], 'uk') }}
                 </span>
             </div>
 
             <!-- Контент -->
-            <div class="absolute inset-0 flex flex-col justify-end p-8">
-                <div class="flex flex-col gap-1.5">
+            <div class="absolute inset-0 flex flex-col justify-end p-5">
+                <div class="flex flex-col gap-0.5">
                     <h3
                         class="text-white text-xl md:text-2xl font-black uppercase tracking-wide leading-tight font-[Oswald]">
                         {{ $collection->getLabel() }}

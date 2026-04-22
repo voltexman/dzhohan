@@ -11,9 +11,9 @@
         class="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent transition-opacity duration-300 group-hover:from-black/90">
     </div>
 
-    <div class="absolute right-3 top-3 flex items-center gap-1.5">
-        <img src="{{ Vite::asset('resources/images/header-knife.svg') }}" alt="Collection Icon" class="size-6 opacity-75">
-        <span class="text-white opacity-75 text-xl font-[Oswald] font-semibold">
+    <div class="absolute right-3 top-3 flex items-center gap-0.5">
+        <img src="{{ Vite::asset('resources/images/header-knife.svg') }}" class="size-8 opacity-40 mt-0.5" alt="">
+        <span class="text-white/40 text-3xl font-[Oswald] font-semibold">
             {{ Product::countByCollection($collection) }}
         </span>
     </div>
