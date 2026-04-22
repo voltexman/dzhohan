@@ -1,10 +1,12 @@
 <?php
 
 use Livewire\Attributes\Title;
+use App\Services\AiConfiguratorService;
 use App\Livewire\Forms;
 use App\Enums\SteelType;
 use App\Enums\Order\OrderType;
 use App\Enums\KnifeCollection;
+use App\Enums\HandleMaterial;
 use App\Enums\BladeShape;
 use App\Models\Order;
 use App\Models\Subscriber;
@@ -100,6 +102,66 @@ new #[Title('Замовлення ножів ручної роботи')] class 
         if ($targetStep < $this->step && $targetStep >= 1) {
             $this->step = $targetStep;
         }
+    }
+
+    public string $aiInput = '';
+    public ?array $aiSuggestion = null;
+    public bool $aiLoading = false;
+
+    public function askAi(): void
+    {
+        if (!$this->aiInput) {
+            return;
+        }
+
+        $this->aiLoading = true;
+
+        [$step, $options] = $this->resolveStepConfig();
+
+        $service = app(AiConfiguratorService::class);
+
+        $this->aiSuggestion = $service->recommend(step: $step, userInput: $this->aiInput, options: $options, state: $this->getState());
+
+        $this->aiLoading = false;
+    }
+
+    private function resolveStepConfig(): array
+    {
+        return match ($this->step) {
+            1 => ['knife_type', collect(KnifeCollection::cases())->map(fn($i) => ['name' => $i->getLabel()])->toArray()],
+
+            2 => ['blade_steel', collect(SteelType::cases())->map(fn($i) => ['name' => $i->getLabel()])->toArray()],
+
+            3 => ['handle_material', collect(HandleMaterial::cases())->map(fn($i) => ['name' => $i->getLabel()])->toArray()],
+
+            default => ['unknown', []],
+        };
+    }
+
+    private function getState(): array
+    {
+        return [
+            'knife_type' => $this->knife_type,
+            'blade_shape' => $this->blade_shape,
+            'blade_steel' => $this->blade_steel,
+            'blade_length' => $this->blade_length,
+            'blade_thickness' => $this->blade_thickness,
+            'handle_material' => $this->handle_material,
+            'handle_color' => $this->handle_color,
+        ];
+    }
+
+    public function applyAiSuggestion(string $value): void
+    {
+        match ($this->step) {
+            1 => ($this->knife_type = $value),
+            2 => ($this->blade_steel = $value),
+            3 => ($this->handle_material = $value),
+            default => null,
+        };
+
+        $this->aiSuggestion = null;
+        $this->aiInput = '';
     }
 
     public function send(): void
@@ -208,22 +270,42 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                     <h2 class="font-[Oswald] text-2xl lg:text-3xl font-bold text-zinc-800 tracking-tight">
                         Оберіть тип ножа
                     </h2>
-                    <p class="text-zinc-500 mt-2">Виберіть категорію, яка найкраще відповідає вашим потребам</p>
+                    <p class="text-sm text-zinc-500 mt-2">Виберіть категорію, яка найкраще відповідає вашим потребам</p>
                 </header>
 
-                <button type="button"
-                    class="mb-8 text-sm font-medium text-orange-500 hover:text-orange-600 transition-colors inline-flex items-center gap-2 group">
-                    <span class="p-1 bg-orange-50 rounded-sm group-hover:bg-orange-100 transition-colors">
-                        <x-lucide-info class="size-4" />
-                    </span>
-                    Дізнатись більше про типи ножів
-                </button>
+                {{-- <div class="mt-6 max-w-md">
+                    <textarea wire:model="aiInput" placeholder="Опишіть потреби (наприклад: вологий клімат, не ржавіє)"
+                        class="w-full border p-3 rounded-sm"></textarea>
 
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <button wire:click="askAi" wire:loading.attr="disabled"
+                        class="mt-2 px-4 py-2 bg-black text-white rounded-sm">
+                        <span wire:loading.remove>AI порада</span>
+                        <span wire:loading>Думаю...</span>
+                    </button>
+
+                    @if ($aiSuggestion)
+                        <div class="mt-4 p-4 border bg-zinc-50 rounded-sm">
+                            <div class="font-semibold mb-2">Рекомендація:</div>
+
+                            @foreach ($aiSuggestion['recommendations'] as $rec)
+                                <div wire:click="applyAiSuggestion('{{ $rec }}')"
+                                    class="cursor-pointer text-orange-600 hover:underline">
+                                    → {{ $rec }}
+                                </div>
+                            @endforeach
+
+                            <div class="text-sm text-zinc-500 mt-2">
+                                {{ $aiSuggestion['reason'] }}
+                            </div>
+                        </div>
+                    @endif
+                </div> --}}
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-5">
                     @foreach (KnifeCollection::cases() as $type)
                         <button type="button" wire:click="$set('knife_type', '{{ $type->getLabel() }}')"
                             @class([
-                                'relative rounded-sm text-center transition-all duration-200 cursor-pointer h-48 lg:h-56 w-full overflow-hidden group',
+                                'relative rounded-sm text-center transition-all duration-200 cursor-pointer h-40 lg:h-50 w-full overflow-hidden group',
                                 'ring-2 ring-orange-500 ring-offset-2 bg-orange-50' =>
                                     $knife_type === $type->getLabel(),
                                 'bg-white border border-zinc-200 hover:border-orange-300' =>
@@ -232,7 +314,7 @@ new #[Title('Замовлення ножів ручної роботи')] class 
 
                             <img src="{{ Vite::asset("resources/images/{$type->icons()}") }}"
                                 alt="{{ $type->getLabel() }}"
-                                class="absolute inset-0 size-full object-contain p-6 -rotate-35 group-hover:scale-110 group-hover:-rotate-40 transition-all duration-500 ease-out">
+                                class="absolute inset-0 size-full object-contain p-5 -rotate-35 group-hover:scale-110 group-hover:-rotate-40 transition-all duration-500 ease-out">
 
                             @if ($knife_type === $type->getLabel())
                                 <div class="absolute top-3 right-3 bg-orange-500 text-white p-1.5 rounded-sm z-10">
@@ -260,16 +342,14 @@ new #[Title('Замовлення ножів ручної роботи')] class 
 
                     {{-- Other Option --}}
                     <button type="button" wire:click="$set('knife_type', 'Інший')" @class([
-                        'relative rounded-sm text-center transition-all duration-200 cursor-pointer h-48 lg:h-56 w-full overflow-hidden group',
+                        'relative rounded-sm text-center transition-all duration-200 cursor-pointer h-40 lg:h-50 w-full overflow-hidden group',
                         'ring-2 ring-orange-500 ring-offset-2 bg-orange-50' =>
                             $knife_type === 'Інший',
                         'bg-white border border-zinc-200 hover:border-orange-300' =>
                             $knife_type !== 'Інший',
                     ])>
                         <img src="{{ Vite::asset('resources/images/other-icon.png') }}" alt="Інший"
-                            class="absolute inset-0 size-full object-contain p-6 -rotate-35 
-               group-hover:scale-110 group-hover:-rotate-40 
-               transition-all duration-500 ease-out">
+                            class="absolute inset-0 size-full object-contain p-6 -rotate-35 group-hover:scale-110 group-hover:-rotate-40 transition-all duration-500 ease-out">
 
                         @if ($knife_type === 'Інший')
                             <div class="absolute top-3 right-3 bg-orange-500 text-white p-1.5 rounded-sm z-10">
@@ -310,16 +390,36 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                     <h2 class="font-[Oswald] text-2xl lg:text-3xl font-bold text-zinc-800 tracking-tight">
                         Параметри клинка
                     </h2>
-                    <p class="text-zinc-500 mt-2">Налаштуйте характеристики леза під ваші потреби</p>
+                    <p class="text-sm text-zinc-500 mt-2">Налаштуйте характеристики леза під ваші потреби</p>
                 </header>
 
-                <button type="button"
-                    class="mb-8 text-sm font-medium text-orange-500 hover:text-orange-600 transition-colors inline-flex items-center gap-2 group">
-                    <span class="p-1 bg-orange-50 rounded-sm group-hover:bg-orange-100 transition-colors">
-                        <x-lucide-info class="size-4" />
-                    </span>
-                    Які бувають форми клинків?
-                </button>
+                {{-- <div class="mt-6 max-w-md">
+                    <textarea wire:model="aiInput" placeholder="Опишіть потреби (наприклад: вологий клімат, не ржавіє)"
+                        class="w-full border p-3 rounded-sm"></textarea>
+
+                    <button wire:click="askAi" wire:loading.attr="disabled"
+                        class="mt-2 px-4 py-2 bg-black text-white rounded-sm">
+                        <span wire:loading.remove>AI порада</span>
+                        <span wire:loading>Думаю...</span>
+                    </button>
+
+                    @if ($aiSuggestion)
+                        <div class="mt-4 p-4 border bg-zinc-50 rounded-sm">
+                            <div class="font-semibold mb-2">Рекомендація:</div>
+
+                            @foreach ($aiSuggestion['recommendations'] as $rec)
+                                <div wire:click="applyAiSuggestion('{{ $rec }}')"
+                                    class="cursor-pointer text-orange-600 hover:underline">
+                                    → {{ $rec }}
+                                </div>
+                            @endforeach
+
+                            <div class="text-sm text-zinc-500 mt-2">
+                                {{ $aiSuggestion['reason'] }}
+                            </div>
+                        </div>
+                    @endif
+                </div> --}}
 
                 {{-- Blade Shape --}}
                 <x-form.group class="mb-8">
@@ -403,16 +503,8 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                     <h2 class="font-[Oswald] text-2xl lg:text-3xl font-bold text-zinc-800 tracking-tight">
                         Руків'я
                     </h2>
-                    <p class="text-zinc-500 mt-2">Оберіть матеріал та колір для комфортного хвату</p>
+                    <p class="text-sm text-zinc-500 mt-2">Оберіть матеріал та колір для комфортного хвату</p>
                 </header>
-
-                <button type="button"
-                    class="mb-8 text-sm font-medium text-orange-500 hover:text-orange-600 transition-colors inline-flex items-center gap-2 group">
-                    <span class="p-1 bg-orange-50 rounded-sm group-hover:bg-orange-100 transition-colors">
-                        <x-lucide-info class="size-4" />
-                    </span>
-                    Як обрати матеріал руків'я?
-                </button>
 
                 {{-- Handle Material --}}
                 <x-form.group class="mb-10">
@@ -517,7 +609,7 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                     <h2 class="font-[Oswald] text-2xl lg:text-3xl font-bold text-zinc-800 tracking-tight">
                         Додаткові опції
                     </h2>
-                    <p class="text-zinc-500 mt-2">Персоналізуйте ваш ніж</p>
+                    <p class="text-sm text-zinc-500 mt-2">Персоналізуйте ваш ніж</p>
                 </header>
 
                 {{-- Option Cards --}}
@@ -618,7 +710,7 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                     <h2 class="font-[Oswald] text-2xl lg:text-3xl font-bold text-zinc-800 tracking-tight">
                         Контактна інформація
                     </h2>
-                    <p class="text-zinc-500 mt-2">Вкажіть ваші дані для оформлення замовлення</p>
+                    <p class="text-sm text-zinc-500 mt-2">Вкажіть ваші дані для оформлення замовлення</p>
                 </header>
 
                 @include('partials.order.order-form')
@@ -628,8 +720,7 @@ new #[Title('Замовлення ножів ручної роботи')] class 
         {{-- ============================================= --}}
         {{-- Navigation Buttons --}}
         {{-- ============================================= --}}
-        <nav class="flex items-center justify-between mt-12 pt-8 border-t-2 border-zinc-100" x-cloak
-            aria-label="Навігація форми">
+        <nav class="flex items-center justify-between mt-10" x-cloak aria-label="Навігація форми">
             {{-- Back Button --}}
             <x-button variant="soft" color="dark" wire:show="step > 1" wire:click="previousStep"
                 wire:loading.attr="disabled" wire:target="previousStep">
@@ -683,7 +774,7 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                                             $num === $step,
                                         'bg-orange-100 text-orange-600 hover:bg-orange-200 cursor-pointer' =>
                                             $num < $step,
-                                        'bg-zinc-100 text-zinc-400 cursor-default' => $num > $step,
+                                        'bg-zinc-200 text-zinc-400 cursor-default' => $num > $step,
                                     ]) @if ($num > $step) disabled @endif
                                     aria-current="{{ $num === $step ? 'step' : 'false' }}">
                                     @if ($num < $step)
@@ -719,9 +810,7 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                     x-transition:enter="transition ease-out duration-300"
                     x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0"
                     class="">
-                    <h3 class="font-[Oswald] text-xl font-bold text-zinc-800 tracking-wide flex items-center gap-3 mb-6">
-                        Ваше замовлення
-                    </h3>
+                    <x-block.title icon="layers-plus" class="lg:mt-10 mb-5">Ваше замовлення</x-block.title>
 
                     <div class="space-y-5">
                         {{-- Knife Type --}}
@@ -812,9 +901,6 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                         </div>
                     </div>
 
-                    {{-- Divider --}}
-                    <div class="border-t-2 border-zinc-100 my-6"></div>
-
                     {{-- Price Note --}}
                     <div class="flex items-start gap-3 p-4 bg-zinc-100 rounded-lg">
                         <x-lucide-info class="size-5 text-zinc-400 shrink-0 mt-0.5" />
@@ -826,22 +912,16 @@ new #[Title('Замовлення ножів ручної роботи')] class 
 
                 {{-- Contact Card --}}
                 <div class="">
-                    <div class="text-sm font-semibold text-zinc-700 mb-4">
-                        Є питання? Зв'яжіться:
-                    </div>
-                    <div class="space-y-3">
+                    <x-block.title class="mb-5">Є питання? Зв'яжіться:</x-block.title>
+                    <div class="space-y-2.5">
                         <a href="tel:+380639518842"
-                            class="flex items-center gap-3 text-sm font-medium text-zinc-700 hover:text-orange-600 transition-colors group">
-                            <span class="p-2 bg-white rounded-md">
-                                <x-lucide-phone class="size-4 text-orange-500" />
-                            </span>
+                            class="flex items-center gap-1.5 text-sm font-medium text-zinc-700 hover:text-orange-600 transition-colors group">
+                            <x-lucide-phone class="size-4 text-orange-500" />
                             {{ $settings->phone }}
                         </a>
                         <a href="mailto:dzhogun@gmail.com"
-                            class="flex items-center gap-3 text-sm font-medium text-zinc-700 hover:text-orange-600 transition-colors group">
-                            <span class="p-2 bg-white rounded-md">
-                                <x-lucide-mail class="size-4 text-orange-500" />
-                            </span>
+                            class="flex items-center gap-1.5 text-sm font-medium text-zinc-700 hover:text-orange-600 transition-colors group">
+                            <x-lucide-mail class="size-4 text-orange-500" />
                             {{ $settings->email }}
                         </a>
                     </div>

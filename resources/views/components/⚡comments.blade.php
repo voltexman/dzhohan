@@ -62,7 +62,7 @@ new class extends Component {
 
 <div class="space-y-10 pb-10">
     <form class="space-y-2.5" wire:submit="send">
-        <div class="flex justify-between">
+        {{-- <div class="flex justify-between">
             <h3 class="text-lg font-semibold font-[SN_Pro]">
                 Обговорення поціновувачів
                 @if ($this->comments->count() > 0)
@@ -78,7 +78,7 @@ new class extends Component {
                 <x-lucide-refresh-cw wire:loading.class="animate-spin" wire:target="$refresh"
                     class="size-5 stroke-gray-800" />
             </x-button>
-        </div>
+        </div> --}}
 
         @guest
             <x-form.input color="soft" type="text" wire:model.trim="form.author_name" placeholder="Ім’я"

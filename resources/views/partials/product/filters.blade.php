@@ -1,9 +1,4 @@
-@use('App\Enums\KnifeCollection')
-@use('App\Enums\HandleMaterial')
-@use('App\Enums\CurrencyType')
-@use('App\Enums\BladeGrind')
-@use('App\Enums\BladeShape')
-@use('App\Enums\SteelType')
+ @use('App\Enums\KnifeCollection')
 
 <div class=" h-[calc(100vh-120px)] lg:h-[calc(100vh-4rem)] lg:mt-4 lg:pr-8 flex flex-col justify-between">
     <x-scrollbar class="space-y-10 pt-4">

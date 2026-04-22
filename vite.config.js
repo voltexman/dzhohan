@@ -10,6 +10,7 @@ export default defineConfig({
                 "resources/js/app.js",
                 "resources/js/pages/main.js",
                 "resources/js/pages/product-show.js",
+                "resources/js/pages/blog-show.js",
             ],
             refresh: true,
         }),

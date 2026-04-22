@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\PostType;
+use App\Traits\Likeable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, Likeable;
 
     protected $fillable = ['name', 'slug', 'text', 'type'];
 

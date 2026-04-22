@@ -1,18 +1,36 @@
 <?php
 
 use App\Enums\PostType;
+use Illuminate\Support\Facades\Cookie;
 use Livewire\Attributes\Session;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Url;
+use Livewire\WithPagination;
 use Livewire\Component;
 use App\Models\Post;
 use App\Models\Tag;
 
 new class extends Component {
-    #[Session]
+    use WithPagination;
+
+    #[Url(as: 'q')]
     public string $search = '';
 
-    // #[Session]
-    // public array $tags = [];
+    #[Url]
+    public string $type = 'all';
+
+    #[Url(as: 'tag')]
+    public array $selectedTags = [];
+
+    #[Session]
+    public string $view = 'grid';
+
+    public int $perPage = 12;
+
+    public function mount()
+    {
+        $this->view = Cookie::get('blog_view', 'grid');
+    }
 
     #[Computed]
     public function posts()
@@ -27,121 +45,171 @@ new class extends Component {
                         ->orWhereHas('tags', fn($tag) => $tag->where('name', 'like', "%{$this->search}%"));
                 });
             })
+            ->when($this->type !== 'all', fn($q) => $q->where('type', $this->type))
+            ->when(!empty($this->selectedTags), function ($query) {
+                $query->whereHas('tags', fn($q) => $q->whereIn('slug', $this->selectedTags));
+            })
             ->latest()
-            ->get();
+            ->paginate($this->perPage);
+    }
+
+    #[Computed]
+    public function tags()
+    {
+        return Tag::whereHas('posts')->get();
+    }
+
+    #[Computed]
+    public function activeFilters(): array
+    {
+        $active = [];
+
+        if ($this->search) {
+            $active[] = [
+                'type' => 'search',
+                'label' => 'Пошук: ' . $this->search,
+            ];
+        }
+
+        if ($this->type !== 'all') {
+            $active[] = [
+                'type' => 'type',
+                'label' => PostType::tryFrom($this->type)?->label() ?? $this->type,
+            ];
+        }
+
+        if (!empty($this->selectedTags)) {
+            $tagModels = Tag::whereIn('slug', $this->selectedTags)->get();
+            foreach ($tagModels as $tag) {
+                $active[] = [
+                    'type' => 'tag',
+                    'label' => '#' . $tag->name,
+                    'slug' => $tag->slug,
+                ];
+            }
+        }
+
+        return $active;
+    }
+
+    public function removeFilter(string $type, ?string $slug = null)
+    {
+        match ($type) {
+            'search' => ($this->search = ''),
+            'type' => ($this->type = 'all'),
+            'tag' => ($this->selectedTags = array_values(array_diff($this->selectedTags, [$slug]))),
+            default => null,
+        };
+    }
+
+    public function resetFilters()
+    {
+        $this->reset(['search', 'type', 'selectedTags']);
+    }
+
+    public function loadMore()
+    {
+        $this->perPage += 4;
     }
 };
 ?>
 
 <x-slot name="title">
-    Блог про ножі — поради, огляди, вибір ножів
+    Блог майстерні Dzhohan — все про ножі ручної роботи
 </x-slot>
 
 <x-slot name="description">
-    Читайте блог про ножі: як обрати ніж, догляд за лезом, огляди матеріалів та поради від майстра. Корисна
-    інформація для новачків і професіоналів.
+    Корисні статті про вибір ножів, типи сталі, матеріали руків'я та догляд за інструментами. Новини майстерні та огляди
+    нових робіт.
 </x-slot>
 
 @section('header')
-    <x-header class="h-[50vh]!" :image="Vite::asset('resources/images/blog-header-bg.png')">
-        <x-slot:title>Мій блог</x-slot:title>
+    <x-header class="h-[45vh]!" :image="Vite::asset('resources/images/blog-header-bg.png')">
+        <x-slot:title>Світ ножів {{ env('APP_NAME') }}</x-slot:title>
 
-        @if ($this->posts->isNotEmpty())
-            <x-slot:description>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quas, tenetur animi voluptas
-                veniam repellat eius.
-            </x-slot:description>
-        @endif
+        <x-slot:description>
+            Читайте про тонкощі ножової справи, наші новини та корисні поради для поціновувачів якісного інструменту.
+        </x-slot:description>
     </x-header>
 @endsection
 
-<x-section sidebar-position="right">
-    <x-slot:sidebar class="h-screen">
-        <x-form.input wire:model.trim.live="search" icon="search" />
+<section class="lg:min-h-screen bg-white pb-32">
+    <div x-data="{ mobileFiltersOpen: false }"
+        class="max-w-5xl lg:max-w-6xl xl:max-w-7xl px-5 mx-auto lg:grid lg:grid-cols-3 lg:gap-10">
+        <aside
+            class="hidden lg:block shrink-0 sticky top-16 lg:top-14 z-40 lg:h-screen w-full border-b lg:border-b-0 lg:border-r border-zinc-200 bg-linear-to-b lg:bg-linear-to-r from-zinc-50 lg:from-transparent to-zinc-100">
+            @include('partials.blog.filters')
+        </aside>
 
-        {{-- <div class="flex flex-wrap gap-1.5 my-5">
-            @foreach ($this->posts->tags as $tag)
-                <span
-                    class="text-xs px-1.5 py-0.5 bg-neutral-200 rounded-md font-medium border border-neutral-100 text-neutral-600">
-                    <x-lucide-tag class="size-3 inline-flex" />
-                    {{ $tag->name }}
-                </span>
-            @endforeach
-        </div> --}}
-
-        <input type="text" id="input">
-    </x-slot:sidebar>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        @forelse ($this->posts as $post)
-            <article @class([
-                'group relative rounded-md overflow-hidden border border-zinc-200 bg-zinc-100',
-                'aspect-[4/3]',
-                'first:col-span-full first:aspect-[21/12] last:col-span-full last:aspect-[21/12]',
-            ])>
-
-                {{-- Тип матеріалу (зверху зліва) --}}
-                <div
-                    class="absolute z-20 top-3 left-3 px-2 py-1.5 rounded-sm bg-black/50 backdrop-blur flex items-center gap-1.5">
-                    @if ($post->type === PostType::ARTICLE)
-                        <x-lucide-file-text class="size-6 text-white" stroke-width="1.5" />
-                    @elseif($post->type === PostType::NEWS)
-                        <x-lucide-circle-play class="size-6 stroke-white" stroke-width="1.5" />
-                    @endif
-                </div>
-
-                {{-- Фонове зображення --}}
-                <img src="{{ Vite::asset('resources/images/header.png') }}" alt="{{ $post->name }}"
-                    class="absolute inset-0 size-full object-cover transition duration-500 group-hover:scale-105">
-
-                {{-- затемнення / градієнт --}}
-                <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent"></div>
-
-                {{-- meta (лайки / коментарі) --}}
-                <div class="absolute top-3 right-3 flex gap-2 text-white text-xs font-medium">
-
-                    @if ($post->likes_count)
-                        <div class="flex items-center gap-1 px-2 py-1 rounded-full bg-black/50 backdrop-blur">
-                            <x-lucide-heart class="size-3.5" />
-                            {{ $post->likes_count }}
-                        </div>
-                    @endif
-
-                    @if ($post->comments_count)
-                        <div class="flex items-center gap-1 px-2 py-1 rounded-full bg-black/50 backdrop-blur">
-                            <x-lucide-message-circle class="size-3.5" />
-                            {{ $post->comments_count }}
-                        </div>
-                    @endif
-
-                </div>
-
-                {{-- контент внизу --}}
-                <div class="absolute bottom-0 p-5 text-white">
-
-                    <h3 class="font-semibold tracking-tight group-first:text-2xl">
-                        {{ $post->name }}
-                    </h3>
-
-                    @isset($post->excerpt)
-                        <p class="mt-1 text-sm text-white/80 line-clamp-2 group-first:text-base">
-                            {{ $post->excerpt }}
-                        </p>
-                    @endisset
-
-                    <a href="{{ route('blog.show', $post) }}" wire:navigate
-                        class="flex items-center gap-1 mt-2.5 text-xs uppercase tracking-wider font-semibold text-orange-500 group-hover:text-white transition">
-                        Детальніше
-                        <x-lucide-move-right class="size-3.5 inline-flex" />
-                    </a>
-
-                </div>
-            </article>
-
-        @empty
-            <div class="col-span-full text-center py-16 text-zinc-400">
-                Немає записів
+        <main class="flex-1 lg:col-span-2 flex flex-col gap-5 lg:pt-8 pb-10">
+            <div class="px-5 lg:px-0 text-center lg:text-left">
+                <h2 class="text-4xl md:text-5xl font-bold text-zinc-900 mb-6 font-[Russo_One]">
+                    Наш останній блог
+                </h2>
+                <p class="text-zinc-500 max-w-2xl leading-relaxed text-lg">
+                    Ми ділимося досвідом, новинами та цікавими історіями зі світу ножів ручної роботи.
+                </p>
             </div>
-        @endforelse
+
+            <!-- Кнопка відкриття фільтрів на мобілці -->
+            <div
+                class="sticky lg:static top-16 z-40 px-5 py-2.5 lg:px-0 bg-white border-b lg:border-0 border-zinc-100 flex flex-col gap-0.5">
+                <div class="flex justify-end">
+                    <x-drawer>
+                        <x-slot:trigger>
+                            <x-button variant="ghost" color="dark" size="sm" icon class="border border-zinc-200">
+                                <x-lucide-filter class="size-5 stroke-zinc-800" />
+                            </x-button>
+                        </x-slot:trigger>
+                        <x-slot:header class="flex justify-between">
+                            <div class="flex flex-col me-auto">
+                                <div class="font-[Oswald] uppercase tracking-wider">Фільтри</div>
+                            </div>
+                            <x-button @click="open = false" color="dark" size="xs" class="ms-auto">
+                                Показати
+                            </x-button>
+                        </x-slot:header>
+
+                        @include('partials.blog.filters')
+                    </x-drawer>
+                </div>
+
+                @if (!empty($this->activeFilters))
+                    <div class="flex flex-wrap items-center gap-2 mt-4">
+                        @foreach ($this->activeFilters as $filter)
+                            <div
+                                class="flex items-center gap-2 bg-zinc-50 px-3 py-1 rounded-full border border-zinc-100">
+                                <span
+                                    class="text-xs font-bold text-zinc-600 font-[Oswald] uppercase tracking-wider">{{ $filter['label'] }}</span>
+                                <button
+                                    wire:click="removeFilter('{{ $filter['type'] }}', '{{ $filter['slug'] ?? '' }}')"
+                                    class="cursor-pointer">
+                                    <x-lucide-x class="size-3 text-zinc-400 hover:text-red-500" />
+                                </button>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+
+            {{-- ХАОТИЧНА СІТКА (Masonry Layout) --}}
+            <div class="px-5 lg:px-0 columns-1 md:columns-2 xl:columns-3 gap-10">
+                @forelse($this->posts as $post)
+                    <div class="break-inside-avoid">
+                        @include('partials.blog.post-item')
+                    </div>
+                @empty
+                    <div class="col-span-full">
+                        @include('partials.blog.blog-empty')
+                    </div>
+                @endforelse
+            </div>
+
+            @if ($this->posts->hasMorePages())
+                <div x-data x-intersect="$wire.loadMore()" class="w-full flex justify-center py-20">
+                    <x-lucide-loader-circle class="size-8 text-orange-500 animate-spin" />
+                </div>
+            @endif
+        </main>
     </div>
-</x-section>
+</section>

@@ -85,33 +85,27 @@ new #[Layout('layouts::cart')] class extends Component {
 <section x-data="{ show: false }" class="bg-white min-h-screen pt-8 relative mt-[70vh] lg:mt-0">
     <div class="flex justify-between px-5 lg:px-10">
         <a href="{{ $product->category === ProductCategory::KNIFE ? $product->collection->url() : route('materials') }}"
-            class="flex items-center gap-1.5 text-zinc-700 hover:text-zinc-800" wire:navigate>
-            <x-lucide-chevron-left class="size-6 shrink-0" />
-            <span class="text-xs font-semibold tracking-wide">
-                {{ $product->category === ProductCategory::KNIFE ? 'До колекції' : 'До магазину' }}
-            </span>
+            class="flex items-center" wire:navigate>
+            <x-lucide-arrow-left class="size-6.5 shrink-0 fill-zinc-100 stroke-zinc-800" />
         </a>
 
         <div class="flex gap-4">
-            {{-- <button type="button">
-                <x-lucide-share-2 class="size-6.5 fill-gray-100 stroke-gray-800" />
-            </button> --}}
             <div @click="const el = document.getElementById('comment-body'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.focus();"
                 class="flex gap-0.5 items-center cursor-pointer">
-                <x-lucide-message-circle class="size-6.5 fill-gray-100 stroke-gray-800" />
+                <x-lucide-message-circle class="size-6.5 fill-zinc-100 stroke-zinc-800" />
             </div>
             <button type="button" wire:click="like"
                 class="flex gap-0.5 items-center cursor-pointer group focus:outline-none">
                 <x-lucide-heart class="size-6.5 transition-all duration-300 group-hover:scale-110"
-                    x-bind:class="$wire.isLiked ? 'fill-red-600 stroke-red-600' : 'fill-gray-100 stroke-gray-800'" />
+                    x-bind:class="$wire.isLiked ? 'fill-red-600 stroke-red-600' : 'fill-zinc-100 stroke-zinc-800'" />
             </button>
         </div>
     </div>
 
     <div class="flex flex-col mt-2.5 px-5 lg:px-10">
-        <div class="text-black font-[SN_Pro] text-xl font-semibold">{{ $product->name }}</div>
+        <div class="text-black font-[SN_Pro] text-2xl font-semibold">{{ $product->name }}</div>
         @if ($product->category === ProductCategory::KNIFE)
-            <div class="text-zinc-600 text-sm font-[Oswald] font-medium tracking-wider leading-none">
+            <div class="text-zinc-500 text-sm font-[Russo_One] font-thin tracking-wide leading-none">
                 {{ $product->collection->getLabel() }}
             </div>
         @endif
@@ -138,7 +132,7 @@ new #[Layout('layouts::cart')] class extends Component {
         </x-button>
     </div>
 
-    <x-table class="flex-none lg:ms-10 mt-10 w-full lg:max-w-md">
+    <x-table class="flex-none mt-10 w-full">
         <x-table.row>
             <x-table.cell class="font-semibold text-black text-nowrap">Артикул (SKU)</x-table.cell>
             <x-table.cell class="text-gray-700">{{ $product->sku }}</x-table.cell>
@@ -232,14 +226,16 @@ new #[Layout('layouts::cart')] class extends Component {
     @endisset
 
     @if (filled(trim(strip_tags($product->description))))
-        <div class="max-w-3xl mt-10 space-y-2.5 px-5 lg:px-10">
-            <h3 class="text-lg font-semibold font-[SN_Pro]">Огляд та особливості</h3>
+        <div class="max-w-3xl mt-10 px-5 lg:px-10">
+            <x-block.title icon="puzzle" tag="h4" class="mb-5">Огляд та особливості</x-block.title>
             <p class="text-gray-700 font-[Inter]">{!! $product->description !!}</p>
         </div>
     @endif
 
     <div class="px-5 lg:px-10 mt-5 flex flex-wrap gap-2.5">
-        @each('partials.product.show.tags', $product->tags, 'tag')
+        @foreach ($product->tags as $tag)
+            <x-tag>{{ $tag->name }}</x-tag>
+        @endforeach
     </div>
 
     @isset($product->full_youtube_video_id)
@@ -258,18 +254,12 @@ new #[Layout('layouts::cart')] class extends Component {
         <livewire:review :$product />
     @endif
 
-    <div class="max-w-xl mt-10 scroll-mt-20 lg:scroll-mt-8 px-5 lg:px-10" id="comments-section">
-        <livewire:comments :model="$product" />
-    </div>
-
     @if ($this->latestProducts->isNotEmpty())
-        <div class="mt-5 mb-10 space-y-2.5 overflow-hidden">
-            <h3 class="text-lg font-semibold font-[SN_Pro] px-5 lg:px-10">
-                Останні товари
-            </h3>
+        <div class="bg-zinc-100 border-y border-zinc-200 mt-10 py-10 overflow-hidden">
+            <x-block.title icon="sparkles" tag="h4" class="mb-5 px-5 lg:px-10">Останні роботи</x-block.title>
 
             <div class="embla-latest overflow-hidden cursor-grab active:cursor-grabbing">
-                <div class="embla-latest__container flex gap-4 px-5 lg:px-10">
+                <div class="embla-latest__container flex gap-5 px-5 lg:px-10">
                     @foreach ($this->latestProducts as $latestProduct)
                         <div @class([
                             'embla-latest__slide min-w-0',
@@ -284,6 +274,11 @@ new #[Layout('layouts::cart')] class extends Component {
             </div>
         </div>
     @endif
+
+    <div class="max-w-xl mt-10 scroll-mt-20 lg:scroll-mt-8 px-5 lg:px-10" id="comments-section">
+        <x-block.title icon="message-circle" tag="h4" class="mb-5">Обговорення</x-block.title>
+        <livewire:comments :model="$product" />
+    </div>
 
     <div x-show="show" x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 translate-y-10" x-transition:enter-end="opacity-100 translate-y-0"
