@@ -1,23 +1,27 @@
 {
-  "_scroll-CSrXAD8k.js": {
-    "file": "assets/scroll-CSrXAD8k.js",
+  "_embla-carousel.esm-OEu_7As_.js": {
+    "file": "assets/embla-carousel.esm-OEu_7As_.js",
+    "name": "embla-carousel.esm"
+  },
+  "_scroll-DNpj9G91.js": {
+    "file": "assets/scroll-DNpj9G91.js",
     "name": "scroll"
   },
-  "_timeline-yvWxrf8d.js": {
-    "file": "assets/timeline-yvWxrf8d.js",
+  "_timeline-CgffP742.js": {
+    "file": "assets/timeline-CgffP742.js",
     "name": "timeline",
     "imports": [
-      "_scroll-CSrXAD8k.js"
+      "_scroll-DNpj9G91.js"
     ]
   },
   "node_modules/photoswipe/dist/photoswipe.esm.js": {
-    "file": "assets/photoswipe.esm-CNbi_jDX.js",
+    "file": "assets/photoswipe.esm-5WlHtpKg.js",
     "name": "photoswipe.esm",
     "src": "node_modules/photoswipe/dist/photoswipe.esm.js",
     "isDynamicEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-DyuLIys9.css",
+    "file": "assets/app-DXuMIW27.css",
     "name": "app",
     "names": [
       "app.css"
@@ -234,32 +238,42 @@
     "src": "resources/images/tactical-icon.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app-D-JJ2l8d.js",
+    "file": "assets/app-CTNk58Js.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "imports": [
-      "_scroll-CSrXAD8k.js",
-      "_timeline-yvWxrf8d.js"
+      "_scroll-DNpj9G91.js",
+      "_timeline-CgffP742.js"
+    ]
+  },
+  "resources/js/pages/blog-show.js": {
+    "file": "assets/blog-show-C89H3ZGo.js",
+    "name": "blog-show",
+    "src": "resources/js/pages/blog-show.js",
+    "isEntry": true,
+    "imports": [
+      "_embla-carousel.esm-OEu_7As_.js"
     ]
   },
   "resources/js/pages/main.js": {
-    "file": "assets/main-AavHxWYj.js",
+    "file": "assets/main-Djqju_-r.js",
     "name": "main",
     "src": "resources/js/pages/main.js",
     "isEntry": true,
     "imports": [
-      "_scroll-CSrXAD8k.js",
-      "_timeline-yvWxrf8d.js"
+      "_scroll-DNpj9G91.js",
+      "_timeline-CgffP742.js"
     ]
   },
   "resources/js/pages/product-show.js": {
-    "file": "assets/product-show-CQV9ZlGI.js",
+    "file": "assets/product-show-DbReC-wz.js",
     "name": "product-show",
     "src": "resources/js/pages/product-show.js",
     "isEntry": true,
     "imports": [
-      "_scroll-CSrXAD8k.js"
+      "_scroll-DNpj9G91.js",
+      "_embla-carousel.esm-OEu_7As_.js"
     ],
     "dynamicImports": [
       "node_modules/photoswipe/dist/photoswipe.esm.js"

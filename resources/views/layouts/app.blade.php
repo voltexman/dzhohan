@@ -202,7 +202,7 @@
                 <h2 class="font-[Oswald] text-3xl font-semibold text-gray-700">
                     Підписка
                 </h2>
-                <div class="max-w-sm text-sm text-gray-600 mt-2.5 text-center lg:text-left">
+                <div class="max-w-sm text-sm text-zinc-500 mt-2.5 text-center lg:text-left">
                     Дізнавайтесь про нові товари та їхні огляди, отримуйте вигідні та спецільні пропозиції.
                 </div>
                 <div class="mt-5 w-full">

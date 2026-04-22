@@ -56,6 +56,13 @@
             'soft' => 'bg-stone-50/50 text-gray-700 hover:bg-stone-200 focus-visible:ring-gray-400',
             'link' => 'bg-transparent text-white underline-offset-4 hover:underline focus-visible:ring-gray-400',
         ],
+        'orange' => [
+            'default' => 'bg-orange-500 text-white hover:bg-orange-400 focus-visible:ring-orange-400',
+            'outline' => 'border border-gray-300 text-black hover:bg-gray-200 focus-visible:ring-gray-400',
+            'ghost' => 'text-zinc-600 hover:bg-gray-200/60 focus-visible:ring-gray-400',
+            'soft' => 'bg-stone-50/50 text-gray-700 hover:bg-stone-200 focus-visible:ring-gray-400',
+            'link' => 'bg-transparent text-white underline-offset-4 hover:underline focus-visible:ring-gray-400',
+        ],
     ];
 
     $variantClass = $colors[$color][$variant] ?? $colors[$color]['default'];

@@ -45,15 +45,15 @@ class ProductFactory extends Factory
 
             // Розміри тільки для ножів
             'total_length' => $category === ProductCategory::KNIFE
-                ? fake()->randomFloat(1, 150, 350)
+                ? fake()->numberBetween(150, 350) . '.' . fake()->numberBetween(0, 99)
                 : null,
 
             'blade_length' => $category === ProductCategory::KNIFE
-                ? fake()->randomFloat(1, 70, 220)
+                ? fake()->numberBetween(70, 220) . '.' . fake()->numberBetween(0, 99)
                 : null,
 
             'blade_thickness' => $category === ProductCategory::KNIFE
-                ? fake()->randomFloat(1, 1.5, 6.0)
+                ? fake()->numberBetween(1, 6) . '.' . fake()->numberBetween(0, 9)
                 : null,
         ];
     }
@@ -61,6 +61,11 @@ class ProductFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (Product $product) {
+            // Skip media attachment in testing environment
+            if (app()->environment('testing')) {
+                return;
+            }
+
             collect(range(1, rand(2, 6)))->each(function () use ($product) {
                 $path = database_path('seeders/images/product-test-'.rand(1, 12).'.jpg');
 

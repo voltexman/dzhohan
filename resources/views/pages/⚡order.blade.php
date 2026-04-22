@@ -466,15 +466,11 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                 {{-- Dimensions --}}
                 <div class="grid grid-cols-2 gap-5 max-w-md">
                     <x-form.group>
-                        <x-form.label>
-                            Довжина клинка
-                            <span class="text-red-500 text-lg">*</span>
-                        </x-form.label>
+                        <x-form.label required>Довжина клинка</x-form.label>
                         <div class="relative">
                             <x-form.input type="number" wire:model.live="blade_length" placeholder="150" min="50"
-                                max="500"
-                                class="w-full px-5 py-3.5 pr-14 bg-white border border-zinc-200 rounded-sm text-zinc-800 font-medium
-                                       focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all" />
+                                max="500" required
+                                class="w-full px-5 py-3.5 pr-14 bg-white border border-zinc-200 rounded-sm text-zinc-800 font-medium focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all" />
                             <span class="absolute right-5 top-1/2 -translate-y-1/2 text-zinc-400 font-medium">мм</span>
                         </div>
                         @error('blade_length')
@@ -573,13 +569,13 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                 <x-form.group>
                     <x-form.label class="text-zinc-700 font-bold text-base mb-4 block">Колір руків'я</x-form.label>
 
-                    <div class="flex flex-wrap gap-4 mb-6">
+                    <div class="flex flex-wrap gap-5 mb-5">
                         <template x-for="color in handleColors" :key="color.value">
                             <button type="button" x-on:click="$wire.handle_color = color.value"
                                 :class="$wire.handle_color === color.value ?
                                     'ring-2 ring-orange-500 ring-offset-2 scale-110' :
-                                    'hover:scale-110 ring-1 ring-zinc-200'"
-                                class="size-14 rounded-sm transition-all duration-200 cursor-pointer"
+                                    'hover:scale-110'"
+                                class="size-14 rounded-md transition-all duration-200 cursor-pointer"
                                 :style="`background:${color.value}`" :title="color.name">
                                 <span class="sr-only" x-text="color.name"></span>
                             </button>
@@ -587,10 +583,10 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                     </div>
 
                     {{-- Custom Color --}}
-                    <div class="inline-flex items-center gap-5 p-5 bg-zinc-50 rounded-sm">
-                        <div class="relative">
+                    <div class="inline-flex items-center gap-2.5">
+                        <div class="relative rounded-md overflow-hidden">
                             <input type="color" wire:model.live="handle_color"
-                                class="size-14 rounded-sm cursor-pointer border border-zinc-200">
+                                class="size-14 rounded-md cursor-pointer">
                         </div>
                         <div>
                             <p class="text-sm text-zinc-500 font-medium">Свій колір</p>
@@ -723,7 +719,7 @@ new #[Title('Замовлення ножів ручної роботи')] class 
         <nav class="flex items-center justify-between mt-10" x-cloak aria-label="Навігація форми">
             {{-- Back Button --}}
             <x-button variant="soft" color="dark" wire:show="step > 1" wire:click="previousStep"
-                wire:loading.attr="disabled" wire:target="previousStep">
+                wire:loading.attr="disabled" wire:target="previousStep" class="gap-1.5">
                 <x-lucide-arrow-left wire:loading.remove wire:target="previousStep" class="size-5" />
                 <x-lucide-loader-2 wire:loading wire:target="previousStep" class="size-5 animate-spin" />
                 Назад
@@ -733,20 +729,19 @@ new #[Title('Замовлення ножів ручної роботи')] class 
 
             {{-- Next Button --}}
             <x-button wire:show="step < 5" wire:click="nextStep" wire:loading.attr="disabled" wire:target="nextStep"
-                class="">
+                class="gap-1.5">
                 Далі
                 <x-lucide-arrow-right wire:loading.remove wire:target="nextStep" class="size-5" />
                 <x-lucide-loader-2 wire:loading wire:target="nextStep" class="size-5 animate-spin" />
             </x-button>
 
             {{-- Submit Button --}}
-            <button type="button" wire:show="step === 5" wire:click="send" wire:loading.attr="disabled"
-                wire:target="send"
-                class="inline-flex items-center gap-2.5 px-8 py-3 text-sm font-bold text-white bg-orange-500 hover:bg-orange-600 rounded-xl shadow-xl shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+            <x-button color="orange" wire:show="step === 5" wire:click="send" wire:loading.attr="disabled"
+                wire:target="send" class="gap-1.5">
                 Відправити замовлення
                 <x-lucide-send wire:loading.remove wire:target="send" class="size-5" />
                 <x-lucide-loader-2 wire:loading wire:target="send" class="size-5 animate-spin" />
-            </button>
+            </x-button>
         </nav>
 
         {{-- ============================================= --}}
@@ -758,11 +753,11 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                 <nav class="hidden lg:block" aria-label="Кроки замовлення">
                     <div class="relative">
                         @foreach ($this->stepLabels as $num => $label)
-                            <div class="relative flex items-start gap-4 @if (!$loop->last) pb-8 @endif">
+                            <div class="relative flex items-start gap-5 @if (!$loop->last) pb-8 @endif">
                                 {{-- Connecting Line --}}
                                 @if (!$loop->last)
                                     <div
-                                        class="absolute left-5 top-10 w-0.5 h-full -translate-x-1/2 transition-colors duration-300 {{ $num < $step ? 'bg-orange-300' : 'bg-zinc-200' }}">
+                                        class="absolute left-5 top-10 w-0.5 h-full -translate-x-1/2 transition-colors duration-300 {{ $num < $step ? 'bg-orange-200' : 'bg-zinc-200' }}">
                                     </div>
                                 @endif
 
@@ -772,7 +767,7 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                                         'relative z-10 flex items-center justify-center size-10 rounded-full text-sm font-bold transition-all duration-300 shrink-0',
                                         'bg-orange-500 text-white shadow-lg shadow-orange-500/30 ring-4 ring-orange-500/20' =>
                                             $num === $step,
-                                        'bg-orange-100 text-orange-600 hover:bg-orange-200 cursor-pointer' =>
+                                        'bg-orange-200 text-orange-600 hover:bg-orange-200 cursor-pointer' =>
                                             $num < $step,
                                         'bg-zinc-200 text-zinc-400 cursor-default' => $num > $step,
                                     ]) @if ($num > $step) disabled @endif
@@ -810,7 +805,7 @@ new #[Title('Замовлення ножів ручної роботи')] class 
                     x-transition:enter="transition ease-out duration-300"
                     x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0"
                     class="">
-                    <x-block.title icon="layers-plus" class="lg:mt-10 mb-5">Ваше замовлення</x-block.title>
+                    <x-block.title icon="package-plus" class="lg:mt-10 mb-5">Ваше замовлення</x-block.title>
 
                     <div class="space-y-5">
                         {{-- Knife Type --}}
@@ -912,7 +907,7 @@ new #[Title('Замовлення ножів ручної роботи')] class 
 
                 {{-- Contact Card --}}
                 <div class="">
-                    <x-block.title class="mb-5">Є питання? Зв'яжіться:</x-block.title>
+                    <x-block.title icon="badge-question-mark" class="mb-5">Є питання? Зв'яжіться:</x-block.title>
                     <div class="space-y-2.5">
                         <a href="tel:+380639518842"
                             class="flex items-center gap-1.5 text-sm font-medium text-zinc-700 hover:text-orange-600 transition-colors group">
