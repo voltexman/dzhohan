@@ -1,6 +1,8 @@
 @props(['product', 'view', 'collection' => null])
 
-<a href="{{ $product->category === \App\Enums\ProductCategory::KNIFE
+@use('App\Enums\ProductCategory')
+
+<a href="{{ $product->category === ProductCategory::KNIFE
     ? route('knife.show', [$product->collection, $product->slug])
     : route('material.show', $product->slug) }}"
     @class([
@@ -33,15 +35,13 @@
             ]) />
         </x-button>
 
-        {{-- Показуємо плашку лише якщо товару НЕМАЄ в наявності --}}
         @if (!$product->hasStock())
             <div @class([
                 'absolute z-20 flex items-center justify-center',
-                // Якщо режим 'cards' — зліва вгорі, інакше — справа внизу (як було)
                 'top-3 left-3' => $view === 'cards',
                 'bottom-2.5 right-2.5' => $view !== 'cards',
             ])>
-                <span class="bg-white/25 text-white px-2.5 py-1.5 roundedfull text-xs shadow-xl">
+                <span class="bg-white/25 text-white px-2.5 py-1.5 rounded-xs text-xs">
                     Продано
                 </span>
             </div>
@@ -58,18 +58,18 @@
     ])>
         <h3 @class([
             'font-semibold font-[SN_Pro] transition line-clamp-1 drop-shadow-xl',
-            'text-lg text-gray-800 group-hover:text-orange-600' => $view !== 'grid',
-            'text-lg text-gray-800 group-hover:text-orange-600' => $view !== 'list',
-            'text-white text-lg' => $view === 'cards',
+            'text-xl text-zinc-800 group-hover:text-orange-600' => $view === 'grid',
+            'text-lg text-zinc-800 group-hover:text-orange-600' => $view === 'list',
+            'text-white text-xl' => $view === 'cards',
         ])>
             {{ $product->name }}
         </h3>
 
-        @if (!$collection && $product->category === \App\Enums\ProductCategory::KNIFE && $product->collection)
+        @if (!$collection && $product->category === ProductCategory::KNIFE && $product->collection)
             <div @class([
-                'font-[Oswald] tracking-wide w-full',
-                'text-gray-600' => $view !== 'cards',
-                'text-gray-200' => $view === 'cards',
+                'font-[Russo_One] font-thin text-xs tracking-wide w-full',
+                'text-zinc-600' => $view !== 'cards',
+                'text-zinc-400' => $view === 'cards',
             ])>
                 {{ $product->collection->getLabel() }}
             </div>
@@ -127,11 +127,7 @@
                         @if ($product->likes_count)
                             <div @class([
                                 'flex items-center gap-0.5 text-xs font-medium transition-colors duration-300',
-                            
-                                // Стан: ЛАЙКНУТО (має найвищий пріоритет)
                                 'text-red-500' => $product->isLiked(),
-                            
-                                // Стан: НЕ ЛАЙКНУТО (залежить від режиму відображення)
                                 'text-zinc-500' =>
                                     !$product->isLiked() && in_array($view, ['grid', 'list']),
                                 'text-zinc-300' => !$product->isLiked() && $view === 'cards',
@@ -139,11 +135,7 @@
 
                                 <x-lucide-heart @class([
                                     'size-3.5 mb-0.5 transition-all duration-300',
-                                
-                                    // Стан: ЛАЙКНУТО (має найвищий пріоритет)
                                     'fill-red-500 stroke-red-500 scale-110' => $product->isLiked(),
-                                
-                                    // Стан: НЕ ЛАЙКНУТО (залежить від режиму відображення)
                                     'fill-zinc-100 stroke-zinc-500' =>
                                         !$product->isLiked() && in_array($view, ['grid', 'list']),
                                     'fill-zinc-100/25 stroke-zinc-300' =>
