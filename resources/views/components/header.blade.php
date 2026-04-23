@@ -1,6 +1,6 @@
 @props(['title', 'description', 'image'])
 
-<header {{ $attributes->class('relative top-0 h-[35vh] bg-cover bg-center bg-no-repeat bg-fixed') }}
+<header {{ $attributes->class('relative top-0 h-[38vh] bg-cover bg-center bg-no-repeat bg-fixed') }}
     style="background-image: url('{{ $image }}')">
 
     <div class="absolute inset-0 bg-black/50 z-0 backdrop-blur-sm"></div>

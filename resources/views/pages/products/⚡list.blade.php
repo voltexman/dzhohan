@@ -410,7 +410,7 @@ new class extends Component {
             <div class="flex gap-5 mt-2.5 -mb-5">
                 @if ($this->stockCounts['available'])
                     <div class="flex items-center gap-1.5">
-                        <x-lucide-package-check class="size-6 text-orange-500" stroke-width="1.5" />
+                        <x-lucide-package-check class="size-7 text-orange-500" stroke-width="1.5" />
                         <div class="flex flex-col">
                             <span class="text-zinc-50 leading-none">
                                 <span class="text-sm font-bold">{{ $this->stockCounts['available'] }}</span>
@@ -421,7 +421,7 @@ new class extends Component {
                 @endif
                 @if ($this->stockCounts['sold'])
                     <div class="flex items-center gap-1.5">
-                        <x-lucide-hammer class="size-6 text-orange-500" stroke-width="1.5" />
+                        <x-lucide-hammer class="size-7 text-orange-500" stroke-width="1.5" />
                         <div class="flex flex-col">
                             <span class="text-zinc-50 leading-none">
                                 <span class="text-sm font-bold">{{ $this->stockCounts['sold'] }}</span>

@@ -79,7 +79,7 @@ new class extends Component {
     </x-header>
 @endsection
 
-<section class="relative pb-20">
+<section class="relative">
     <div class="max-w-5xl xl:max-w-6xl mx-auto px-5">
         {{-- Головне зображення --}}
         <div class="relative -mt-32 md:-mt-48 z-10 rounded-md overflow-hidden shadow-2xl border-2 border-white">
@@ -87,7 +87,7 @@ new class extends Component {
                 alt="{{ $post->name }}" />
         </div>
 
-        <div class="flex flex-col lg:flex-row gap-12 mt-12">
+        <div class="flex flex-col lg:flex-row gap-10 mt-10">
             {{-- Контент --}}
             <div class="flex-1 min-w-0">
                 <div
@@ -154,35 +154,79 @@ new class extends Component {
         </div>
     </div>
 
-    {{-- Читайте також (Повна ширина) --}}
+    {{-- Читайте також --}}
     @if ($this->relatedPosts->isNotEmpty())
-        <div class="bg-zinc-100 border-y border-zinc-200 py-10 mt-10 overflow-hidden">
+        <div class="py-10 mt-10 bg-zinc-100 border-y border-zinc-200">
             <div class="max-w-5xl xl:max-w-6xl mx-auto px-5">
                 <x-block.title icon="sparkles" tag="h4" class="mb-5">Читайте також</x-block.title>
             </div>
 
             <div class="embla-related overflow-hidden cursor-grab active:cursor-grabbing">
                 <div
-                    class="embla__container flex gap-6 px-5 lg:px-[calc((100vw-1152px)/2+1.25rem)] xl:px-[calc((100vw-1152px)/2+1.25rem)]">
+                    class="embla__container flex flex-nowrap gap-6 px-5 lg:px-[calc((100vw-1024px)/2+1.25rem)] xl:px-[calc((100vw-1152px)/2+1.25rem)]">
                     @foreach ($this->relatedPosts as $related)
-                        <div class="embla__slide flex-[0_0_280px] sm:flex-[0_0_320px] min-w-0">
-                            <a href="{{ route('blog.show', $related) }}" wire:navigate class="group block space-y-4">
-                                <div class="aspect-video rounded-2xl overflow-hidden shadow-sm border border-zinc-200">
+                        <div class="embla__slide flex-[0_0_260px] sm:flex-[0_0_300px] lg:flex-[0_0_320px] w-80 sm:w-90">
+                            <a href="{{ route('blog.show', $related) }}" wire:navigate
+                                class="group block h-full overflow-hidden rounded-md">
+                                <div
+                                    class="relative overflow-visible bg-zinc-900 rounded-md border border-zinc-700/30 hover:shadow-2xl transition-all duration-300 aspect-3/4">
+                                    {{-- Фонове зображення --}}
                                     <img src="{{ Vite::asset('resources/images/header.png') }}"
                                         alt="{{ $related->name }}"
-                                        class="size-full object-cover transition duration-500 group-hover:scale-110">
-                                </div>
-                                <div class="space-y-2">
-                                    <span class="text-[11px] font-bold text-zinc-400 uppercase tracking-widest block">
-                                        {{ $related->created_at->format('d M, Y') }}
-                                    </span>
-                                    <h5
-                                        class="font-bold text-lg text-zinc-900 group-hover:text-orange-600 transition-colors line-clamp-2 leading-snug">
-                                        {{ $related->name }}
-                                    </h5>
-                                    <p class="text-sm text-zinc-500 line-clamp-2">
-                                        {{ Str::limit(strip_tags($related->excerpt ?? $related->text), 100) }}
-                                    </p>
+                                        class="absolute inset-0 size-full object-cover transition duration-500 group-hover:scale-110 rounded-lg">
+
+                                    {{-- Затемнення градієнт --}}
+                                    <div
+                                        class="absolute inset-0 bg-linear-to-t from-zinc-900/95 via-zinc-900/50 to-transparent rounded-lg">
+                                    </div>
+
+                                    {{-- Категорія --}}
+                                    <div class="absolute top-3 left-3 z-20">
+                                        <span
+                                            class="px-3 py-1 bg-orange-600/80 backdrop-blur-sm text-[10px] font-bold uppercase tracking-wider text-white rounded-xs font-[Oswald]">
+                                            {{ $related->type->label() }}
+                                        </span>
+                                    </div>
+
+                                    {{-- Мета (лайки/коментарі) --}}
+                                    <div class="absolute top-3 right-3 flex gap-2 z-20">
+                                        <div
+                                            class="flex items-center gap-1 px-2 py-1 rounded-xs bg-white/15 backdrop-blur-sm text-[10px] font-bold font-[Oswald] text-white">
+                                            <x-lucide-heart class="size-3 text-orange-400 fill-orange-400" />
+                                            {{ $related->likes_count ?: 0 }}
+                                        </div>
+                                        <div
+                                            class="flex items-center gap-1 px-2 py-1 rounded-xs bg-white/15 backdrop-blur-sm text-[10px] font-bold font-[Oswald] text-white">
+                                            <x-lucide-message-circle class="size-3 text-orange-400" />
+                                            {{ $related->comments_count ?: 0 }}
+                                        </div>
+                                    </div>
+
+                                    {{-- Контент над зображенням --}}
+                                    <div class="absolute inset-0 flex flex-col justify-end p-5 z-10">
+                                        {{-- Дата --}}
+                                        <div class="flex items-center gap-1.5 mb-2.5">
+                                            <x-lucide-calendar class="size-3 text-orange-400" />
+                                            <span
+                                                class="text-xs font-bold text-orange-300 tracking-wide font-[Oswald]">
+                                                {{ $related->created_at->format('d.m.Y') }}
+                                            </span>
+                                        </div>
+
+                                        {{-- Заголовок --}}
+                                        <h5
+                                            class="text-base font-bold text-white leading-tight mb-2.5 font-[SN_Pro] group-hover:text-orange-300 transition-colors line-clamp-2">
+                                            {{ $related->name }}
+                                        </h5>
+
+                                        {{-- Теги --}}
+                                        <div class="flex gap-2.5 pt-2.5 border-t border-white/10">
+                                            @foreach ($related->tags->take(2) as $tag)
+                                                <span
+                                                    class="text-xs text-orange-300/80 font-medium font-[Oswald]">#{{ $tag->name }}</span>
+                                            @endforeach
+                                        </div>
+                                    </div>
                                 </div>
                             </a>
                         </div>

@@ -193,7 +193,7 @@ new class extends Component {
             </div>
 
             {{-- ХАОТИЧНА СІТКА (Masonry Layout) --}}
-            <div class="px-5 lg:px-0 columns-1 md:columns-2 xl:columns-3 gap-10">
+            <div class="px-5 lg:px-0 columns-1 md:columns-2 xl:columns-3 gap-5">
                 @forelse($this->posts as $post)
                     <div class="break-inside-avoid">
                         @include('partials.blog.post-item')
