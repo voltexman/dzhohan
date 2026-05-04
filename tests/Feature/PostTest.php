@@ -3,6 +3,7 @@
 use App\Enums\PostType;
 use App\Models\Post;
 use App\Models\Tag;
+use Illuminate\Database\QueryException;
 
 describe('Post CRUD Operations', function () {
     describe('Create', function () {
@@ -34,7 +35,7 @@ describe('Post CRUD Operations', function () {
         });
 
         it('fails creating post with missing required fields', function () {
-            $this->expectException(\Illuminate\Database\QueryException::class);
+            $this->expectException(QueryException::class);
 
             Post::create([
                 'text' => 'Текст поста',
@@ -158,11 +159,12 @@ describe('Post CRUD Operations', function () {
             $postId = $post->id;
 
             // Перевірити, чи є тип post
-            $postType = (new \ReflectionClass($post))->getTraitNames();
+            $postType = (new ReflectionClass($post))->getTraitNames();
             $hasSoftDeletes = in_array('Illuminate\Database\Eloquent\SoftDeletes', $postType);
 
-            if (!$hasSoftDeletes) {
+            if (! $hasSoftDeletes) {
                 expect(true)->toBeTrue(); // Пропустити тест
+
                 return;
             }
 

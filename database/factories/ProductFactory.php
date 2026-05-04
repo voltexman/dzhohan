@@ -45,15 +45,15 @@ class ProductFactory extends Factory
 
             // Розміри тільки для ножів
             'total_length' => $category === ProductCategory::KNIFE
-                ? fake()->numberBetween(150, 350) . '.' . fake()->numberBetween(0, 99)
+                ? fake()->numberBetween(150, 350).'.'.fake()->numberBetween(0, 99)
                 : null,
 
             'blade_length' => $category === ProductCategory::KNIFE
-                ? fake()->numberBetween(70, 220) . '.' . fake()->numberBetween(0, 99)
+                ? fake()->numberBetween(70, 220).'.'.fake()->numberBetween(0, 99)
                 : null,
 
             'blade_thickness' => $category === ProductCategory::KNIFE
-                ? fake()->numberBetween(1, 6) . '.' . fake()->numberBetween(0, 9)
+                ? fake()->numberBetween(1, 6).'.'.fake()->numberBetween(0, 9)
                 : null,
         ];
     }

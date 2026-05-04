@@ -4,6 +4,7 @@ use App\Enums\CurrencyType;
 use App\Enums\KnifeCollection;
 use App\Enums\ProductCategory;
 use App\Models\Product;
+use Illuminate\Database\QueryException;
 
 describe('Product CRUD Operations - Knives', function () {
     describe('Create', function () {
@@ -54,7 +55,7 @@ describe('Product CRUD Operations - Knives', function () {
         });
 
         it('knife requires category', function () {
-            $this->expectException(\Illuminate\Database\QueryException::class);
+            $this->expectException(QueryException::class);
 
             Product::create([
                 'name' => 'Test Knife',

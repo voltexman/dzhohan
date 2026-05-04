@@ -87,7 +87,7 @@ class AiConfiguratorService
 
         $filtered = array_values(array_filter(
             $data['recommendations'],
-            fn($item) => in_array($item, $valid)
+            fn ($item) => in_array($item, $valid)
         ));
 
         if (empty($filtered)) {

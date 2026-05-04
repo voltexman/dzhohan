@@ -61,7 +61,7 @@ describe('Model Relationships', function () {
                 'likeable_type' => Post::class,
                 'likeable_id' => $post->id,
             ]);
-            
+
             $post->tags()->attach($tags);
 
             $loaded = Post::with(['tags', 'comments', 'likes'])->find($post->id);
